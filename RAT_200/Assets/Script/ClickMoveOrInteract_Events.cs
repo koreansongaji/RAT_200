@@ -53,7 +53,9 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
     static readonly List<RaycastResult> _uiHits = new();
 
     float ReachRadius => reach ? Mathf.Max(0f, reach.radius) : 1.6f;
-    bool HorizontalOnly => reach ? reach.horizontalOnly : true;
+    bool HorizontalOnly => reach ? reach.horizontalOnly : false;
+
+
 
     void Awake() { _path = new NavMeshPath(); }
     void Start()

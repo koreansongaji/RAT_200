@@ -14,7 +14,7 @@ public class RatFlipByVelocity : MonoBehaviour
     {
         if (!agent || !cam) return;
         Vector3 v = agent.velocity;
-        v.y = 0f;
+        //v.y = 0f;
         if (v.sqrMagnitude < 0.0001f) return;
 
         // 카메라의 오른쪽을 기준으로 좌/우 결정
