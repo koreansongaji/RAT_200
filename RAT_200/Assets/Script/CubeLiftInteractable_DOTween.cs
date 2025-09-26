@@ -50,13 +50,17 @@ public class CubeLiftInteractable_DOTween : BaseInteractable
         _tMove?.Kill(); _tFov?.Kill();
         float targetY = _startPos.y + liftHeight;
 
-        _tMove = transform.DOMoveY(targetY, duration)
+        var tn = GetComponent<TweenNoiseAdapter>();
+        _tMove = TweenNoiseAdapter.WithNoise(
+            transform.DOMoveY(targetY, duration)
                   .SetEase(ease)
                   .SetUpdate(UpdateType.Normal) // 오브젝트 트윈은 Normal이면 충분
                   .SetLink(gameObject, LinkBehaviour.KillOnDestroy)
-                  .OnComplete(() => { _opened = true; _busy = false; });
+                  .OnComplete(() => { _opened = true; _busy = false; }),
+            tn
+        );
 
-        
+
     }
 
     // (선택) 다시 닫는 동작이 필요하면 호출
@@ -68,11 +72,15 @@ public class CubeLiftInteractable_DOTween : BaseInteractable
         if (obstacle) obstacle.enabled = true;
         if (_col) _col.enabled = true;
 
-        _tMove = transform.DOMoveY(_startPos.y, duration)
+        var tn = GetComponent<TweenNoiseAdapter>();
+        _tMove = TweenNoiseAdapter.WithNoise(
+            transform.DOMoveY(_startPos.y, duration)
                   .SetEase(ease)
                   .SetUpdate(UpdateType.Normal)
                   .SetLink(gameObject, LinkBehaviour.KillOnDestroy)
-                  .OnComplete(() => { _busy = false; _opened = false; });
+                  .OnComplete(() => { _busy = false; _opened = false; }),
+            tn
+        );
     }
 
     void OnDisable() { _tMove?.Kill(); _tFov?.Kill(); }

@@ -23,6 +23,9 @@ public class SphereColorInteractable : BaseInteractable
     void SetRandomColor()
     {
         if (!targetRenderer) return;
+
+        GetComponent<NoiseImpulse>()?.Fire(0.35f);
+
         Color c = Random.ColorHSV(0f, 1f, 0.6f, 1f, 0.7f, 1f);
 
         if (usePropertyBlock && _mpb != null)
