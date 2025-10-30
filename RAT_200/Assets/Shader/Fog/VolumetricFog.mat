@@ -110,7 +110,7 @@ Material:
     - _MaxDistance: 10
     - _Metallic: 0
     - _NoiseOffset: 2.21
-    - _NoiseTiling: 105
+    - _NoiseTiling: 100
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueOffset: 0
@@ -120,7 +120,7 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
-    - _StepSize: 0.1
+    - _StepSize: 5.8
     - _Surface: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
