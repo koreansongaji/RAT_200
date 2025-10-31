@@ -26,6 +26,8 @@ public class MicroZoomSession : MonoBehaviour
     float _blockUntil;           // ESC 직후 재진입 차단 타임스탬프
     PlayerInteractor _pi;
 
+    public bool InMicro => _inMicro;
+
     void Awake()
     {
         if (microCloseupCam) microCloseupCam.Priority = CloseupCamManager.MicroOff;
@@ -42,7 +44,7 @@ public class MicroZoomSession : MonoBehaviour
     public bool TryEnterMicro(PlayerInteractor i)
     {
         if (_inMicro || !i) return false;
-        //if (Time.unscaledTime < _blockUntil) return false;
+        if (Time.unscaledTime < _blockUntil) return false;
         _pi = i;
         EnterMicro();
         return true;
