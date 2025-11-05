@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4fc06f4414704c140a9083f56831a3d7
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324245
+  packageName: Basic Security System
+  packageVersion: 1.0.0
+  assetPath: Assets/SecuritySystem/CCTV/prefabs/Materials/Demo Skybox.mat
+  uploadId: 768091

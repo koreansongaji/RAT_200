@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 927fa517c92f8aa49b5fc68a0e07c195
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324245
+  packageName: Basic Security System
+  packageVersion: 1.0.0
+  assetPath: Assets/SecuritySystem/CCTV/prefabs/Materials/RenderTexture/Render/Render
+    Material.mat
+  uploadId: 768091

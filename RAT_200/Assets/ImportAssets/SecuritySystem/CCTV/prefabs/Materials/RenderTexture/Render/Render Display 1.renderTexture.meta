@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 4bbcec45a6a0b3347b4519f49df18fc3
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 8400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324245
+  packageName: Basic Security System
+  packageVersion: 1.0.0
+  assetPath: Assets/SecuritySystem/CCTV/prefabs/Materials/RenderTexture/Render/Render
+    Display 1.renderTexture
+  uploadId: 768091

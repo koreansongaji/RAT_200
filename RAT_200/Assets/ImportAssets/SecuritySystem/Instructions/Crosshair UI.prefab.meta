@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ff65c2d32374b864d9ddcfc35e2351fb
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324245
+  packageName: Basic Security System
+  packageVersion: 1.0.0
+  assetPath: Assets/SecuritySystem/Instructions/Crosshair UI.prefab
+  uploadId: 768091

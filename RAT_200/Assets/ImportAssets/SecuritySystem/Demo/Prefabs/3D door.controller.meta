@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 82d0f33a8194f0a4081d72eb195b7efd
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324245
+  packageName: Basic Security System
+  packageVersion: 1.0.0
+  assetPath: Assets/SecuritySystem/Demo/Prefabs/3D door.controller
+  uploadId: 768091

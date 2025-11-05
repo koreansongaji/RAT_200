@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 704a13e183f01db409c4aea9d17ca8c9
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324245
+  packageName: Basic Security System
+  packageVersion: 1.0.0
+  assetPath: Assets/SecuritySystem/Keypad/Materials/Keypad Material.mat
+  uploadId: 768091

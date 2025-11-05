@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 37bc915ce9cd0dd4a98a1696547db837
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324245
+  packageName: Basic Security System
+  packageVersion: 1.0.0
+  assetPath: Assets/SecuritySystem/Demo/Prefabs/Demo Scene.prefab
+  uploadId: 768091

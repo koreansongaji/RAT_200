@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 2092e3bebc8879743baa39bc31e21fe5
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324245
+  packageName: Basic Security System
+  packageVersion: 1.0.0
+  assetPath: Assets/SecuritySystem/Keypad/Prefabs/Panel.prefab
+  uploadId: 768091

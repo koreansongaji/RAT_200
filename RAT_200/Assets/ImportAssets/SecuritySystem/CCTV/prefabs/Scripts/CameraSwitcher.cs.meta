@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: a33ca818f6ec5df4383025b7c1e99b66
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324245
+  packageName: Basic Security System
+  packageVersion: 1.0.0
+  assetPath: Assets/SecuritySystem/CCTV/prefabs/Scripts/CameraSwitcher.cs
+  uploadId: 768091
