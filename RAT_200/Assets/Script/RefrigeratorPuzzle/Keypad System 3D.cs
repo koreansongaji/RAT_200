@@ -104,7 +104,15 @@ namespace KeyPad3DScript
       IEnumerator Correct()
       {
          yield return new WaitForSeconds(0.35f);
-         Task.enabled = true; ;
+
+         // Task.enabled 토글 대신 명시적 호출
+         var mb = Task as MonoBehaviour;
+         if (mb != null)
+         {
+             var tap = mb.GetComponent<Task1.TaskAnimationPlay>();
+             if (tap != null) tap.PlayOpen();
+         }
+
          StartCoroutine(Reset());
       }
 

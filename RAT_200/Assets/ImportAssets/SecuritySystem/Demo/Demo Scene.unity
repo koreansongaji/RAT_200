@@ -290,6 +290,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 0.025
       objectReference: {fileID: 0}
+    - target: {fileID: 2973198005085856606, guid: 37bc915ce9cd0dd4a98a1696547db837, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -39.708
+      objectReference: {fileID: 0}
     - target: {fileID: 4315041795414572457, guid: 37bc915ce9cd0dd4a98a1696547db837, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.2
@@ -298,13 +302,25 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 0.025
       objectReference: {fileID: 0}
+    - target: {fileID: 4479158740046522075, guid: 37bc915ce9cd0dd4a98a1696547db837, type: 3}
+      propertyPath: m_text
+      value: dsdsds
+      objectReference: {fileID: 0}
     - target: {fileID: 4668012101795626974, guid: 37bc915ce9cd0dd4a98a1696547db837, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 59449c7de4d071d45ab7708337da3be7, type: 2}
+    - target: {fileID: 4678005372451478855, guid: 37bc915ce9cd0dd4a98a1696547db837, type: 3}
+      propertyPath: m_Intensity
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4692928026006026580, guid: 37bc915ce9cd0dd4a98a1696547db837, type: 3}
       propertyPath: m_Name
       value: Demo Scene
+      objectReference: {fileID: 0}
+    - target: {fileID: 4795258299411698632, guid: 37bc915ce9cd0dd4a98a1696547db837, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.17
       objectReference: {fileID: 0}
     - target: {fileID: 5031699802216665487, guid: 37bc915ce9cd0dd4a98a1696547db837, type: 3}
       propertyPath: m_LocalScale.x
@@ -313,6 +329,10 @@ PrefabInstance:
     - target: {fileID: 6142124014099286525, guid: 37bc915ce9cd0dd4a98a1696547db837, type: 3}
       propertyPath: m_IsTrigger
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6325234377772873269, guid: 37bc915ce9cd0dd4a98a1696547db837, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6842023590254235506, guid: 37bc915ce9cd0dd4a98a1696547db837, type: 3}
       propertyPath: m_LocalScale.x
