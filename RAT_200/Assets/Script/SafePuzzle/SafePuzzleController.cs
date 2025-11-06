@@ -10,75 +10,104 @@ public class SafePuzzleController : MonoBehaviour
     public SafeDialInteractable diamond;
     public SafeDialInteractable club;
 
-    [Header("Answer Paper")]
-    public GameObject paperPrefab;      // 종이 프리팹(월드 스페이스 TMP가 붙은 단순 보드)
-    public Transform paperSpawnPoint;   // 종이가 항상 생성될 고정 위치
-    public string paperFormat = "♠ {0}\n♥ {1}\n♦ {2}\n♣ {3}";
+    [Header("ENTER Button")]
+    public PressableButton3D enterButton;       // PressableButton3D의 OnPressed를 코드에서 연결
 
-    [Header("Safe Door")]
-    public Transform rightDoorHinge;    // 오른쪽 문 힌지(로컬 Z 또는 Y 회전)
+    [Header("Status Display (optional)")]
+    public TMP_Text statusText;                // READY / FAIL / OPEN 표시용
+    public float failBlinkSec = 0.6f;
+
+    [Header("Door")]
+    public Transform rightDoorHinge;           // 금고 오른문 힌지
     public Vector3 openLocalEuler = new(0, -85, 0);
     public float openSec = 0.5f;
     public Ease openEase = Ease.OutSine;
 
-    [Header("Seed")]
-    public int randomSeed = 0;          // 0이면 Time-based
+    [Header("Answer Paper (optional)")]
+    public GameObject paperPrefab;
+    public Transform paperSpawnPoint;
+    public string paperFormat = "♠ {0}\n♥ {1}\n♦ {2}\n♣ {3}";
 
-    int _ansSpade, _ansHeart, _ansDiamond, _ansClub;
-    bool _opened;
+    [Header("Seed")]
+    public int randomSeed = 0;                 // 0이면 Time 기반
+
+    int ansSpade, ansHeart, ansDiamond, ansClub;
+    bool opened;
+
+    void Awake()
+    {
+        // Enter 버튼 눌렀을 때 시도
+        if (enterButton) enterButton.OnPressed.AddListener(AttemptOpen);
+    }
 
     void Start()
     {
         InitAnswers();
         SpawnPaper();
-        // 시작 LED와 다이얼 각도 초기화(원하면 전부 0으로)
-        spade?.SetValue(0, true);
-        heart?.SetValue(0, true);
-        diamond?.SetValue(0, true);
-        club?.SetValue(0, true);
+        SetStatus("READY");
+    }
+
+    void OnDestroy()
+    {
+        if (enterButton) enterButton.OnPressed.RemoveListener(AttemptOpen);
     }
 
     void InitAnswers()
     {
         System.Random rng = (randomSeed == 0) ? new System.Random() : new System.Random(randomSeed);
-        _ansSpade = rng.Next(0, 10);
-        _ansHeart = rng.Next(0, 10);
-        _ansDiamond = rng.Next(0, 10);
-        _ansClub = rng.Next(0, 10);
+        ansSpade = rng.Next(0, 10);
+        ansHeart = rng.Next(0, 10);
+        ansDiamond = rng.Next(0, 10);
+        ansClub = rng.Next(0, 10);
+        Debug.Log($"Spade: {ansSpade}, Heart: {ansHeart}, Diamond: {ansDiamond}, Club: {ansClub}");
     }
 
     void SpawnPaper()
     {
         if (!paperPrefab || !paperSpawnPoint) return;
         var go = Instantiate(paperPrefab, paperSpawnPoint.position, paperSpawnPoint.rotation);
-
-        // 종이 프리팹 안에 TMP_Text 하나 있다고 가정
         var tmp = go.GetComponentInChildren<TMP_Text>();
-        if (tmp)
-            tmp.text = string.Format(paperFormat, _ansSpade, _ansHeart, _ansDiamond, _ansClub);
+        if (tmp) tmp.text = string.Format(paperFormat, ansSpade, ansHeart, ansDiamond, ansClub);
     }
 
-    public void OnDialChanged(SafeDialInteractable dial)
+    public void AttemptOpen()
     {
-        if (_opened) return;
+        if (opened) return;
 
-        bool ok = (spade && spade.CurrentValue == _ansSpade)
-               && (heart && heart.CurrentValue == _ansHeart)
-               && (diamond && diamond.CurrentValue == _ansDiamond)
-               && (club && club.CurrentValue == _ansClub);
+        bool ok =
+            (spade && spade.CurrentValue == ansSpade) &&
+            (heart && heart.CurrentValue == ansHeart) &&
+            (diamond && diamond.CurrentValue == ansDiamond) &&
+            (club && club.CurrentValue == ansClub);
 
         if (ok) OpenDoor();
+        else ShowFail();
     }
 
     void OpenDoor()
     {
-        if (_opened) return;
-        _opened = true;
-
+        opened = true;
+        SetStatus("OPEN");
         if (rightDoorHinge)
             rightDoorHinge.DOLocalRotate(openLocalEuler, openSec).SetEase(openEase);
+        // 필요하면 효과음/연출 추가
+    }
 
-        // 여기서 소리/연구원 반응 등 이벤트 추가 가능
-        Debug.Log("[SafePuzzle] OPEN!");
+    void ShowFail()
+    {
+        if (!statusText) return;
+        DOTween.Kill(statusText); // 중복 방지
+        statusText.alpha = 1f;
+        statusText.text = "FAIL";
+        // 간단한 점멸
+        statusText.DOFade(0.2f, failBlinkSec * 0.5f).SetLoops(2, LoopType.Yoyo);
+    }
+
+    void SetStatus(string msg)
+    {
+        if (!statusText) return;
+        DOTween.Kill(statusText);
+        statusText.alpha = 1f;
+        statusText.text = msg;
     }
 }

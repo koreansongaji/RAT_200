@@ -57,8 +57,8 @@ public class SafeDialInteractable : BaseInteractable
     {
         SetValue(CurrentValue + delta, instant: false);
         // 퍼즐 컨트롤러가 있으면 신호
-        var ctrl = GetComponentInParent<SafePuzzleController>();
-        if (ctrl) ctrl.OnDialChanged(this);
+        //var ctrl = GetComponentInParent<SafePuzzleController>();
+        //if (ctrl) ctrl.OnDialChanged(this);
     }
 
     void RotateTo(int value, bool instant)
