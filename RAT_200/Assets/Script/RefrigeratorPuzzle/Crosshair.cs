@@ -8,9 +8,10 @@ namespace HitSystem
     {
         [SerializeField] Transform RaySource;
         [SerializeField] public GameObject CrosshairImage;
-
+        [SerializeField] public float rayrange = 10f;
+        [SerializeField] Camera targetCamera; // 화면상의 마우스 위치에서 레이를 쏠 카메라
+        
         [NonSerialized] public bool openUI;
-        [NonSerialized] public float rayrange = 2.5f;
         [NonSerialized] float hitrange;
         [NonSerialized] public string HitTag;
         [NonSerialized] public bool Active2D;
@@ -22,12 +23,14 @@ namespace HitSystem
         void Start()
         {
             CrosshairImage.SetActive(false);
+            if (targetCamera == null) targetCamera = Camera.main; // 카메라가 비면 메인 카메라 사용
         }
 
 
         void Update()
         {
-            Ray R = new Ray(RaySource.position, RaySource.forward);
+            // 마우스 위치에서 화면 밖으로 나가는 레이
+            Ray R = targetCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
             if (Physics.Raycast(R, out hit, rayrange)) //When raycast decects collider 

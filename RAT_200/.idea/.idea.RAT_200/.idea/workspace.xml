@@ -6,9 +6,21 @@
   <component name="ChangeListManager">
     <list default="true" id="9a50adee-ec7a-4782-bb48-036fabc44743" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.RAT_200/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RAT_200/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Clouds/Clouds Test_DetailNoise.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Clouds/Clouds Test_DetailNoise.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ImportAssets/SecuritySystem/CCTV/prefabs/Materials/RenderTexture/Render/Render Display.renderTexture" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ImportAssets/SecuritySystem/CCTV/prefabs/Materials/RenderTexture/Render/Render Display.renderTexture" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ImportAssets/SecuritySystem/Demo/Demo Scene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ImportAssets/SecuritySystem/Demo/Demo Scene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ImportAssets/SecuritySystem/Instructions/Crosshair UI.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ImportAssets/SecuritySystem/Instructions/Crosshair UI.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ImportAssets/SecuritySystem/Keypad/Scripts/Crosshair.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ImportAssets/SecuritySystem/Keypad/Scripts/Crosshair.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ImportAssets/SecuritySystem/Keypad/Scripts/Keypad System 3D.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ImportAssets/SecuritySystem/Keypad/Scripts/Keypad System 3D.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ImportAssets/SecuritySystem/Keypad/Scripts/Keypad System2D.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ImportAssets/SecuritySystem/Keypad/Scripts/Keypad System2D.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ImportAssets/SecuritySystem/Keypad/Scripts/Outputs/Task Animation.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ImportAssets/SecuritySystem/Keypad/Scripts/Outputs/Task Animation.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Develop/Object Batch.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Develop/Object Batch.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Shader/Fog/VolumetricFog.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shader/Fog/VolumetricFog.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Shader/Outline/Outline Object Shader.shadergraph" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shader/Outline/Outline Object Shader.shadergraph" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Shader/Volumes/ColorMap.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shader/Volumes/ColorMap.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Shader/Volumes/OutLine.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shader/Volumes/OutLine.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,8 +44,11 @@
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5a41d6b7189842eca409fd0b1c3e3dcf17bf78/bf/056add9c/Action.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/b798abedcf1a4bd086c2acc4761834c51dfe00/92/0052b70e/Behaviour.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d33af19c329a4ed299b042988e8741b918800/3f/4df1b170/AudioSource.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/Manager/OptionManager.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/Manager/Singleton.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Script/RefrigeratorPuzzle/OpenRefrigerator.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/UI/OptionPage.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
@@ -49,7 +64,7 @@
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;shader/volumetric-light&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/puzzle/refrigerator&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -130,6 +145,9 @@
       <workItem from="1761244176599" duration="7709000" />
       <workItem from="1761797893564" duration="859000" />
       <workItem from="1761853422004" duration="890000" />
+      <workItem from="1762406293307" duration="1455000" />
+      <workItem from="1762409505229" duration="3512000" />
+      <workItem from="1762447605423" duration="2585000" />
     </task>
     <servers />
   </component>
