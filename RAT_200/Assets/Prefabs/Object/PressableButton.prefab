@@ -101,18 +101,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cap: {fileID: 5266469084275382195}
+  _col: {fileID: 373810652045508837}
+  indicatorRenderer: {fileID: 0}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  disabledColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   downLocalOffset: {x: 0, y: -2, z: 0}
   tweenDuration: 0.06
   tweenEase: 6
   sfxSource: {fileID: 0}
   sfxClick: {fileID: 0}
-  indicatorRenderer: {fileID: 0}
-  normalColor: {r: 1, g: 1, b: 1, a: 1}
-  disabledColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   interactable: 1
   OnPressed:
     m_PersistentCalls:
       m_Calls: []
+  requireMicroZoom: 1
+  autoToggleCollider: 1
+  zoomSource: {fileID: 0}
 --- !u!65 &373810652045508837
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -5,7 +5,7 @@ using TMPro;
 using DG.Tweening;
 using Unity.Cinemachine;
 
-public class ChemMixingStation : BaseInteractable
+public class ChemMixingStation : BaseInteractable, IMicroSessionHost
 {
     [Header("요구 보유 플래그(보유만 체크, 소모X)")]
     [SerializeField] string sodiumId = "Sodium";
@@ -41,7 +41,6 @@ public class ChemMixingStation : BaseInteractable
     [SerializeField] GameObject diamondCardPrefab; // 다이아 문양 카드 프리팹
     [SerializeField] Transform cardSpawnPoint;     // 카드 생성 위치(실험대 앞)
 
-    // --- ChemMixingStation 내부에 필드만 추가 ---
     [Header("3D Buttons (optional)")]
     [SerializeField] PressableButton3D btnNa3D;
     [SerializeField] PressableButton3D btnWater3D;
@@ -78,8 +77,6 @@ public class ChemMixingStation : BaseInteractable
         if (btnMix3D) btnMix3D.OnPressed.AddListener(Submit);
     }
 
-    
-
     public override bool CanInteract(PlayerInteractor i)
     {
         if (!i) return false;
@@ -101,20 +98,40 @@ public class ChemMixingStation : BaseInteractable
 
         if (_micro) // ★ Micro가 붙어있다면…
         {
-            // 1) 아직 Micro가 아니면 진입 시도
-            if (_micro.TryEnterMicro(i))
+            // === 새 MicroZoomSession 시그니처 ===
+            if (_micro.TryEnter(i))
             {
                 Debug.Log("[ChemMixingStation] Enter Micro zoom");
             }
-            // 2) 이미 Micro 상태거나, 블록 윈도우라면 아무 것도 하지 않음
-            return; // ★★★ 여기서 폴백 StartSession() 절대 금지!
+            // === 구(舊) 시그니처를 쓰는 프로젝트라면 위 한 줄을 아래로 교체 ===
+            // if (_micro.TryEnterMicro(i)) { Debug.Log("[ChemMixingStation] Enter Micro zoom"); }
+            return; // ★★★ 폴백 StartSession() 금지(동작 유지)
         }
 
-        // Micro 컨트롤러(컴포넌트)가 아예 없을 때만 직접 세션 시작
+        // Micro 컨트롤러가 아예 없을 때만 직접 세션 시작
         StartSession();
     }
 
-    // ===== 세션 ====
+    // ===== IMicroSessionHost 구현 (MicroZoomSession이 자동 호출) =====
+    public bool CanBeginMicro(PlayerInteractor player)
+    {
+        // 기존 CanInteract과 동일한 조건 사용(보유만 체크 + 세션 중복 방지)
+        if (!player) return false;
+        bool hasAll = player.HasItem(sodiumId) && player.HasItem(gelId) && player.HasItem(waterInFlaskId);
+        return hasAll && !_session;
+    }
+
+    public void OnMicroEnter(PlayerInteractor player)
+    {
+        StartSession();
+    }
+
+    public void OnMicroExit(PlayerInteractor player)
+    {
+        CancelSession();
+    }
+
+    // ===== 세션 =====
     public void StartSession()
     {
         _session = true;
@@ -143,8 +160,8 @@ public class ChemMixingStation : BaseInteractable
         _session = false;
         if (panel) panel.enabled = false;
 
-        // Micro 종료(ESC로도 나오지만 제출 이후 자동 복귀)
-        //if (_micro) _micro.ExitMicro();
+        // Micro 종료는 MicroZoomSession에서 ESC/제출 흐름에 맞춰 처리
+        // if (_micro) _micro.Exit(); // (구버전: ExitMicro())
     }
 
     void Tap(ref int counter, int need, Button src)
@@ -155,6 +172,7 @@ public class ChemMixingStation : BaseInteractable
         counter++;
         RefreshTexts();
     }
+
     // 3D 버튼 전용 탭(Interactable 토글 반영)
     void Tap3D(ref int counter, int need, PressableButton3D src)
     {
@@ -186,8 +204,7 @@ public class ChemMixingStation : BaseInteractable
             // 실패: 소음을 최대로 올려 연구원 소환 트리거
             if (NoiseSystem.Instance)
             {
-                // 1로 고정 세팅 보장: 현재값과 상관없이 최대로
-                NoiseSystem.Instance.FireImpulse(1f);
+                NoiseSystem.Instance.FireImpulse(1f); // 최대로
             }
             OnMakeBigNoise?.Invoke();
             Debug.Log("[ChemMixingStation] 혼합 실패 → 소음 최대치");
@@ -198,7 +215,7 @@ public class ChemMixingStation : BaseInteractable
         // 성공 처리
         Debug.Log("[ChemMixingStation] 혼합 성공!");
 
-        // 카드 생성(폭발 연출은 추후; 지금은 간단히 스폰)
+        // 카드 생성
         if (diamondCardPrefab && cardSpawnPoint)
         {
             Instantiate(diamondCardPrefab, cardSpawnPoint.position, cardSpawnPoint.rotation);
@@ -234,23 +251,11 @@ public class ChemMixingStation : BaseInteractable
         if (btnGel3D) btnGel3D.SetInteractable(_session ? (_cGel < needGel) : (needGel > 0));
         RefreshTexts();
     }
+
     // === Backward-compat wrappers (for MicroZoomSession) ===
-    public void BeginSessionFromExternal()
-    {
-        // 기존 외부 진입 호출과 동일 동작
-        StartSession();
-    }
+    public void BeginSessionFromExternal() => StartSession();
+    public void EndSessionFromExternal() => CancelSession();
 
-    public void EndSessionFromExternal()
-    {
-        // 제출이 아닌 외부 종료 플로우로 정리
-        // EndSession(bool fromSubmit) 내부에서 Micro 종료까지 처리됨
-        // (세션 중이 아닐 때 호출되어도 안전)
-        var wasSession = true; // 의미만 전달; 내부에서 플래그 검사함
-        CancelSession();       // EndSession(false) 호출과 동일
-    }
-
-    // 에디터에서 숫자 바뀌면 텍스트 갱신되도록
 #if UNITY_EDITOR
     void OnValidate()
     {
