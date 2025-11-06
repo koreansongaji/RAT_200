@@ -91,8 +91,9 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
             var target = hitI.collider.GetComponentInParent<IInteractable>();
             if (target != null)
             {
-                // ★ 오브젝트별 RequiredDistance 무시, 플레이어 리치만 사용
-                float effectiveReach = ReachRadius;
+                bool inMicro = CloseupCamManager.InMicro;
+                // Micro에서는 "손 닿는 거리" 개념을 없애고 그냥 상호작용만 허용
+                float effectiveReach = inMicro ? float.PositiveInfinity : ReachRadius;
 
                 Vector3 closest = GetClosestPointOnTarget(target, agent.transform.position, out _);
                 _hasDebugClosest = true;
@@ -109,11 +110,18 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
                     return;
                 }
 
-                // 리치 밖이면 접근 이동
-                if (TryApproachTarget(target, closest, effectiveReach)) return;
+                //// 리치 밖이면 접근 이동
+                //if (TryApproachTarget(target, closest, effectiveReach)) return;
 
-                // 폴백: Ground로 이동 시도
-                if (TryMoveToGroundUnderRay(ray)) return;
+                //// 폴백: Ground로 이동 시도
+                //if (TryMoveToGroundUnderRay(ray)) return;
+
+                // Micro에선 이동 금지. Room 모드에서만 접근 이동/그라운드 이동 허용
+                if (!inMicro)
+                {
+                    if (TryApproachTarget(target, closest, effectiveReach)) return;
+                    if (TryMoveToGroundUnderRay(ray)) return;
+                }
 
                 // 마지막 폴백: 타깃 근방 보정
                 Vector3 approx = target.AsTransform().position;

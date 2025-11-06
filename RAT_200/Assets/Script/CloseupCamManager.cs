@@ -5,6 +5,7 @@ public static class CloseupCamManager
 {
     static CinemachineCamera _activeClose;
     static CinemachineCamera _activeMicro;
+    public static bool InMicro => _activeMicro != null;
 
     public const int CloseOn = 20;
     public const int CloseOff = 0;
