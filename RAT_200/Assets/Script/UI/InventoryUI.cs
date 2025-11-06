@@ -44,7 +44,7 @@ public class InventoryUI : MonoBehaviour
 
     void Awake()
     {
-        if (!player) player = FindObjectOfType<PlayerInteractor>();
+        //if (!player) player = FindObjectOfType<PlayerInteractor>();
         if (!canvasGroup) canvasGroup = GetComponentInChildren<CanvasGroup>(true);
 
         _visible = !startHidden;
