@@ -33,6 +33,15 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
     [SerializeField] float speedBoostMultiplier = 1.8f;    // 달리기 배수 (예: 1.8x)
     [SerializeField] float accelBoostMultiplier = 1.5f;    // 가속도 배수 (선택)
 
+    // ===== Drag state =====
+    [SerializeField] float dragThresholdPixels = 6f;
+    [SerializeField] LayerMask draggableMask = ~0; // 필요시 Draggable 전용 레이어로 좁혀도 OK
+
+    Draggable3D _dragCandidate;
+    Draggable3D _activeDrag;
+    Vector2 _pressPos;
+    bool _pointerDown;
+
     float _lastClickTime;
     Vector2 _lastClickScreenPos;
     bool _boostActive;
@@ -42,6 +51,8 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
     [SerializeField] Animator animator;      // (있다면 참조)
 
     private NavMeshPath _path;
+
+    // 클릭 큐(기존 흐름 유지)
     private bool _queuedClick;
     private Vector2 _queuedScreenPos;
 
@@ -55,7 +66,17 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
     float ReachRadius => reach ? Mathf.Max(0f, reach.radius) : 1.6f;
     bool HorizontalOnly => reach ? reach.horizontalOnly : false;
 
+    // ====== NEW: Draggable 헬퍼 ======
+    Draggable3D RaycastForDraggable(Vector2 screenPos)
+    {
+        var ray = cam.ScreenPointToRay(screenPos);
+        if (Physics.Raycast(ray, out var hit, maxRayDistance, draggableMask))
+            return hit.collider.GetComponentInParent<Draggable3D>();
+        return null;
+    }
 
+    bool InMicro() => CloseupCamManager.InMicro; // Micro 여부(이동 금지 판단) 
+    bool ModKey() => Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 
     void Awake() { _path = new NavMeshPath(); }
     void Start()
@@ -64,20 +85,110 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
         _baseAccel = agent.acceleration;
         if (animator) _baseAnimatorSpeed = animator.speed;
     }
-    // PlayerInput(Invoke Unity Events)에서 연결
+
+    // ====== 기존 LeftClick 액션 (performed 시 1회) ======
     public void OnClick(InputAction.CallbackContext ctx)
     {
+        //if (!ctx.performed) return;
+
+        //// 드래그 중이면 클릭 큐 무시
+        //if (_activeDrag != null) return;
+
+        //var mouse = Mouse.current;
+        //_queuedScreenPos = mouse != null ? mouse.position.ReadValue() : (Vector2)Input.mousePosition;
+        //_queuedClick = true;
+    }
+
+    // ====== NEW: Pointer Down / Drag / Up 액션 ======
+    public void OnPointerDown(InputAction.CallbackContext ctx)
+    {
         if (!ctx.performed) return;
-        var mouse = Mouse.current;
-        _queuedScreenPos = mouse != null ? mouse.position.ReadValue() : (Vector2)Input.mousePosition;
+        var pos = Mouse.current != null ? Mouse.current.position.ReadValue() : (Vector2)Input.mousePosition;
+
+        _pointerDown = true;
+        _pressPos = pos;
+
+        if (IsPointerOverUI(pos))
+        {
+            _dragCandidate = null;
+            return;
+        }
+
+        _dragCandidate = RaycastForDraggable(pos);
+    }
+
+    public void OnPointerDrag(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.performed && !ctx.canceled) return; // 값 변경 시점
+        if (!_pointerDown) return;
+
+        var pos = Mouse.current != null ? Mouse.current.position.ReadValue() : (Vector2)Input.mousePosition;
+
+        // 이미 드래그 중이면 매 프레임 갱신
+        if (_activeDrag != null)
+        {
+            _activeDrag.DragUpdate(cam.ScreenPointToRay(pos));
+            return; // 이동/인터랙트 차단
+        }
+
+        // 후보가 있고 임계치 이상 움직였으면 드래그 발화 시도
+        if (_dragCandidate != null)
+        {
+            if ((pos - _pressPos).magnitude >= dragThresholdPixels)
+            {
+                if (_dragCandidate.CanBeginDrag(InMicro, ModKey))
+                {
+                    // 드래그 시작: 이동/부스트를 안전하게 끊는다
+                    HardStop();
+                    ActivateBoostIfNeeded(false, pos);
+
+                    _activeDrag = _dragCandidate;
+                    _activeDrag.BeginDrag(cam.ScreenPointToRay(pos));
+                }
+                else
+                {
+                    _dragCandidate = null; // 조건 불가 → 일반 클릭으로
+                }
+            }
+        }
+    }
+
+    public void OnPointerUp(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.performed) return;
+
+        var pos = Mouse.current != null ? Mouse.current.position.ReadValue() : (Vector2)Input.mousePosition;
+        _pointerDown = false;
+
+        // 드래그 중이었으면 소비하고 종료
+        if (_activeDrag != null)
+        {
+            _activeDrag.EndDrag();
+            _activeDrag = null;
+            _dragCandidate = null;
+            return;
+        }
+
+        // 드래그 발화가 없었음 → 기존 클릭 큐로 전달(스크린 좌표)
+        _queuedScreenPos = pos;
         _queuedClick = true;
     }
 
     void Update()
     {
+        // 1) 이동 도착 체크
         if (!agent.pathPending && agent.hasPath && Arrived())
             HardStop();
 
+        // 2) 드래그 활성 시(안전장치): 입력 이벤트 연결이 없더라도 프레임마다 추적
+        if (_activeDrag != null)
+        {
+            var pos = Mouse.current != null ? Mouse.current.position.ReadValue() : (Vector2)Input.mousePosition;
+            _activeDrag.DragUpdate(cam.ScreenPointToRay(pos));
+            return; // 드래그 프레임엔 이동/인터랙트 처리 금지
+        }
+
+        // 3) 클릭 큐 처리 (기존 흐름 유지)
         if (!_queuedClick) return;
         _queuedClick = false;
 
@@ -91,8 +202,7 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
             var target = hitI.collider.GetComponentInParent<IInteractable>();
             if (target != null)
             {
-                bool inMicro = CloseupCamManager.InMicro;
-                // Micro에서는 "손 닿는 거리" 개념을 없애고 그냥 상호작용만 허용
+                bool inMicro = InMicro();
                 float effectiveReach = inMicro ? float.PositiveInfinity : ReachRadius;
 
                 Vector3 closest = GetClosestPointOnTarget(target, agent.transform.position, out _);
@@ -104,17 +214,11 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
 
                 if (within && target.CanInteract(player))
                 {
-                    HardStop(); // ← 경로 끊고 속도 0(부스트도 원복)
-                    ActivateBoostIfNeeded(false, _queuedScreenPos); // ← 이동 없음: 부스트 해제 확실히
-                    target.Interact(player);   // 리치 안이면 제자리에서 상호작용
+                    HardStop();
+                    ActivateBoostIfNeeded(false, _queuedScreenPos);
+                    target.Interact(player);   // 리치 안이면 제자리 상호작용
                     return;
                 }
-
-                //// 리치 밖이면 접근 이동
-                //if (TryApproachTarget(target, closest, effectiveReach)) return;
-
-                //// 폴백: Ground로 이동 시도
-                //if (TryMoveToGroundUnderRay(ray)) return;
 
                 // Micro에선 이동 금지. Room 모드에서만 접근 이동/그라운드 이동 허용
                 if (!inMicro)
@@ -131,8 +235,8 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
             }
         }
 
+        // Interactable이 아니면 → 일반 이동(Ground)
         ActivateBoostIfNeeded(true, _queuedScreenPos);
-        // 일반 이동(Ground)
         TryMoveToGroundUnderRay(ray);
     }
 
