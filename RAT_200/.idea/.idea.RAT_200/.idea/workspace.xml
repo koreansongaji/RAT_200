@@ -6,9 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="9a50adee-ec7a-4782-bb48-036fabc44743" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.RAT_200/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RAT_200/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Develop/Object Batch/Map Batch.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Develop/Object Batch/Map Batch.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/GraphicsSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/GraphicsSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/QualitySettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/QualitySettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Develop/Shader/Water.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Develop/Shader/Water.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Shader/Fog/VolumetricFog.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shader/Fog/VolumetricFog.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Shader/Fog/VolumetricFog.shader" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shader/Fog/VolumetricFog.shader" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,6 +52,7 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "git-widget-placeholder": "shader/water",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -67,10 +68,8 @@
       <option name="PROGRAM_PARAMETERS" value="-projectPath C:\Users\korea\notebook_Work\GitHub\RAT_200\RAT_200 -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="C:\Users\korea\notebook_Work\GitHub\RAT_200\RAT_200" />
       <option name="PASS_PARENT_ENVS" value="1" />
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="ENV_FILE_PATHS" value="" />
       <option name="REDIRECT_INPUT_PATH" value="" />
-      <option name="PTY_MODE" value="Auto" />
       <option name="MIXED_MODE_DEBUG" value="0" />
       <method v="2" />
     </configuration>
@@ -79,10 +78,8 @@
       <option name="PROGRAM_PARAMETERS" value="-runTests -batchmode -projectPath C:\Users\korea\notebook_Work\GitHub\RAT_200\RAT_200 -testResults Logs/results.xml -logFile Logs/Editor.log -testPlatform EditMode -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="C:\Users\korea\notebook_Work\GitHub\RAT_200\RAT_200" />
       <option name="PASS_PARENT_ENVS" value="1" />
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="ENV_FILE_PATHS" value="" />
       <option name="REDIRECT_INPUT_PATH" value="" />
-      <option name="PTY_MODE" value="Auto" />
       <option name="MIXED_MODE_DEBUG" value="0" />
       <method v="2" />
     </configuration>
@@ -114,7 +111,7 @@
       <option name="useMixedMode" value="false" />
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Device" type="UnityDevicePlayer" factoryName="UnityAttachToDevicePlayer">
+    <configuration name="Attach to" type="UnityDevicePlayer" factoryName="UnityAttachToDevicePlayer">
       <method v="2" />
     </configuration>
   </component>
@@ -137,6 +134,7 @@
       <workItem from="1762409505229" duration="3512000" />
       <workItem from="1762447605423" duration="2585000" />
       <workItem from="1762453090416" duration="1187000" />
+      <workItem from="1763032383609" duration="3200000" />
     </task>
     <servers />
   </component>
