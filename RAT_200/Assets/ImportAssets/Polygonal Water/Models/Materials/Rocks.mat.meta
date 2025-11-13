@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: daaaefd4009d65b4b810d39e37997421
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 133344
+  packageName: Polygonal Water
+  packageVersion: 1.2.0
+  assetPath: Assets/Polygonal Water/Models/Materials/Rocks.mat
+  uploadId: 766409

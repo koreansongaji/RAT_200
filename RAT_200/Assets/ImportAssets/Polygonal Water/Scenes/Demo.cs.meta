@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 75fe3ca84eb76f94daa95bf92c89690f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 133344
+  packageName: Polygonal Water
+  packageVersion: 1.2.0
+  assetPath: Assets/Polygonal Water/Scenes/Demo.cs
+  uploadId: 766409

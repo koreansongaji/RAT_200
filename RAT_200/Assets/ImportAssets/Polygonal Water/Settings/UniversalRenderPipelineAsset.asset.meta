@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 25622241683246e4bb62c64068f482f7
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 133344
+  packageName: Polygonal Water
+  packageVersion: 1.2.0
+  assetPath: Assets/Polygonal Water/Settings/UniversalRenderPipelineAsset.asset
+  uploadId: 766409

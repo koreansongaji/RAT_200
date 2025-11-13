@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: eeb39907391cd2641baf0fe1498a7ab0
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 112000000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 133344
+  packageName: Polygonal Water
+  packageVersion: 1.2.0
+  assetPath: Assets/Polygonal Water/Scenes/Demo/LightingData.asset
+  uploadId: 766409

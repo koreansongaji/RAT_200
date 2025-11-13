@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b9b83af7641ab594b8cc492f123ab965
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 133344
+  packageName: Polygonal Water
+  packageVersion: 1.2.0
+  assetPath: Assets/Polygonal Water/Models/Materials/Leaf.mat
+  uploadId: 766409

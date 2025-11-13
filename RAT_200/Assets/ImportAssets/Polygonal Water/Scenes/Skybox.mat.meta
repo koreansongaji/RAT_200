@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b8aa52b63e46a1145bacf0d5621a83df
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 133344
+  packageName: Polygonal Water
+  packageVersion: 1.2.0
+  assetPath: Assets/Polygonal Water/Scenes/Skybox.mat
+  uploadId: 766409
