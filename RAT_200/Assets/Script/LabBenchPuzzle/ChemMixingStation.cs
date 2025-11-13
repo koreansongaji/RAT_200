@@ -199,29 +199,36 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost
 
         bool success = (_cNa == needNa) && (_cWater == needWater) && (_cGel == needGel);
 
+        // ★ 성공/실패 공통: 마이크로에서 반드시 빠져나오기(ESC 누른 것처럼)
+        if (_micro && _micro.InMicro)
+            _micro.Exit();
+
         if (!success)
         {
-            // 실패: 소음을 최대로 올려 연구원 소환 트리거
+            // 실패: 소음 최대로, 외부 이벤트
             if (NoiseSystem.Instance)
-            {
-                NoiseSystem.Instance.FireImpulse(1f); // 최대로
-            }
+                NoiseSystem.Instance.FireImpulse(1f);
             OnMakeBigNoise?.Invoke();
             Debug.Log("[ChemMixingStation] 혼합 실패 → 소음 최대치");
+
+            // 세션 종료(Exit()에서 CancelSession이 호출되지만,
+            // Micro가 없을 수도 있으니 로컬도 안전하게 종료)
             EndSession(true);
             return;
         }
 
-        // 성공 처리
+        // === 성공 처리 ===
         Debug.Log("[ChemMixingStation] 혼합 성공!");
 
-        // 카드 생성
+        // 1) 카드 생성
         if (diamondCardPrefab && cardSpawnPoint)
-        {
             Instantiate(diamondCardPrefab, cardSpawnPoint.position, cardSpawnPoint.rotation);
-        }
 
-        // 냉장고 위로 플레이어 이동(선택 카메라 클로즈업)
+        // 2) CloseCam 전환: 실험대 closecam은 0으로, 냉장고 closecam을 20으로
+        //    Activate()가 기존 활성 closecam의 우선순위를 0으로 내리고 새 cam을 20으로 올려줌.
+        if (fridgeVCam) CloseupCamManager.Activate(fridgeVCam);
+
+        // 3) 플레이어를 절대 좌표(냉장고 위)로 이동 + 냉장고 closecam 유지
         if (_lastPlayer)
         {
             var mover = _lastPlayer.GetComponent<PlayerScriptedMover>();
@@ -232,14 +239,16 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost
                     moveDuration,
                     moveEase,
                     fridgeVCam,
-                    CloseupCamManager.CloseOn,
+                    CloseupCamManager.CloseOn, // = 20
                     true
                 );
             }
         }
 
+        // Micro가 없는 폴백 케이스 대비 로컬 세션 종료
         EndSession(true);
     }
+
 
     // ===== 외부 레시피 주입 API =====
     /// <summary>매판 바뀌는 젤 필요량을 설정(예: 2~6).</summary>
