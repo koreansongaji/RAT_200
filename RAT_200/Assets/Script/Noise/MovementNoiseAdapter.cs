@@ -4,8 +4,14 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class MovementNoiseAdapter : MonoBehaviour
 {
-    public float walkRatePerSecond = 0.25f;
-    public float runRatePerSecond = 0.40f;
+    [Header("Rates (기획 반영)")]
+    [Tooltip("걷기 중 초당 소음 증가량 (0~1). 기획상 걷기는 0%.")]
+    public float walkRatePerSecond = 0f;          // ★ 걷기 = 0%
+
+    [Tooltip("달리기 중 초당 소음 증가량 (0~1). 기획상 달리기 = +1%p/초.")]
+    public float runRatePerSecond = 0.01f;        // ★ 1%/sec → 0.01
+
+    [Header("Run 판정")]
     public float velocityEps = 0.05f;
     public bool detectRunBySpeed = true;
     [Min(0f)] public float runSpeedThreshold = 3.5f;
