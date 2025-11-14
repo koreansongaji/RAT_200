@@ -5,7 +5,7 @@ using TMPro;
 using DG.Tweening;
 using Unity.Cinemachine;
 
-public class ChemMixingStation : BaseInteractable, IMicroSessionHost
+public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHidePlayerPreference
 {
     [Header("요구 보유 플래그(보유만 체크, 소모X)")]
     [SerializeField] string sodiumId = "Sodium";
@@ -54,6 +54,9 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost
 
     // 내부 캐시
     MicroZoomSession _micro;
+
+    public bool hidePlayerDuringMicro = true; // 퍼즐별로 토글
+    public bool HidePlayerDuringMicro => hidePlayerDuringMicro;
 
     void Awake()
     {
