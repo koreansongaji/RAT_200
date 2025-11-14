@@ -2,7 +2,7 @@
 using TMPro;
 using DG.Tweening;
 
-public class SafePuzzleController : MonoBehaviour
+public class SafePuzzleController : MonoBehaviour, IMicroHidePlayerPreference
 {
     [Header("Dials")]
     public SafeDialInteractable spade;
@@ -30,6 +30,9 @@ public class SafePuzzleController : MonoBehaviour
 
     [Header("Seed")]
     public int randomSeed = 0;                 // 0이면 Time 기반
+
+    public bool hidePlayerDuringMicro = true; // 퍼즐별로 토글
+    public bool HidePlayerDuringMicro => hidePlayerDuringMicro;
 
     int ansSpade, ansHeart, ansDiamond, ansClub;
     bool opened;
