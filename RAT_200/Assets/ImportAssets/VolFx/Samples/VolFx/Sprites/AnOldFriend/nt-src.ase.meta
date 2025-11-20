@@ -1,5 +1,12 @@
 fileFormatVersion: 2
 guid: e5c183a3a969cb04da9656f093ff8f2c
+AssetOrigin:
+  serializedVersion: 1
+  productId: 300643
+  packageName: VolFx - VFX Toolkit (Post Processing, Timeline Tracks, Shaders, Tools)
+  packageVersion: 2.9.1
+  assetPath: Assets/ImportAssets/VolFx/Samples/VolFx/Sprites/AnOldFriend/nt-src.ase
+  uploadId: 777194
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -106,6 +113,7 @@ ScriptedImporter:
     pivot: {x: 0, y: 0}
     alignment: 0
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 0
@@ -127,6 +135,7 @@ ScriptedImporter:
     pivot: {x: 0.50710905, y: 0.056074765}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -185,10 +194,3 @@ ScriptedImporter:
   spritePackingTag: 
   canvasSize: {x: 200, y: 200}
   previousTextureSize: {x: 256, y: 256}
-AssetOrigin:
-  serializedVersion: 1
-  productId: 300643
-  packageName: VolFx - VFX Toolkit (Post Processing, Timeline Tracks, Shaders, Tools)
-  packageVersion: 2.9.1
-  assetPath: Assets/ImportAssets/VolFx/Samples/VolFx/Sprites/AnOldFriend/nt-src.ase
-  uploadId: 777194

@@ -3108,7 +3108,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Object: {fileID: 1984203179}
-  Animation: {fileID: 7400000, guid: ea10b24a5cdc6ae4581719e00ba0cd3d, type: 2}
 --- !u!95 &1984203181
 Animator:
   serializedVersion: 7

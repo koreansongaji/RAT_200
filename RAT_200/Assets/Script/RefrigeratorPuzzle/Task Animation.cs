@@ -6,7 +6,6 @@ namespace Task1
     public class TaskAnimationPlay : MonoBehaviour
     {
         [SerializeField] GameObject Object;
-        [SerializeField] AnimationClip Animation;
         private Animator anim;
         void Awake()
         {
@@ -19,7 +18,6 @@ namespace Task1
         private void OnEnable()
         {
             Object.GetComponent<Animator>().enabled = true;
-            // Object.GetComponent<Animator>().SetTrigger("Open");
         }
         public void PlayOpen()
         {
