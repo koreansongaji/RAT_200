@@ -1096,6 +1096,46 @@ Transform:
   - {fileID: 772371286}
   m_Father: {fileID: 414077910}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &110161752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254007949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edd861d6ffb09f94aa802499ddf8479c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cap: {fileID: 1006352781}
+  downLocalOffset: {x: 0, y: 0, z: -0.07}
+  tweenDuration: 0.06
+  tweenEase: 6
+  sfxSource: {fileID: 0}
+  sfxClick: {fileID: 0}
+  indicatorRenderer: {fileID: 0}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  disabledColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  interactable: 1
+  requireMicroZoom: 0
+  micro: {fileID: 0}
+  autoToggleCollider: 0
+  OnPressed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 343631457}
+        m_TargetAssemblyTypeName: KeypadController, Assembly-CSharp
+        m_MethodName: InputNumber
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 9
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &110936888
 GameObject:
   m_ObjectHideFlags: 0
@@ -2026,6 +2066,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 171629551}
   m_CullTransparentMesh: 1
+--- !u!114 &193168406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254007952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edd861d6ffb09f94aa802499ddf8479c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cap: {fileID: 1006352784}
+  downLocalOffset: {x: 0, y: 0, z: -0.07}
+  tweenDuration: 0.06
+  tweenEase: 6
+  sfxSource: {fileID: 0}
+  sfxClick: {fileID: 0}
+  indicatorRenderer: {fileID: 0}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  disabledColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  interactable: 1
+  requireMicroZoom: 0
+  micro: {fileID: 343631458}
+  autoToggleCollider: 0
+  OnPressed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 343631457}
+        m_TargetAssemblyTypeName: KeypadController, Assembly-CSharp
+        m_MethodName: InputNumber
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 6
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &194827396
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2852,6 +2932,46 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.221503, y: 0.1501069, z: 2.093462}
   m_Center: {x: 1.46557, y: 0.11414552, z: -6.6161506e-15}
+--- !u!114 &308051140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254007946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edd861d6ffb09f94aa802499ddf8479c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cap: {fileID: 1006352778}
+  downLocalOffset: {x: 0, y: 0, z: -0.07}
+  tweenDuration: 0.06
+  tweenEase: 6
+  sfxSource: {fileID: 0}
+  sfxClick: {fileID: 0}
+  indicatorRenderer: {fileID: 0}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  disabledColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  interactable: 1
+  requireMicroZoom: 0
+  micro: {fileID: 0}
+  autoToggleCollider: 0
+  OnPressed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 343631457}
+        m_TargetAssemblyTypeName: KeypadController, Assembly-CSharp
+        m_MethodName: InputEnter
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &313481905
 GameObject:
   m_ObjectHideFlags: 0
@@ -3010,6 +3130,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1831231467}
     m_Modifications:
+    - target: {fileID: 90761885647908480, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 186368612158501836, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 428233682645338612, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1728609740531465678, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 1770902733929479268, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
       propertyPath: m_Name
       value: Keypad 3D
@@ -3017,6 +3153,10 @@ PrefabInstance:
     - target: {fileID: 1770902733929479268, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
       propertyPath: m_TagString
       value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 1922774786587712883, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2782667812840992646, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
       propertyPath: Task
@@ -3026,6 +3166,14 @@ PrefabInstance:
       propertyPath: RayLink
       value: 
       objectReference: {fileID: 1425733949}
+    - target: {fileID: 2782667812840992646, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2958218773443353607, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3105756309763599163, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.17132545
@@ -3078,6 +3226,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3331742294202901261, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 3867623074254516226, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 3991524410875314677, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4355574687202733758, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
       propertyPath: m_fontColor.b
       value: 1
@@ -3090,10 +3250,128 @@ PrefabInstance:
       propertyPath: m_fontColor.r
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 4696049319999647339, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4955496397785073480, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 5180922293587953954, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 5311152074063809130, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5961312517831767274, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6468216624870251673, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 6682751603759681864, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 6859317212494955333, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 6919184996136944096, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7245144763422480766, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7552646703699698411, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7710400421523867190, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 8303659663950916637, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8499298161817038440, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 8949093314142220180, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 7246820484218652657, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+    - {fileID: 3883905858673635123, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+    - {fileID: 4344447840837801590, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+    - {fileID: 7847255728406545182, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+    - {fileID: 1672018048946986171, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+    - {fileID: 493399402552284289, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+    - {fileID: 4374311971070110117, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+    - {fileID: 2593024598073236807, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+    - {fileID: 5846030080111955633, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+    - {fileID: 8712403257323844669, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+    - {fileID: 2223130414560835843, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+    - {fileID: 1238681017438117083, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+    - {fileID: 2782667812840992646, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 3105756309763599163, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 689878173}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2801524200606534286, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 343631457}
+    - targetCorrespondingSourceObject: {fileID: 2801524200606534286, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 343631458}
+    - targetCorrespondingSourceObject: {fileID: 7710400421523867190, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1254007962}
+    - targetCorrespondingSourceObject: {fileID: 5180922293587953954, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1254007961}
+    - targetCorrespondingSourceObject: {fileID: 1728609740531465678, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1254007960}
+    - targetCorrespondingSourceObject: {fileID: 6682751603759681864, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1254007959}
+    - targetCorrespondingSourceObject: {fileID: 8949093314142220180, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1254007958}
+    - targetCorrespondingSourceObject: {fileID: 6859317212494955333, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 193168406}
+    - targetCorrespondingSourceObject: {fileID: 6468216624870251673, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 512955602}
+    - targetCorrespondingSourceObject: {fileID: 3331742294202901261, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2010847506}
+    - targetCorrespondingSourceObject: {fileID: 8499298161817038440, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 110161752}
+    - targetCorrespondingSourceObject: {fileID: 3867623074254516226, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 968197648}
+    - targetCorrespondingSourceObject: {fileID: 186368612158501836, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1123379865}
+    - targetCorrespondingSourceObject: {fileID: 4955496397785073480, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 308051140}
     - targetCorrespondingSourceObject: {fileID: 326792593826086632, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 0}
@@ -3106,6 +3384,90 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3105756309763599163, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
   m_PrefabInstance: {fileID: 343631452}
   m_PrefabAsset: {fileID: 0}
+--- !u!82 &343631454 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 1662078849278858014, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &343631455 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4355574687202733758, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &343631456 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2801524200606534286, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &343631457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343631456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41a8ba7e4a9979d49b1845b0042b96a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  password: 1234
+  maxChars: 5
+  inputDisplay: {fileID: 343631455}
+  audioSource: {fileID: 343631454}
+  beepClip: {fileID: 0}
+  errorClip: {fileID: 0}
+  successClip: {fileID: 0}
+  OnCorrectPassword:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1831231468}
+        m_TargetAssemblyTypeName: DoorInteractable, Assembly-CSharp
+        m_MethodName: UnlockAndOpen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnWrongPassword:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &343631458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343631456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f4c6b8a7b105f44296faffa3b8944f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  benchCloseupCam: {fileID: 0}
+  microCloseupCam: {fileID: 689878174}
+  mixingStation: {fileID: 0}
+  hintCanvas: {fileID: 0}
+  lockPlayerWhileMicro: 1
+  showCursorWhileMicro: 1
+  OnEnterMicro:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExitMicro:
+    m_PersistentCalls:
+      m_Calls: []
+  reenterBlockSec: 0.2
+  hostOverride: {fileID: 0}
 --- !u!1001 &345737371
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4607,6 +4969,46 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &512955602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254007951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edd861d6ffb09f94aa802499ddf8479c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cap: {fileID: 1006352783}
+  downLocalOffset: {x: 0, y: 0, z: -0.07}
+  tweenDuration: 0.06
+  tweenEase: 6
+  sfxSource: {fileID: 0}
+  sfxClick: {fileID: 0}
+  indicatorRenderer: {fileID: 0}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  disabledColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  interactable: 1
+  requireMicroZoom: 0
+  micro: {fileID: 0}
+  autoToggleCollider: 0
+  OnPressed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 343631457}
+        m_TargetAssemblyTypeName: KeypadController, Assembly-CSharp
+        m_MethodName: InputNumber
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 7
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &521166567
 GameObject:
   m_ObjectHideFlags: 0
@@ -6072,6 +6474,81 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &689878172
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 689878173}
+  - component: {fileID: 689878174}
+  m_Layer: 0
+  m_Name: KeypadMicroCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &689878173
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 689878172}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.00008895714, y: -0.99984425, z: -0.016500246, w: 0.006274998}
+  m_LocalPosition: {x: -0.28, y: 0.21, z: 4.67}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 343631453}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &689878174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 689878172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Priority:
+    Enabled: 1
+    m_Value: 30
+  OutputChannel: 1
+  StandbyUpdate: 2
+  m_StreamingVersion: 20241001
+  m_LegacyPriority: 0
+  Target:
+    TrackingTarget: {fileID: 0}
+    LookAtTarget: {fileID: 0}
+    CustomLookAtTarget: 0
+  Lens:
+    FieldOfView: 60.000004
+    OrthographicSize: 5
+    NearClipPlane: 0.3
+    FarClipPlane: 1000
+    Dutch: 0
+    ModeOverride: 0
+    PhysicalProperties:
+      GateFit: 2
+      SensorSize: {x: 21.946, y: 16.002}
+      LensShift: {x: 0, y: 0}
+      FocusDistance: 10
+      Iso: 200
+      ShutterSpeed: 0.005
+      Aperture: 16
+      BladeCount: 5
+      Curvature: {x: 2, y: 11}
+      BarrelClipping: 0.25
+      Anamorphism: 0
+  BlendHint: 0
 --- !u!1 &713989160
 GameObject:
   m_ObjectHideFlags: 0
@@ -7775,6 +8252,51 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 962563087}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &966105430 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: be8f1c81ed8baed46a56730fa2dbab36, type: 3}
+  m_PrefabInstance: {fileID: 1831231466}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &968197648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254007948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edd861d6ffb09f94aa802499ddf8479c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cap: {fileID: 1006352780}
+  downLocalOffset: {x: 0, y: 0, z: -0.07}
+  tweenDuration: 0.06
+  tweenEase: 6
+  sfxSource: {fileID: 0}
+  sfxClick: {fileID: 0}
+  indicatorRenderer: {fileID: 0}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  disabledColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  interactable: 1
+  requireMicroZoom: 0
+  micro: {fileID: 0}
+  autoToggleCollider: 0
+  OnPressed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 343631457}
+        m_TargetAssemblyTypeName: KeypadController, Assembly-CSharp
+        m_MethodName: InputClear
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &985193157
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7986,6 +8508,66 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1005327429}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1006352778 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1033478728158105528, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1006352779 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5973729619774761321, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1006352780 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2770694878598573786, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1006352781 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8827472265634733516, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1006352782 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4544095152714839229, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1006352783 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2044717602669789989, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1006352784 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1286701129385467248, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1006352785 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 264551414797169014, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1006352786 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2856467526112883473, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1006352787 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 49792819129463699, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1006352788 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2060251464283036794, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1006352789 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 642527786736462138, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1045901346
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8884,8 +9466,15 @@ MonoBehaviour:
   invertDirection: 0
   startOpened: 0
   openOnlyOnce: 0
+  isLocked: 0
+  OnTryLockedInteract:
+    m_PersistentCalls:
+      m_Calls: []
   duration: 0.4
   ease: 9
+  sfxSource: {fileID: 0}
+  openSound: {fileID: 0}
+  closeSound: {fileID: 0}
 --- !u!1 &1105152949
 GameObject:
   m_ObjectHideFlags: 0
@@ -9051,6 +9640,46 @@ Transform:
   - {fileID: 2142302175}
   m_Father: {fileID: 414077910}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1123379865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254007947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edd861d6ffb09f94aa802499ddf8479c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cap: {fileID: 1006352779}
+  downLocalOffset: {x: 0, y: 0, z: -0.07}
+  tweenDuration: 0.06
+  tweenEase: 6
+  sfxSource: {fileID: 0}
+  sfxClick: {fileID: 0}
+  indicatorRenderer: {fileID: 0}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  disabledColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  interactable: 1
+  requireMicroZoom: 0
+  micro: {fileID: 0}
+  autoToggleCollider: 0
+  OnPressed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 343631457}
+        m_TargetAssemblyTypeName: KeypadController, Assembly-CSharp
+        m_MethodName: InputNumber
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1129687455
 GameObject:
   m_ObjectHideFlags: 0
@@ -10007,6 +10636,266 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3afbb583b3c02c041b89df4cb71aa4d2, type: 3}
   m_PrefabInstance: {fileID: 1251291231}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1254007946 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4955496397785073480, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1254007947 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 186368612158501836, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1254007948 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3867623074254516226, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1254007949 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8499298161817038440, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1254007950 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3331742294202901261, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1254007951 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6468216624870251673, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1254007952 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6859317212494955333, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1254007953 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8949093314142220180, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1254007954 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6682751603759681864, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1254007955 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1728609740531465678, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1254007956 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5180922293587953954, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1254007957 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7710400421523867190, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
+  m_PrefabInstance: {fileID: 343631452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1254007958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254007953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edd861d6ffb09f94aa802499ddf8479c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cap: {fileID: 1006352785}
+  downLocalOffset: {x: 0, y: 0, z: -0.07}
+  tweenDuration: 0.06
+  tweenEase: 6
+  sfxSource: {fileID: 0}
+  sfxClick: {fileID: 0}
+  indicatorRenderer: {fileID: 0}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  disabledColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  interactable: 1
+  requireMicroZoom: 0
+  micro: {fileID: 0}
+  autoToggleCollider: 0
+  OnPressed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 343631457}
+        m_TargetAssemblyTypeName: KeypadController, Assembly-CSharp
+        m_MethodName: InputNumber
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 5
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1254007959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254007954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edd861d6ffb09f94aa802499ddf8479c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cap: {fileID: 1006352786}
+  downLocalOffset: {x: 0, y: 0, z: -0.07}
+  tweenDuration: 0.06
+  tweenEase: 6
+  sfxSource: {fileID: 0}
+  sfxClick: {fileID: 0}
+  indicatorRenderer: {fileID: 0}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  disabledColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  interactable: 1
+  requireMicroZoom: 0
+  micro: {fileID: 0}
+  autoToggleCollider: 0
+  OnPressed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 343631457}
+        m_TargetAssemblyTypeName: KeypadController, Assembly-CSharp
+        m_MethodName: InputNumber
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 4
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1254007960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254007955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edd861d6ffb09f94aa802499ddf8479c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cap: {fileID: 1006352787}
+  downLocalOffset: {x: 0, y: 0, z: -0.07}
+  tweenDuration: 0.06
+  tweenEase: 6
+  sfxSource: {fileID: 0}
+  sfxClick: {fileID: 0}
+  indicatorRenderer: {fileID: 0}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  disabledColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  interactable: 1
+  requireMicroZoom: 0
+  micro: {fileID: 0}
+  autoToggleCollider: 0
+  OnPressed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 343631457}
+        m_TargetAssemblyTypeName: KeypadController, Assembly-CSharp
+        m_MethodName: InputNumber
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1254007961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254007956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edd861d6ffb09f94aa802499ddf8479c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cap: {fileID: 1006352788}
+  downLocalOffset: {x: 0, y: 0, z: -0.07}
+  tweenDuration: 0.06
+  tweenEase: 6
+  sfxSource: {fileID: 0}
+  sfxClick: {fileID: 0}
+  indicatorRenderer: {fileID: 0}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  disabledColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  interactable: 1
+  requireMicroZoom: 0
+  micro: {fileID: 0}
+  autoToggleCollider: 0
+  OnPressed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 343631457}
+        m_TargetAssemblyTypeName: KeypadController, Assembly-CSharp
+        m_MethodName: InputNumber
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1254007962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254007957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edd861d6ffb09f94aa802499ddf8479c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cap: {fileID: 1006352789}
+  downLocalOffset: {x: 0, y: 0, z: -0.07}
+  tweenDuration: 0.06
+  tweenEase: 6
+  sfxSource: {fileID: 0}
+  sfxClick: {fileID: 0}
+  indicatorRenderer: {fileID: 0}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  disabledColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  interactable: 1
+  requireMicroZoom: 0
+  micro: {fileID: 0}
+  autoToggleCollider: 0
+  OnPressed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 343631457}
+        m_TargetAssemblyTypeName: KeypadController, Assembly-CSharp
+        m_MethodName: InputNumber
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &1273677959
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11886,8 +12775,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1425733948}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2840153, y: 0, z: 0, w: 0.95881975}
-  m_LocalPosition: {x: -0.0021146378, y: 3.033, z: -4.006}
+  m_LocalRotation: {x: -0.0117303375, y: -0.70255953, z: -0.0116045335, w: 0.7114337}
+  m_LocalPosition: {x: -1.8006508, y: 1.6878154, z: 2.4168856}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15030,13 +15919,47 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: be8f1c81ed8baed46a56730fa2dbab36, type: 3}
       insertIndex: -1
       addedObject: {fileID: 343631453}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be8f1c81ed8baed46a56730fa2dbab36, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1831231468}
+    - targetCorrespondingSourceObject: {fileID: -9164264847631874504, guid: be8f1c81ed8baed46a56730fa2dbab36, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2078480687}
   m_SourcePrefab: {fileID: 100100000, guid: be8f1c81ed8baed46a56730fa2dbab36, type: 3}
 --- !u!4 &1831231467 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: be8f1c81ed8baed46a56730fa2dbab36, type: 3}
   m_PrefabInstance: {fileID: 1831231466}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1831231468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 966105430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24b850122449fc446a320a1aabc5d780, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  displayName: Interact
+  requiredDistance: 1.2
+  door: {fileID: 1831231467}
+  openAngle: -90
+  invertDirection: 0
+  startOpened: 0
+  openOnlyOnce: 0
+  isLocked: 1
+  OnTryLockedInteract:
+    m_PersistentCalls:
+      m_Calls: []
+  duration: 0.4
+  ease: 9
+  sfxSource: {fileID: 0}
+  openSound: {fileID: 0}
+  closeSound: {fileID: 0}
 --- !u!1 &1841983646
 GameObject:
   m_ObjectHideFlags: 0
@@ -16030,6 +16953,46 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3322491302534511487, guid: 3911be452b22e7d468245016a21bb6aa, type: 3}
   m_PrefabInstance: {fileID: 1989455749}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2010847506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254007950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edd861d6ffb09f94aa802499ddf8479c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cap: {fileID: 1006352782}
+  downLocalOffset: {x: 0, y: 0, z: -0.07}
+  tweenDuration: 0.06
+  tweenEase: 6
+  sfxSource: {fileID: 0}
+  sfxClick: {fileID: 0}
+  indicatorRenderer: {fileID: 0}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  disabledColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  interactable: 1
+  requireMicroZoom: 0
+  micro: {fileID: 0}
+  autoToggleCollider: 0
+  OnPressed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 343631457}
+        m_TargetAssemblyTypeName: KeypadController, Assembly-CSharp
+        m_MethodName: InputNumber
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 8
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &2011639450
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16779,6 +17742,32 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.0982073, y: 0.45120147, z: 0.080625}
   m_Center: {x: 0.00029556826, y: 0.21926455, z: -0.019402139}
+--- !u!1 &2078480683 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -9164264847631874504, guid: be8f1c81ed8baed46a56730fa2dbab36, type: 3}
+  m_PrefabInstance: {fileID: 1831231466}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &2078480687
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2078480683}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.6284943, y: 2.122237, z: 0.23921055}
+  m_Center: {x: 1.3142471, y: 1.0611185, z: 0}
 --- !u!1 &2081587489
 GameObject:
   m_ObjectHideFlags: 0
