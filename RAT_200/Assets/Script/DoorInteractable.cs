@@ -1,10 +1,6 @@
 using UnityEngine;
 using DG.Tweening;
 
-/// <summary>
-/// 피벗이 힌지에 있는 문/서랍 전용 인터랙트.
-/// 클릭하면 열기/닫기 토글.
-/// </summary>
 public class DoorInteractable : BaseInteractable
 {
     [Header("Door Target")]
@@ -16,8 +12,10 @@ public class DoorInteractable : BaseInteractable
     [SerializeField] private float openAngle = 90f;
     [Tooltip("왼쪽/오른쪽 문 방향이 반대일 때 체크하면 각도가 반대로 적용됨.")]
     [SerializeField] private bool invertDirection = false;
-    [Tooltip("씬 시작 시 이미 열린 상태로 둘지 여부.")]
     [SerializeField] private bool startOpened = false;
+
+    [Header("Restrictions")]
+    [SerializeField] private bool openOnlyOnce = false; // ★ 추가됨
 
     [Header("Tween")]
     [SerializeField] private float duration = 0.4f;
@@ -31,11 +29,9 @@ public class DoorInteractable : BaseInteractable
 
     void Awake()
     {
-        if (!door)
-            door = transform;
+        if (!door) door = transform;
 
         _closedEuler = door.localEulerAngles;
-
         float dir = invertDirection ? -1f : 1f;
         _openedEuler = _closedEuler + new Vector3(0f, openAngle * dir, 0f);
 
@@ -45,8 +41,11 @@ public class DoorInteractable : BaseInteractable
 
     public override bool CanInteract(PlayerInteractor i)
     {
-        // 재생 중에는 다시 못 누르게
         if (_isAnimating) return false;
+
+        // ★ 추가된 로직: 한번만 열기 모드이고, 이미 열려있다면 false
+        if (openOnlyOnce && _isOpen) return false;
+
         return base.CanInteract(i);
     }
 
@@ -57,18 +56,17 @@ public class DoorInteractable : BaseInteractable
 
         _isOpen = !_isOpen;
         _isAnimating = true;
-
         _tween?.Kill();
 
         Vector3 targetEuler = _isOpen ? _openedEuler : _closedEuler;
 
-        _tween = door
-            .DOLocalRotate(targetEuler, duration)
+        // 여기도 TweenNoiseAdapter 연동을 추가해 두었습니다 (선택 사항)
+        var t = door.DOLocalRotate(targetEuler, duration)
             .SetEase(ease)
-            .OnComplete(() =>
-            {
-                _isAnimating = false;
-            });
+            .OnComplete(() => _isAnimating = false);
+
+        var noise = GetComponent<TweenNoiseAdapter>();
+        _tween = TweenNoiseAdapter.WithNoise(t, noise);
     }
 
     void OnDisable()
