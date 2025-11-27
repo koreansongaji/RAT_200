@@ -57,14 +57,14 @@ Material:
     m_Floats:
     - Depth: -0.5
     - End_Fog: -1.2
-    - Fog_: 1
+    - Fog_: 0
     - Refraction: 1
     - Refraction_Strength: 0.5
     - Scene_Intensity: -0.33
     - Smoothness: 0
     - Start_Fog: 0.4
-    - Strength: 2
-    - Underwater: 1
+    - Strength: 1.32
+    - Underwater: 0
     - Underwater_Density: 0
     - Underwater_Depth: 1
     - Underwater_Movement: 4
@@ -73,7 +73,7 @@ Material:
     - Vector1_7614B90E: -1.01
     - Vector1_A82DB55F: 0.4
     - Vector1_EF9412C7: -1.2
-    - _Alpha: 1
+    - _Alpha: 0.21
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _Blend: 0
@@ -81,10 +81,10 @@ Material:
     - _CastShadows: 1
     - _Cull: 0
     - _Depth: 0.61
-    - _Detail_Speed: 0
+    - _Detail_Speed: 0.2
     - _DstBlend: 10
-    - _Glow_Size: 1.2
-    - _Polygonal_Size: 10
+    - _Glow_Size: 0
+    - _Polygonal_Size: 5
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
@@ -106,6 +106,6 @@ Material:
     - _Depth_Color: {r: 6.7186017, g: 9.886723, b: 10.432951, a: 0}
     - _Glow_Color: {r: 0.16643162, g: 0.16643162, b: 0.16643162, a: 1}
     - _Polygonal_Color: {r: 0, g: 0.6431373, b: 1.4980392, a: 1}
-    - _Polygonal_Speed: {r: 0.03, g: 0.03, b: 0, a: 0}
+    - _Polygonal_Speed: {r: 0.01, g: 0.01, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
