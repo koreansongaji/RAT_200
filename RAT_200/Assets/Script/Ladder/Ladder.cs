@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(LadderPlacementController))]
 public class Ladder : MonoBehaviour
 {
-    [Range(1, 5)] public int lengthLevel = 1; // 업그레이드로 증가
+    [Range(1, 4)] public int lengthLevel = 1; // 업그레이드로 증가
     public LadderPlaceSpot currentSpot;       // 현재 붙어있는 슬롯 (없으면 들고 다니는 상태)
 
     public void AttachTo(LadderPlaceSpot spot, bool alignRotation = true)

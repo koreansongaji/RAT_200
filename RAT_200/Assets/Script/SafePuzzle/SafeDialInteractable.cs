@@ -22,11 +22,13 @@ public class SafeDialInteractable : BaseInteractable
 
     public int CurrentValue { get; private set; } = 0;
     Tween _t;
+    Quaternion _baseLocalRotation;
 
     void Awake()
     {
         if (!dialRoot) dialRoot = transform;
         if (!micro) micro = GetComponentInParent<MicroZoomSession>();
+        _baseLocalRotation = dialRoot.localRotation;
         UpdateLed();
     }
 
@@ -63,13 +65,32 @@ public class SafeDialInteractable : BaseInteractable
 
     void RotateTo(int value, bool instant)
     {
-        float targetX = 36f * value; // 시계 방향 회전을 X축 +방향으로
+        float targetX = 36f * value;
+
         _t?.Kill();
+
+        // 기준 로컬 회전
+        Quaternion baseRot = _baseLocalRotation;
+
+        // 로컬 X축을 기준으로 회전 (★ transform의 localAxis 사용)
+        Quaternion xRot = Quaternion.AngleAxis(targetX, Vector3.down);
+
+        Quaternion finalRot = baseRot * xRot;
+
         if (instant)
-            dialRoot.localRotation = Quaternion.Euler(targetX, 0, 90);
+        {
+            dialRoot.localRotation = finalRot;
+        }
         else
-            _t = dialRoot.DOLocalRotate(new Vector3(targetX, 0, 90), tweenSec).SetEase(ease);
+        {
+            _t = dialRoot.DOLocalRotateQuaternion(finalRot, tweenSec)
+                         .SetEase(ease);
+        }
     }
+
+
+
+
 
     void UpdateLed()
     {

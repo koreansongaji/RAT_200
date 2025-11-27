@@ -188,7 +188,7 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
             return; // 드래그 프레임엔 이동/인터랙트 처리 금지
         }
 
-        // 3) 클릭 큐 처리 (기존 흐름 유지)
+        // 3) 클릭 큐 처리
         if (!_queuedClick) return;
         _queuedClick = false;
 
@@ -196,50 +196,71 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
 
         Ray ray = cam.ScreenPointToRay(_queuedScreenPos);
 
-        // Interactable 우선
-        if (Physics.Raycast(ray, out var hitI, maxRayDistance, interactableMask))
+        // ★ [핵심 수정] Interactable과 Ground(장애물)를 동시에 검사합니다.
+        // 이렇게 해야 "가장 가까운 것"이 무엇인지 판단할 수 있습니다.
+        // (책상이 앞에 있으면 책상이 먼저 걸리고, 서랍은 뒤에 있으니 무시됨)
+        LayerMask combinedMask = interactableMask | groundMask;
+
+        if (Physics.Raycast(ray, out var hit, maxRayDistance, combinedMask))
         {
-            var target = hitI.collider.GetComponentInParent<IInteractable>();
-            if (target != null)
+            // 1. 가장 먼저 맞은 물체가 Interactable 레이어인지 확인
+            // (비트 연산을 통해 hit된 오브젝트의 레이어가 interactableMask에 포함되는지 체크)
+            if (((1 << hit.collider.gameObject.layer) & interactableMask) != 0)
             {
-                bool inMicro = InMicro();
-                float effectiveReach = inMicro ? float.PositiveInfinity : ReachRadius;
-
-                Vector3 closest = GetClosestPointOnTarget(target, agent.transform.position, out _);
-                _hasDebugClosest = true;
-                _debugClosestPoint = closest;
-
-                bool within = IsWithinReach(agent.transform.position, closest, effectiveReach);
-                _lastWithinReach = within;
-
-                if (within && target.CanInteract(player))
+                // === Interactable 처리 로직 ===
+                var target = hit.collider.GetComponentInParent<IInteractable>();
+                if (target != null)
                 {
-                    HardStop();
-                    ActivateBoostIfNeeded(false, _queuedScreenPos);
-                    target.Interact(player);   // 리치 안이면 제자리 상호작용
+                    bool inMicro = InMicro();
+                    float effectiveReach = inMicro ? float.PositiveInfinity : ReachRadius;
+
+                    Vector3 closest = GetClosestPointOnTarget(target, agent.transform.position, out _);
+                    _hasDebugClosest = true;
+                    _debugClosestPoint = closest;
+
+                    bool within = IsWithinReach(agent.transform.position, closest, effectiveReach);
+                    _lastWithinReach = within;
+
+                    if (within && target.CanInteract(player))
+                    {
+                        HardStop();
+                        ActivateBoostIfNeeded(false, _queuedScreenPos);
+                        target.Interact(player);   // 리치 안이면 제자리 상호작용
+                        return;
+                    }
+
+                    // Micro 모드가 아닐 때만 접근 이동
+                    if (!inMicro)
+                    {
+                        if (TryApproachTarget(target, closest, effectiveReach)) return;
+
+                        // 접근 불가시: 여기서 return하면 클릭 무시됨.
+                        // 만약 접근 불가능한 Interactable을 클릭했을 때 근처 바닥으로라도 가고 싶다면
+                        // 아래 'else' 블록의 이동 로직을 호출하거나, 폴백 로직을 추가해야 함.
+                        // 현재는 "Interactable을 클릭했으나 갈 수 없으면 멈춤"으로 둡니다.
+                        return;
+                    }
                     return;
                 }
+            }
+            else
+            {
+                // 2. 가장 먼저 맞은 게 Interactable이 아님 
+                // (= Ground나 벽이 가로막고 있음)
+                // -> 일반 이동으로 처리
+                ActivateBoostIfNeeded(true, _queuedScreenPos);
 
-                // Micro에선 이동 금지. Room 모드에서만 접근 이동/그라운드 이동 허용
-                if (!inMicro)
+                // 방금 Raycast로 얻은 정확한 위치(hit.point)로 이동 시도
+                if (NavMesh.SamplePosition(hit.point, out var navHit, sampleMaxDistance, NavMesh.AllAreas))
                 {
-                    if (TryApproachTarget(target, closest, effectiveReach)) return;
-                    if (TryMoveToGroundUnderRay(ray)) return;
+                    TrySetPath(navHit.position);
                 }
-
-                // 마지막 폴백: 타깃 근방 보정
-                Vector3 approx = target.AsTransform().position;
-                if (NavMesh.SamplePosition(approx, out var navHit2, sampleMaxDistance, NavMesh.AllAreas))
-                    TrySetPath(navHit2.position);
                 return;
             }
         }
 
-        // Interactable이 아니면 → 일반 이동(Ground)
-        ActivateBoostIfNeeded(true, _queuedScreenPos);
-        TryMoveToGroundUnderRay(ray);
+        // 허공을 클릭했거나 아무것도 안 맞았을 때 -> 아무 동작 안 함
     }
-
     // ===== Reach / Approach =====
     Vector3 GetClosestPointOnTarget(IInteractable target, Vector3 playerPos, out Collider hitCol)
     {

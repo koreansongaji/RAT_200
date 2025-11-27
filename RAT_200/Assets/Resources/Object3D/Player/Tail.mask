@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Tail
+  m_Mask: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: All_Body
+    m_Weight: 0
+  - m_Path: "All_Body/\uC911\uC2EC"
+    m_Weight: 1
+  - m_Path: "All_Body/\uC911\uC2EC/\uBA38\uB9AC"
+    m_Weight: 1
+  - m_Path: "All_Body/\uC911\uC2EC/\uBA38\uB9AC/\uBA38\uB9AC.001"
+    m_Weight: 1
+  - m_Path: "All_Body/\uC911\uC2EC/\uC624\uB978\uB2E4\uB9AC"
+    m_Weight: 1
+  - m_Path: "All_Body/\uC911\uC2EC/\uC624\uB978\uB2E4\uB9AC/\uC624\uB978\uBC1C"
+    m_Weight: 1
+  - m_Path: "All_Body/\uC911\uC2EC/\uC624\uB978\uCABD \uADC0"
+    m_Weight: 1
+  - m_Path: "All_Body/\uC911\uC2EC/\uC624\uB978\uD314"
+    m_Weight: 1
+  - m_Path: "All_Body/\uC911\uC2EC/\uC67C\uB2E4\uB9AC"
+    m_Weight: 1
+  - m_Path: "All_Body/\uC911\uC2EC/\uC67C\uB2E4\uB9AC/\uC67C\uBC1C"
+    m_Weight: 1
+  - m_Path: "All_Body/\uC911\uC2EC/\uC67C\uCABD \uADC0"
+    m_Weight: 1
+  - m_Path: "All_Body/\uC911\uC2EC/\uC67C\uD314"
+    m_Weight: 1
+  - m_Path: Body
+    m_Weight: 0
+  - m_Path: Eye
+    m_Weight: 0
+  - m_Path: Tail
+    m_Weight: 1
+  - m_Path: Tail/Bone
+    m_Weight: 1
+  - m_Path: Tail/Bone/Bone.001
+    m_Weight: 1
+  - m_Path: Tail/Bone/Bone.001/Bone.002
+    m_Weight: 1
+  - m_Path: Tail/Bone/Bone.001/Bone.002/Bone.003
+    m_Weight: 1
+  - m_Path: Tail/Bone/Bone.001/Bone.002/Bone.003/Bone.004
+    m_Weight: 1
+  - m_Path: Tail/Bone/Bone.001/Bone.002/Bone.003/Bone.004/Bone.005
+    m_Weight: 1
+  - m_Path: tail
+    m_Weight: 0

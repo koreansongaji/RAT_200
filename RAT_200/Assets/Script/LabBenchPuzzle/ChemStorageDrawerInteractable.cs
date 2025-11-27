@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Events;
-using DG.Tweening;
 
 public class ChemStorageDrawerInteractable : BaseInteractable
 {
@@ -8,66 +7,54 @@ public class ChemStorageDrawerInteractable : BaseInteractable
     [SerializeField] string sodiumId = "Sodium";
     [SerializeField] string gelId = "Gel";
 
-    [Header("Drawer (열림 연출)")]
-    [SerializeField] Transform drawer;          // 서랍 트랜스폼(로컬 기준)
-    [SerializeField] Vector3 openLocalOffset = new Vector3(0f, 0f, -0.3f);
-    [SerializeField] float duration = 0.5f;
-    [SerializeField] Ease ease = Ease.InOutSine;
-    [SerializeField] bool openOnlyOnce = true;
-    [SerializeField] bool disableColliderOnOpen = false;
+    [Header("설정")]
+    [SerializeField] bool giveOnlyOnce = true;          // 한 번만 지급할지
+    [SerializeField] bool disableColliderAfterGive = false; // 지급 후 상호작용 막기
 
     [Header("이벤트/사운드 등")]
-    public UnityEvent OnOpen;    // 열릴 때 호출
-    public UnityEvent OnGive;    // 아이템 지급 시 호출
+    [Tooltip("클릭해서 상호작용할 때(지급 직전) 호출")]
+    public UnityEvent OnInteract;
+    [Tooltip("아이템 지급이 완료되었을 때 호출")]
+    public UnityEvent OnGive;
 
-    // 내부 상태
-    bool _opened;
-    Vector3 _startLocalPos;
+    bool _given;           // 이미 지급했는지 여부
     Collider _col;
-    Tween _tOpen;
 
     void Awake()
     {
-        if (!drawer) drawer = transform; // 안전장치: drawer 미지정 시 자기 자신
-        _startLocalPos = drawer.localPosition;
         _col = GetComponent<Collider>();
     }
 
     public override bool CanInteract(PlayerInteractor i)
     {
         if (!i) return false;
-        if (openOnlyOnce && _opened) return false;   // 한 번만 열도록
-        return true;
+        if (giveOnlyOnce && _given) return false;
+        return true; // 필요하면 base.CanInteract(i) && ... 로 바꿔도 됨
     }
 
     public override void Interact(PlayerInteractor i)
     {
         if (!CanInteract(i)) return;
 
-        // 열림 연출
-        _tOpen?.Kill();
-        _tOpen = drawer.DOLocalMove(_startLocalPos + openLocalOffset, duration).SetEase(ease);
+        OnInteract?.Invoke();
 
-        _opened = true;
-        OnOpen?.Invoke();
-
-        // 즉시 아이템 지급(소모/카운트 없음: 보유 플래그만 ON)
+        // 아이템 지급
         i.AddItem(sodiumId);
         i.AddItem(gelId);
-        OnGive?.Invoke();
+        _given = true;
 
+        OnGive?.Invoke();
         Debug.Log("[ChemStorageDrawer] Sodium + Gel 지급 완료");
 
-        if (disableColliderOnOpen && _col) _col.enabled = false;
+        if (disableColliderAfterGive && _col)
+            _col.enabled = false;
     }
 
-    // (선택) 에디터/디버그용으로 리셋
-    [ContextMenu("Reset Drawer (Editor)")]
-    void ResetDrawer()
+    // (선택) 에디터용 리셋
+    [ContextMenu("Reset Given (Editor)")]
+    void ResetGiven()
     {
-        _tOpen?.Kill();
-        drawer.localPosition = _startLocalPos;
-        _opened = false;
+        _given = false;
         if (_col) _col.enabled = true;
     }
 }

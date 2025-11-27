@@ -23,6 +23,14 @@ public class SafePuzzleController : MonoBehaviour, IMicroHidePlayerPreference
     public float openSec = 0.5f;
     public Ease openEase = Ease.OutSine;
 
+    // ▼▼▼ [추가] 같이 회전할 오브젝트 설정 ▼▼▼
+    [Header("Optional Linked Object")]
+    [Tooltip("문 열릴 때 같이 돌아갈 오브젝트 (예: 손잡이, 잠금장치). 없으면 비워두세요.")]
+    public Transform linkedPart;
+    [Tooltip("같이 돌아갈 오브젝트의 목표 회전 각도")]
+    public Vector3 linkedPartOpenEuler = new(0, 0, -90);
+    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
     [Header("Answer Paper (optional)")]
     public GameObject paperPrefab;
     public Transform paperSpawnPoint;
@@ -93,6 +101,13 @@ public class SafePuzzleController : MonoBehaviour, IMicroHidePlayerPreference
         SetStatus("OPEN");
         if (rightDoorHinge)
             rightDoorHinge.DOLocalRotate(openLocalEuler, openSec).SetEase(openEase);
+
+        // ▼▼▼ [추가] 추가 오브젝트가 연결되어 있다면 같이 회전 ▼▼▼
+        if (linkedPart)
+        {
+            linkedPart.DOLocalRotate(linkedPartOpenEuler, openSec).SetEase(openEase);
+        }
+        // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
         // 필요하면 효과음/연출 추가
     }
 
