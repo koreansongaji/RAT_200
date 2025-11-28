@@ -83,6 +83,7 @@ public class DoorInteractable : BaseInteractable
         if (!door) return;
 
         ToggleMove();
+        GetComponent<DrawerItemDispenser>()?.Dispense();
     }
 
     // 내부 동작 로직
