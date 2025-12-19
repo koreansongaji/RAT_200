@@ -13,6 +13,7 @@ Shader "Hidden/Vol/Vhs"
 			CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
+			#pragma multi_compile_local _LINE_DISTORTION_ON _
 
 			sampler2D _MainTex;
 			sampler2D _VhsTex;
@@ -76,14 +77,16 @@ Shader "Hidden/Vol/Vhs"
 				i.uv.x += (dy - .5) * _Rocking + (rand(float3(dy, dy, dy)) - .1) * _Pow;
 
 				// line distortion
-				i.uv.y = lerp(i.uv.y, _xScanline, step(dx, 0.01));
+#ifdef _LINE_DISTORTION_ON
+                i.uv.y = lerp(i.uv.y, _xScanline, step(dx, 0.01));
+#endif
 				i.uv = frac(i.uv);
 				
 				const fixed4 c = tex2D(_MainTex, i.uv);
 				vhs.a = c.a;
 				
 				// flickering
-				vhs.rgb += c.rgb - (rand(float3(i.uv.x, i.uv.y, _xScanline)) * _xScanline / 5) * _Flickering * _Glitch.rgb;
+				vhs.rgb += c.rgb - (rand(float3(i.uv.x, i.uv.y, _xScanline)) * _xScanline / 5) * _Flickering * _Glitch.rgb * _Glitch.a;
 				
 				// glow
 				fixed3 bleed = tex2D(_MainTex, i.uv + float2(0.01, 0) * _Bleed).rgb;

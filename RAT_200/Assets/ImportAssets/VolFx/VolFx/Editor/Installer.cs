@@ -585,6 +585,7 @@ namespace VolFx
         {
             var target           = EditorUserBuildSettings.activeBuildTarget;
             var buildTargetGroup = BuildPipeline.GetBuildTargetGroup(target);
+            #pragma warning disable CS0618
             var defines          = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup);
             return defines.Split(';').ToList();
         }

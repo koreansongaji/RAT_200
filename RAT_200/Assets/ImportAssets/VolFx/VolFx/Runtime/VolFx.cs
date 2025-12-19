@@ -360,6 +360,8 @@ namespace VolFx
                         camDesc.colorFormat = _owner._format.Value.ToGraphicsFormat();
                     
                     passData._camDepth = resData.activeDepthTexture;
+                    builder.UseTexture(passData._camDepth, AccessFlags.ReadWrite);
+
                     passData._cam      = camData.camera;
 
                     passData._selfTarget = _isSelfTarget();
@@ -1219,6 +1221,9 @@ namespace VolFx
             _passes.Destroy();
         }
         
+#if UNITY_RENDER_GRAPH
+        [Obsolete]
+#endif
         public override void SetupRenderPasses(ScriptableRenderer renderer, in RenderingData renderingData)
         {
             _execution.ConfigureInput(ScriptableRenderPassInput.Color);
@@ -1233,8 +1238,6 @@ namespace VolFx
             if (_blit == null)
                 _blit = new Material(_blitShader);
 #endif
-            //노멀 강제 활성화
-            _execution.ConfigureInput(ScriptableRenderPassInput.Normal);
             
             renderer.EnqueuePass(_execution);
         }

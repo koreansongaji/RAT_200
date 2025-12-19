@@ -18,6 +18,7 @@ namespace ScreenFx
         public override Playable CreatePlayable(PlayableGraph graph, GameObject go)
         {
 #if UNITY_EDITOR
+            #pragma warning disable CS0618
             if (UnityEngine.Object.FindObjectOfType<ScreenFx>() == null)
                 Debug.LogWarning($"ScreenFx : the Scene has no CinemachineCamera with ScreenFx component on it");
 #endif

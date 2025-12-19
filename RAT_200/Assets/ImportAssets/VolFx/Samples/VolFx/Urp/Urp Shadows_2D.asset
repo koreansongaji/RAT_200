@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _active: 1
   _shader: {fileID: 4800000, guid: 37430ae71ba54bd390a4ca51906fd972, type: 3}
-  _ditherTex: {fileID: 2800000, guid: e470306b2a0935842a3dc6bdc1f3e813, type: 3}
+  _maskScale: 0
+  _maskTex: {fileID: 2800000, guid: 88a3d604a839e254b914fc85e80a88c6, type: 3}
 --- !u!114 &-8517561346783428979
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -271,6 +272,21 @@ MonoBehaviour:
   _fps: 60
   _scale: 0.5
   _hdr: 0
+--- !u!114 &-7519534638024787470
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d93f1809b0d8d949803e8bb60f44915, type: 3}
+  m_Name: Comics
+  m_EditorClassIdentifier: 
+  _active: 1
+  _shader: {fileID: 4800000, guid: f97628ee99a0e10418407fba82d232cb, type: 3}
+  _ditherTex: {fileID: 2800000, guid: e470306b2a0935842a3dc6bdc1f3e813, type: 3}
 --- !u!114 &-6718439891295309787
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -285,6 +301,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _active: 1
   _shader: {fileID: 4800000, guid: f3f2512ee1fe3774ba15927559ebdd5d, type: 3}
+--- !u!114 &-4489833879492871121
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7479e16a933e7f946b0d6fbbdd506f6c, type: 3}
+  m_Name: Warp
+  m_EditorClassIdentifier: 
+  _active: 1
+  _shader: {fileID: 4800000, guid: c8ad0a2f4d91daa428cc0448e8687944, type: 3}
+  _maskPower: 2
 --- !u!114 &-4087369987367878777
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -313,6 +344,20 @@ MonoBehaviour:
   _velocityDefault: {x: 0, y: 0, z: 0}
   _textureDefault: {fileID: 2800000, guid: 9d5d64ece5c9f1e4e8a7a7c731f76c51, type: 3}
   _shadeDefault: 0
+--- !u!114 &-3497589594812239238
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efc333b15d5e54546b9236a93044a3ee, type: 3}
+  m_Name: Jpeg
+  m_EditorClassIdentifier: 
+  _active: 1
+  _shader: {fileID: 4800000, guid: c87cb70bbf7424448b290759a6e27a96, type: 3}
 --- !u!114 &-2444572399665932362
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -449,22 +494,10 @@ MonoBehaviour:
   debugShaders:
     debugReplacementPS: {fileID: 4800000, guid: cf852408f2e174538bcd9b7fda1c5ae7, type: 3}
     hdrDebugViewPS: {fileID: 4800000, guid: 573620ae32aec764abd4d728906d2587, type: 3}
-    probeVolumeSamplingDebugComputeShader: {fileID: 7200000, guid: 53626a513ea68ce47b59dc1299fe3959, type: 3}
-  probeVolumeResources:
-    probeVolumeDebugShader: {fileID: 0}
-    probeVolumeFragmentationDebugShader: {fileID: 0}
-    probeVolumeOffsetDebugShader: {fileID: 0}
-    probeVolumeSamplingDebugShader: {fileID: 0}
-    probeSamplingDebugMesh: {fileID: 0}
-    probeSamplingDebugTexture: {fileID: 0}
-    probeVolumeBlendStatesCS: {fileID: 0}
   m_RendererFeatures:
   - {fileID: 4402921922530051674}
   m_RendererFeatureMap: 5a062f2e29521a3d
   m_UseNativeRenderPass: 0
-  m_LayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
   m_TransparencySortMode: 0
   m_TransparencySortAxis: {x: 0, y: 1, z: 0}
   m_HDREmulationScale: 1
@@ -488,9 +521,26 @@ MonoBehaviour:
   m_CameraSortingLayerDownsamplingMethod: 0
   m_MaxLightRenderTextureCount: 16
   m_MaxShadowRenderTextureCount: 1
+  m_ShapeLightShader: {fileID: 4800000, guid: d79e1c784eaf80c4585c0be7391f757a, type: 3}
+  m_ShapeLightVolumeShader: {fileID: 4800000, guid: 7e60080c8cd24a2468cb08b4bfee5606, type: 3}
+  m_PointLightShader: {fileID: 4800000, guid: e35a31e1679aeff489e202f5cc4853d5, type: 3}
+  m_PointLightVolumeShader: {fileID: 4800000, guid: c7d04ca57e5449d49ad9cee1c604bc26, type: 3}
+  m_CoreBlitShader: {fileID: 4800000, guid: 93446b5c5339d4f00b85c159e1159b7c, type: 3}
+  m_BlitHDROverlay: {fileID: 4800000, guid: a89bee29cffa951418fc1e2da94d1959, type: 3}
+  m_CoreBlitColorAndDepthPS: {fileID: 4800000, guid: d104b2fc1ca6445babb8e90b0758136b, type: 3}
+  m_SamplingShader: {fileID: 4800000, guid: 04c410c9937594faa893a11dceb85f7e, type: 3}
+  m_ProjectedShadowShader: {fileID: 4800000, guid: ce09d4a80b88c5a4eb9768fab4f1ee00, type: 3}
+  m_SpriteShadowShader: {fileID: 4800000, guid: 44fc62292b65ab04eabcf310e799ccf6, type: 3}
+  m_SpriteUnshadowShader: {fileID: 4800000, guid: de02b375720b5c445afe83cd483bedf3, type: 3}
+  m_GeometryUnshadowShader: {fileID: 4800000, guid: 77774d9009bb81447b048c907d4c6273, type: 3}
+  m_FallbackErrorShader: {fileID: 4800000, guid: e6e9a19c3678ded42a3bc431ebef7dbd, type: 3}
   m_PostProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
+  m_FallOffLookup: {fileID: 2800000, guid: 5688ab254e4c0634f8d6c8e0792331ca, type: 3}
   m_DefaultMaterialType: 0
   m_DefaultCustomMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_DefaultLitMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_DefaultUnlitMaterial: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  m_DefaultMaskMaterial: {fileID: 2100000, guid: 15d0c3709176029428a0da2f8cecf0b5, type: 2}
 --- !u!114 &703452124284998881
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -845,9 +895,11 @@ MonoBehaviour:
     - {fileID: 8136809060951887187}
     - {fileID: 5751908815294258515}
     - {fileID: 6224388432119938236}
-    - {fileID: 2419187290011588430}
     - {fileID: -8519829960866941013}
     - {fileID: -6718439891295309787}
+    - {fileID: -4489833879492871121}
+    - {fileID: -3497589594812239238}
+    - {fileID: -7519534638024787470}
   _blitShader: {fileID: 4800000, guid: a8a709d9db2241741ab3032b946ef258, type: 3}
 --- !u!114 &4910309748227860240
 MonoBehaviour:

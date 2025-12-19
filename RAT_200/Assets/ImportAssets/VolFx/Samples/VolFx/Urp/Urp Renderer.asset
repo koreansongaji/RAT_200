@@ -1390,6 +1390,20 @@ MonoBehaviour:
   - {fileID: 2800000, guid: bc0d91bf1c4d89d4c8796682be429e14, type: 3}
   - {fileID: 2800000, guid: 0ace482272b64fc40837a5ee28939c86, type: 3}
   - {fileID: 2800000, guid: 52c8c6fc158b1ff4ba8c5e434e700e1b, type: 3}
+--- !u!114 &-6322851699512460755
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efc333b15d5e54546b9236a93044a3ee, type: 3}
+  m_Name: Jpeg
+  m_EditorClassIdentifier: 
+  _active: 1
+  _shader: {fileID: 4800000, guid: c87cb70bbf7424448b290759a6e27a96, type: 3}
 --- !u!114 &-6293240961524348392
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1886,10 +1900,11 @@ MonoBehaviour:
     - {fileID: 4693692152435503996}
     - {fileID: 945909849232666071}
     - {fileID: 4603053508349320540}
-    - {fileID: -7634176268389496072}
     - {fileID: -1971190782790212353}
     - {fileID: -2199452994592786874}
     - {fileID: 6415587422668710723}
+    - {fileID: 4068637316641339350}
+    - {fileID: 5987759519609888380}
   _blitShader: {fileID: 4800000, guid: a8a709d9db2241741ab3032b946ef258, type: 3}
 --- !u!114 &-5515785177496728898
 MonoBehaviour:
@@ -2171,7 +2186,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _active: 1
   _shader: {fileID: 4800000, guid: 37430ae71ba54bd390a4ca51906fd972, type: 3}
-  _ditherTex: {fileID: 2800000, guid: e470306b2a0935842a3dc6bdc1f3e813, type: 3}
+  _maskScale: 0
+  _maskTex: {fileID: 2800000, guid: 88a3d604a839e254b914fc85e80a88c6, type: 3}
 --- !u!114 &-4623383980356333878
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -3195,6 +3211,20 @@ MonoBehaviour:
   _frameRate: 0
   _ascii: {r: 1, g: 1, b: 1, a: 1}
   _image: {r: 0, g: 0, b: 0, a: 1}
+--- !u!114 &-1949278447087147400
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efc333b15d5e54546b9236a93044a3ee, type: 3}
+  m_Name: Jpeg
+  m_EditorClassIdentifier: 
+  _active: 1
+  _shader: {fileID: 4800000, guid: c87cb70bbf7424448b290759a6e27a96, type: 3}
 --- !u!114 &-1758362552670884211
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -3262,7 +3292,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _active: 1
   _shader: {fileID: 4800000, guid: 37430ae71ba54bd390a4ca51906fd972, type: 3}
-  _ditherTex: {fileID: 2800000, guid: e470306b2a0935842a3dc6bdc1f3e813, type: 3}
+  _maskScale: 0
+  _maskTex: {fileID: 2800000, guid: 88a3d604a839e254b914fc85e80a88c6, type: 3}
 --- !u!114 &-1657307313903585483
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -3363,9 +3394,10 @@ MonoBehaviour:
     - {fileID: -4257423273496752385}
     - {fileID: 6919079705327887024}
     - {fileID: 8088723223438040883}
-    - {fileID: 3356084632516931071}
     - {fileID: -1696261682843467995}
+    - {fileID: -1949278447087147400}
     - {fileID: 1759243646554307821}
+    - {fileID: 3072093010266988080}
     - {fileID: -5384445908969031069}
   _blitShader: {fileID: 4800000, guid: a8a709d9db2241741ab3032b946ef258, type: 3}
 --- !u!114 &-1406121207157098977
@@ -3982,7 +4014,7 @@ MonoBehaviour:
     enabled: 1
     value:
       serializedVersion: 2
-      m_Bits: 426016
+      m_Bits: 544
   _source:
     _source: 1
     _globalTex: _inputTex
@@ -4016,8 +4048,8 @@ MonoBehaviour:
     - {fileID: -8036229987627111097}
     - {fileID: -8122367637988797313}
     - {fileID: -8223108778827267781}
-    - {fileID: 6792385234030198673}
     - {fileID: 2457878113174957672}
+    - {fileID: -6322851699512460755}
     - {fileID: -5974257261496979666}
     - {fileID: -1151942904570566980}
   _blitShader: {fileID: 4800000, guid: a8a709d9db2241741ab3032b946ef258, type: 3}
@@ -4036,15 +4068,6 @@ MonoBehaviour:
   debugShaders:
     debugReplacementPS: {fileID: 4800000, guid: cf852408f2e174538bcd9b7fda1c5ae7, type: 3}
     hdrDebugViewPS: {fileID: 4800000, guid: 573620ae32aec764abd4d728906d2587, type: 3}
-    probeVolumeSamplingDebugComputeShader: {fileID: 7200000, guid: 53626a513ea68ce47b59dc1299fe3959, type: 3}
-  probeVolumeResources:
-    probeVolumeDebugShader: {fileID: 0}
-    probeVolumeFragmentationDebugShader: {fileID: 0}
-    probeVolumeOffsetDebugShader: {fileID: 0}
-    probeVolumeSamplingDebugShader: {fileID: 0}
-    probeSamplingDebugMesh: {fileID: 0}
-    probeSamplingDebugTexture: {fileID: 0}
-    probeVolumeBlendStatesCS: {fileID: 0}
   m_RendererFeatures:
   - {fileID: 3639150745071183685}
   - {fileID: -1567537954651103883}
@@ -4054,8 +4077,23 @@ MonoBehaviour:
   - {fileID: 2003572255344527337}
   m_RendererFeatureMap: 45e7105452dc8032751d141189fc3eeacc7f74e2885d6ab35bc62ec108ec19fed588c8f6b3662fb1e987a3d1591ece1b
   m_UseNativeRenderPass: 0
-  xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
+  xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
+  shaders:
+    blitPS: {fileID: 4800000, guid: c17132b1f77d20942aa75f8429c0f8bc, type: 3}
+    copyDepthPS: {fileID: 4800000, guid: d6dae50ee9e1bfa4db75f19f99355220, type: 3}
+    screenSpaceShadowPS: {fileID: 0}
+    samplingPS: {fileID: 4800000, guid: 04c410c9937594faa893a11dceb85f7e, type: 3}
+    stencilDeferredPS: {fileID: 4800000, guid: e9155b26e1bc55942a41e518703fe304, type: 3}
+    fallbackErrorPS: {fileID: 4800000, guid: e6e9a19c3678ded42a3bc431ebef7dbd, type: 3}
+    fallbackLoadingPS: {fileID: 4800000, guid: 7f888aff2ac86494babad1c2c5daeee2, type: 3}
+    materialErrorPS: {fileID: 4800000, guid: 5fd9a8feb75a4b5894c241777f519d4e, type: 3}
+    coreBlitPS: {fileID: 4800000, guid: 93446b5c5339d4f00b85c159e1159b7c, type: 3}
+    coreBlitColorAndDepthPS: {fileID: 4800000, guid: d104b2fc1ca6445babb8e90b0758136b, type: 3}
+    blitHDROverlay: {fileID: 4800000, guid: a89bee29cffa951418fc1e2da94d1959, type: 3}
+    cameraMotionVector: {fileID: 4800000, guid: c56b7e0d4c7cb484e959caeeedae9bbf, type: 3}
+    objectMotionVector: {fileID: 4800000, guid: 7b3ede40266cd49a395def176e1bc486, type: 3}
+    dataDrivenLensFlare: {fileID: 4800000, guid: 6cda457ac28612740adb23da5d39ea92, type: 3}
   m_AssetVersion: 2
   m_OpaqueLayerMask:
     serializedVersion: 2
@@ -4074,10 +4112,22 @@ MonoBehaviour:
   m_RenderingMode: 0
   m_DepthPrimingMode: 0
   m_CopyDepthMode: 1
-  m_DepthAttachmentFormat: 0
-  m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 1
+--- !u!114 &58831676555148753
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efc333b15d5e54546b9236a93044a3ee, type: 3}
+  m_Name: Jpeg
+  m_EditorClassIdentifier: 
+  _active: 1
+  _shader: {fileID: 4800000, guid: c87cb70bbf7424448b290759a6e27a96, type: 3}
 --- !u!114 &165970556945247959
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -5675,6 +5725,21 @@ MonoBehaviour:
   _fps: 60
   _scale: 0.5
   _hdr: 0
+--- !u!114 &3072093010266988080
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7479e16a933e7f946b0d6fbbdd506f6c, type: 3}
+  m_Name: Warp
+  m_EditorClassIdentifier: 
+  _active: 1
+  _shader: {fileID: 4800000, guid: c8ad0a2f4d91daa428cc0448e8687944, type: 3}
+  _maskPower: 2
 --- !u!114 &3356084632516931071
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -6090,9 +6155,10 @@ MonoBehaviour:
     - {fileID: -6546023737323293428}
     - {fileID: -5515785177496728898}
     - {fileID: -6426994453694514758}
-    - {fileID: 6230838400150702978}
     - {fileID: -2956540215545296122}
-    - {fileID: -2488627249588076553}
+    - {fileID: 4782657186109322135}
+    - {fileID: 58831676555148753}
+    - {fileID: 5781611637089604681}
     - {fileID: -2703361760092899115}
   _blitShader: {fileID: 4800000, guid: a8a709d9db2241741ab3032b946ef258, type: 3}
 --- !u!114 &3665953726264711568
@@ -6201,6 +6267,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _active: 1
   _shader: {fileID: 4800000, guid: f3f2512ee1fe3774ba15927559ebdd5d, type: 3}
+--- !u!114 &4068637316641339350
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efc333b15d5e54546b9236a93044a3ee, type: 3}
+  m_Name: Jpeg
+  m_EditorClassIdentifier: 
+  _active: 1
+  _shader: {fileID: 4800000, guid: c87cb70bbf7424448b290759a6e27a96, type: 3}
 --- !u!114 &4136514323097345858
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -6408,6 +6488,21 @@ MonoBehaviour:
   _fps: 60
   _scale: 0.5
   _hdr: 0
+--- !u!114 &4782657186109322135
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d93f1809b0d8d949803e8bb60f44915, type: 3}
+  m_Name: Comics
+  m_EditorClassIdentifier: 
+  _active: 1
+  _shader: {fileID: 4800000, guid: f97628ee99a0e10418407fba82d232cb, type: 3}
+  _ditherTex: {fileID: 2800000, guid: e470306b2a0935842a3dc6bdc1f3e813, type: 3}
 --- !u!114 &4857726858340676142
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -7256,6 +7351,21 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 4b292ed3be6030a46b692cd4a6618fce, type: 3}
   - {fileID: 2800000, guid: e5a866cc090f56e4ba639cea6678767a, type: 3}
   - {fileID: 2800000, guid: a6de4c4d850aff74ea58994f8d761c2d, type: 3}
+--- !u!114 &5781611637089604681
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7479e16a933e7f946b0d6fbbdd506f6c, type: 3}
+  m_Name: Warp
+  m_EditorClassIdentifier: 
+  _active: 1
+  _shader: {fileID: 4800000, guid: c8ad0a2f4d91daa428cc0448e8687944, type: 3}
+  _maskPower: 2
 --- !u!114 &5945225783884248284
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -7285,6 +7395,21 @@ MonoBehaviour:
   _active: 1
   _shader: {fileID: 4800000, guid: 9c32f8d52c844eaab1fc42000e1eef87, type: 3}
   _motionMul: 1
+--- !u!114 &5987759519609888380
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7479e16a933e7f946b0d6fbbdd506f6c, type: 3}
+  m_Name: Warp
+  m_EditorClassIdentifier: 
+  _active: 1
+  _shader: {fileID: 4800000, guid: c8ad0a2f4d91daa428cc0448e8687944, type: 3}
+  _maskPower: 2
 --- !u!114 &6230838400150702978
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -7341,7 +7466,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _active: 1
   _shader: {fileID: 4800000, guid: 37430ae71ba54bd390a4ca51906fd972, type: 3}
-  _ditherTex: {fileID: 2800000, guid: e470306b2a0935842a3dc6bdc1f3e813, type: 3}
+  _maskScale: 0
+  _maskTex: {fileID: 2800000, guid: 88a3d604a839e254b914fc85e80a88c6, type: 3}
 --- !u!114 &6485795404659078798
 MonoBehaviour:
   m_ObjectHideFlags: 3

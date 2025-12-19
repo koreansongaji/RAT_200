@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 996bcbe19ba21a9479e2be880458cd05
+guid: 488db8181d02006408c7f074fb08c621
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -155,6 +155,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 300643
   packageName: VolFx - VFX Toolkit (Post Processing, Timeline Tracks, Shaders, Tools)
-  packageVersion: 2.9.1
+  packageVersion: 2.10.4
   assetPath: Assets/ImportAssets/VolFx/VolFx/Runtime/Passes/Lib/Jpeg/Jpeg Glitch/Jpeg_Glitch_C.jpg
-  uploadId: 777194
+  uploadId: 827094

@@ -36,6 +36,7 @@ namespace VolFx
         private float            _lastDraw;
         private float            _print;
         private float            _adaptive;
+        private float            _move;
         private int              _fadeFrames;
         
         private                 ProfilingSampler _sampler;
@@ -99,10 +100,11 @@ namespace VolFx
             _offsetUv = new Vector2(0.01f * flow.x, 0.01f * flow.y);
             _scaleUv  = 1f + 0.12f * flow.z;
             _rotUv    = settings.m_Angle.value * 0.01f;
+            _move     += settings.m_MotionMove.value * Time.deltaTime * .1f;
             
             mat.SetColor(s_Tint, settings.m_Tint.value);
             
-            mat.SetVector(s_Data, new Vector4(settings.m_Focus.value, settings.m_MotionPower.value, _adaptive));
+            mat.SetVector(s_Data, new Vector4(settings.m_Focus.value, settings.m_MotionPower.value, _adaptive, _move));
             mat.SetTexture(s_MotionTex, settings.m_MotionTex.value);
             return true;
         }

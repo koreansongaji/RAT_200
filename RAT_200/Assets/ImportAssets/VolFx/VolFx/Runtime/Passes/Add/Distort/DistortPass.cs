@@ -28,7 +28,7 @@ namespace VolFx
             _offset += settings.m_Motion.value * settings.m_Tiling.value * Time.deltaTime * 70f * _motionMul;
             
             mat.SetVector(s_Settings, new Vector4(sharpness, tiling, _offset, angle));
-            mat.SetFloat(s_Weight, settings.m_Weight.value);
+            mat.SetFloat(s_Weight, Mathf.Max(settings.m_Weight.value, settings.m_WeightOverride.value));
             
             return true;
         }

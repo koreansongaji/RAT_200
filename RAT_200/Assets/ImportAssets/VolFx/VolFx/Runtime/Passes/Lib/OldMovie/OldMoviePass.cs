@@ -107,6 +107,7 @@ namespace VolFx
                 {
                     if (s_Instance == null)
                     {
+                        #pragma warning disable CS0618
                         s_Instance = FindObjectOfType<AudioOutput>();
                         if (s_Instance == null)
                         {

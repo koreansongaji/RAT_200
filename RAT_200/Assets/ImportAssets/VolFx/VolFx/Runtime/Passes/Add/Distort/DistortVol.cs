@@ -11,6 +11,9 @@ namespace VolFx
     {
         [Tooltip("Effect blend factor")]
         public ClampedFloatParameter m_Weight = new ClampedFloatParameter(0, 0, 1);
+        [Tooltip("Effect blend factor (fixed override not affected by volume weight - can used for volume animation)")]
+        [InspectorName("Override")]
+        public NoInterpClampedFloatParameter m_WeightOverride = new NoInterpClampedFloatParameter(0, 0, 1);
         [Tooltip("Distortion strength")]
         public ClampedFloatParameter m_Value = new ClampedFloatParameter(0, 0, 1);
         [Tooltip("Tiling factor for the distortion wave")]
@@ -19,6 +22,7 @@ namespace VolFx
         public NoInterpClampedFloatParameter m_Angle = new NoInterpClampedFloatParameter(0, -180, 180);
         [Tooltip("Wave animation phase offset")]
         public ClampedFloatParameter m_Motion = new ClampedFloatParameter(0, 0, 1);
+        
 
         // =======================================================================
         public bool IsActive() => active && m_Value.value > 0;

@@ -42,7 +42,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _active: 1
   _shader: {fileID: 4800000, guid: 37430ae71ba54bd390a4ca51906fd972, type: 3}
+  _material: {fileID: 0}
+  _isActive: 0
+  _ditherOffset: {x: 0, y: 0}
   _ditherTex: {fileID: 2800000, guid: e470306b2a0935842a3dc6bdc1f3e813, type: 3}
+  _valueTex: {fileID: 0}
+  _shadesTex: {fileID: 0}
+  _colorsTex: {fileID: 0}
+  _measure: {fileID: 0}
+  _gradient: {fileID: 0}
+  _outline: {fileID: 0}
+  _mode: 0
+  _sampleDepth: 0
 --- !u!114 &-7804151612469913857
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -108,7 +119,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _active: 1
   _shader: {fileID: 4800000, guid: b0dddc9f1ad500343a74284ca704e72d, type: 3}
+  _material: {fileID: 0}
+  _isActive: 0
+  _count: {x: 0, y: 300}
   _maskPower: 2
+  _gradTex: {fileID: 0}
 --- !u!114 &-5777273132539555322
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -753,7 +768,7 @@ MonoBehaviour:
     - {fileID: 2058075190242490847}
     - {fileID: -7804151612469913857}
     - {fileID: -3113342793991908140}
-    - {fileID: -8616951045638973776}
+    - {fileID: 0}
     - {fileID: -4777320612769640160}
     - {fileID: 1531984846403340823}
     - {fileID: 9127339190281965697}
@@ -762,7 +777,7 @@ MonoBehaviour:
     - {fileID: 1499635215647765909}
     - {fileID: -8674292872428762853}
     - {fileID: -2583913343004978852}
-    - {fileID: 8544057592098864896}
+    - {fileID: 0}
     - {fileID: -5479989857512925886}
     - {fileID: 5356589975341002723}
     - {fileID: -3508134541307901912}
@@ -771,7 +786,7 @@ MonoBehaviour:
     - {fileID: 7328309361224257007}
     - {fileID: -5777273132539555322}
     - {fileID: 2550495056576214303}
-    - {fileID: -6143407627670076955}
+    - {fileID: 0}
     - {fileID: 1112413031877735566}
     - {fileID: 3599720735021262239}
   _blitShader: {fileID: 4800000, guid: a8a709d9db2241741ab3032b946ef258, type: 3}
@@ -1637,6 +1652,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _active: 1
   _shader: {fileID: 4800000, guid: c7472d31d10ec8847a485712bae34992, type: 3}
+  _material: {fileID: 0}
+  _isActive: 0
+  _shotFirstTime: 1
+  _fpsLastFrame: -1
+  _distortionOffset: {x: 0, y: 0}
+  _distortionMap: {fileID: 0}
+  _quantSpread: 0
+  _fpsLastScan: -1
+  _scanlines: 0
+  _channelSpread: 0
+  _channelShiftIsOn: 0
+  _doScanShot: 0
+  _fpsNoiseIsOn: 0
+  _doFpsShot: 0
+  _weight: 0
 --- !u!114 &8678059160472687486
 MonoBehaviour:
   m_ObjectHideFlags: 3

@@ -23,17 +23,29 @@ namespace VolFx
         private Texture2D _gradTex;
         private float     _fpsLastFrame;
         private float     _offset;
+        private float     _offsetVal;
+
+        // current values
         private float     _contur;
         private float     _strength;
         private float     _notes;
 
+        // target values
+        private float     _conturTarget;
+        private float     _strengthTarget;
+        private float     _notesTarget;
+
         // =======================================================================
         public override void Init()
         {
-            _fpsLastFrame = 0f;
-            _contur = 0f;
-            _strength = 0f;
-            _notes = 0f;
+            _fpsLastFrame   = 0f;
+            _offsetVal      = 0f;
+            _contur         = 0f;
+            _strength       = 0f;
+            _notes          = 0f;
+            _conturTarget   = 0f;
+            _strengthTarget = 0f;
+            _notesTarget    = 0f;
         }
 
         public override bool Validate(Material mat)
@@ -45,26 +57,46 @@ namespace VolFx
             
             if (settings.m_Fps.overrideState && (Time.time - _fpsLastFrame > (1f / settings.m_Fps.value)))
             {
-                _fpsLastFrame = Time.time;
-                _offset       = Random.value * 3f;
-                _contur       = Random.value * settings.m_ContourDeviation.value;
-                _strength     = Random.value * settings.m_StrengthDeviation.value;
-                _notes        = (Random.value - .5f) * settings.m_ColorNotesDeviation.value;
+                _fpsLastFrame   = Time.time;
+                _offset         = Random.value * 3f;
+                _conturTarget   = Random.value * settings.m_ContourDeviation.value;
+                _strengthTarget = Random.value * settings.m_StrengthDeviation.value;
+                _notesTarget    = (Random.value - .5f) * settings.m_ColorNotesDeviation.value;
             }
             else
             if (settings.m_Fps.overrideState == false || settings.m_Fps.value == 0)
             {
-                _offset   = 0f;
-                _contur   = 0f;
-                _strength = 0f;
-                _notes    = 0f;
+                _offset         = 0f;
+                _conturTarget   = 0f;
+                _strengthTarget = 0f;
+                _notesTarget    = 0f;
             }
+            
+            if (settings.m_Smooth.value == false)
+            {
+                _contur   = _conturTarget;
+                _strength = _strengthTarget;
+                _notes    = _notesTarget;
+            }
+            else
+            {
+                _offset = 0f;
+            }
+            
+            var framesLerpSpeed = settings.m_FramesLerp.value;
+            
+            // smooth interpolation
+            _contur   = Mathf.Lerp(_contur,   _conturTarget,   Time.deltaTime * framesLerpSpeed);
+            _strength = Mathf.Lerp(_strength, _strengthTarget, Time.deltaTime * framesLerpSpeed);
+            _notes    = Mathf.Lerp(_notes,    _notesTarget,    Time.deltaTime * framesLerpSpeed);
+
+            _offsetVal += settings.m_Motion.value * Time.deltaTime;
             
             var sat = settings.m_Saturation.value * -1f;
             
             var dataA = new Vector4(
                 Mathf.Lerp(0, 0.0333f, settings.m_Strength.value + _strength),
-                _offset,
+                _offsetVal + _offset,
                 settings.m_Density.value,
                 Mathf.Lerp(.001f, .333f, settings.m_Blending.value)
             );

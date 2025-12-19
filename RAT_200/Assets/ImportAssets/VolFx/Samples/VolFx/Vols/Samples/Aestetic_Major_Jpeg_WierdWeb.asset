@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Aestetic_Major_Jpeg_WierdWeb
   m_EditorClassIdentifier: 
   components:
-  - {fileID: 6291866331103288912}
   - {fileID: 821671120043623882}
+  - {fileID: 7585418161529972634}
 --- !u!114 &821671120043623882
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -110,4 +110,109 @@ MonoBehaviour:
   _distortionTex:
     m_OverrideState: 1
     m_Value: {fileID: 2800000, guid: 5521388c31c256c4fb3c4375d8efd830, type: 3}
+    dimension: 1
+--- !u!114 &7585418161529972634
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 811610bff6fc5af458d2f8870606b8d0, type: 3}
+  m_Name: JpegVol
+  m_EditorClassIdentifier: 
+  active: 1
+  _intensity:
+    m_OverrideState: 1
+    m_Value: -1.85
+  _blockSize:
+    m_OverrideState: 1
+    m_Value: 6.1
+  _quantization:
+    m_OverrideState: 1
+    m_Value: 15
+  _distortionScale:
+    m_OverrideState: 1
+    m_Value: 0.05
+  _applyToY:
+    m_OverrideState: 1
+    m_Value: 1.01
+  _applyToChroma:
+    m_OverrideState: 1
+    m_Value: 1.58
+  _applyToGlitch:
+    m_OverrideState: 1
+    m_Value: 2.72
+  _fps:
+    m_OverrideState: 1
+    m_Value: 3.5
+  _fpsBreak:
+    m_OverrideState: 1
+    m_Value: 0
+  _fpsLag:
+    m_OverrideState: 1
+    m_Value:
+      _curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 0.24580383
+          value: 0
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+  _fpsBlending:
+    m_OverrideState: 0
+    m_Value: {fileID: 2800000, guid: d633e23b20d86c2428a6e0ad4830b85b, type: 3}
+    dimension: 1
+  _quantSpread:
+    m_OverrideState: 1
+    m_Value: 0.75
+  _scanlineDrift:
+    m_OverrideState: 1
+    m_Value: 0
+  _scanlineRes:
+    m_OverrideState: 1
+    m_Value: 720
+  _scanlinesFps:
+    m_OverrideState: 1
+    m_Value: 120
+  _channelShiftPow:
+    m_OverrideState: 1
+    m_Value: 0.62
+  _channelShiftX:
+    m_OverrideState: 1
+    m_Value: 0
+  _channelShiftY:
+    m_OverrideState: 1
+    m_Value: 0.015
+  _channelShiftSpread:
+    m_OverrideState: 1
+    m_Value: 0
+  _noise:
+    m_OverrideState: 1
+    m_Value: 0
+  _noiseBilinear:
+    m_OverrideState: 1
+    m_Value: 1
+  _distortionTex:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
     dimension: 1

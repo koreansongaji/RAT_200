@@ -232,6 +232,21 @@ MonoBehaviour:
   - _audio: {fileID: 8300000, guid: 0cd16cc3ec9c6764a92c2b2bd029573c, type: 3}
   - _audio: {fileID: 8300000, guid: c99a484cd6b915f4087a45277c1d42ac, type: 3}
   - _audio: {fileID: 8300000, guid: bf48bc9e7e3ea1c4b94a886bb19bb56d, type: 3}
+--- !u!114 &-8570093915774650799
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d93f1809b0d8d949803e8bb60f44915, type: 3}
+  m_Name: Comics
+  m_EditorClassIdentifier: 
+  _active: 1
+  _shader: {fileID: 4800000, guid: f97628ee99a0e10418407fba82d232cb, type: 3}
+  _ditherTex: {fileID: 2800000, guid: e470306b2a0935842a3dc6bdc1f3e813, type: 3}
 --- !u!114 &-8374264211658782312
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -260,6 +275,20 @@ MonoBehaviour:
   _velocityDefault: {x: 0, y: 0, z: 0}
   _textureDefault: {fileID: 2800000, guid: 9d5d64ece5c9f1e4e8a7a7c731f76c51, type: 3}
   _shadeDefault: 0
+--- !u!114 &-8237258573263956196
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efc333b15d5e54546b9236a93044a3ee, type: 3}
+  m_Name: Jpeg
+  m_EditorClassIdentifier: 
+  _active: 1
+  _shader: {fileID: 4800000, guid: c87cb70bbf7424448b290759a6e27a96, type: 3}
 --- !u!114 &-8002271854382001187
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -756,6 +785,36 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 2cb163f37e9b5b24ea6a80fb26d1dcb0, type: 3}
   - {fileID: 2800000, guid: 8a0824da1995cd648bcdb663180f186d, type: 3}
   _grainClamp: 0.5
+--- !u!114 &-6630423716057587601
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d93f1809b0d8d949803e8bb60f44915, type: 3}
+  m_Name: Comics
+  m_EditorClassIdentifier: 
+  _active: 1
+  _shader: {fileID: 4800000, guid: f97628ee99a0e10418407fba82d232cb, type: 3}
+  _ditherTex: {fileID: 2800000, guid: e470306b2a0935842a3dc6bdc1f3e813, type: 3}
+--- !u!114 &-6515806673134014659
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7479e16a933e7f946b0d6fbbdd506f6c, type: 3}
+  m_Name: Warp
+  m_EditorClassIdentifier: 
+  _active: 1
+  _shader: {fileID: 4800000, guid: c8ad0a2f4d91daa428cc0448e8687944, type: 3}
+  _maskPower: 2
 --- !u!114 &-6368238651420575263
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1459,6 +1518,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _active: 1
   _shader: {fileID: 4800000, guid: a8a8d9d8743c6f64b89ba15b99d6ba9c, type: 3}
+--- !u!114 &-2359992244012443891
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7479e16a933e7f946b0d6fbbdd506f6c, type: 3}
+  m_Name: Warp
+  m_EditorClassIdentifier: 
+  _active: 1
+  _shader: {fileID: 4800000, guid: c8ad0a2f4d91daa428cc0448e8687944, type: 3}
+  _maskPower: 2
 --- !u!114 &-1793566746319138409
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1473,7 +1547,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _active: 1
   _shader: {fileID: 4800000, guid: 37430ae71ba54bd390a4ca51906fd972, type: 3}
-  _ditherTex: {fileID: 2800000, guid: e470306b2a0935842a3dc6bdc1f3e813, type: 3}
+  _maskScale: 0
+  _maskTex: {fileID: 2800000, guid: 88a3d604a839e254b914fc85e80a88c6, type: 3}
 --- !u!114 &-722449671608308303
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1919,11 +1994,26 @@ MonoBehaviour:
     - {fileID: -628021997599394885}
     - {fileID: -135512496740703931}
     - {fileID: -6674893053208976368}
-    - {fileID: 4093638422333720947}
+    - {fileID: 2746373209373077806}
+    - {fileID: -6630423716057587601}
     - {fileID: -2940330227935411298}
     - {fileID: 2208150081257762721}
-    - {fileID: -3616147181896329175}
+    - {fileID: -2359992244012443891}
   _blitShader: {fileID: 4800000, guid: a8a709d9db2241741ab3032b946ef258, type: 3}
+--- !u!114 &2746373209373077806
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efc333b15d5e54546b9236a93044a3ee, type: 3}
+  m_Name: Jpeg
+  m_EditorClassIdentifier: 
+  _active: 1
+  _shader: {fileID: 4800000, guid: c87cb70bbf7424448b290759a6e27a96, type: 3}
 --- !u!114 &3517192887583683100
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -2121,12 +2211,13 @@ MonoBehaviour:
     - {fileID: -5119552415443424789}
     - {fileID: 6521221421759020511}
     - {fileID: -9054688359140257827}
-    - {fileID: 8119143770711637039}
+    - {fileID: -8237258573263956196}
+    - {fileID: -8570093915774650799}
     - {fileID: 6285166309023416635}
     - {fileID: -3605308608763968502}
     - {fileID: -2739764273106046999}
+    - {fileID: -6515806673134014659}
     - {fileID: -3103315197804376916}
-    - {fileID: 1406551613265344454}
     - {fileID: -8744136534583793886}
   _blitShader: {fileID: 4800000, guid: a8a709d9db2241741ab3032b946ef258, type: 3}
 --- !u!114 &5208151553749601535
@@ -2596,7 +2687,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _active: 1
   _shader: {fileID: 4800000, guid: 37430ae71ba54bd390a4ca51906fd972, type: 3}
-  _ditherTex: {fileID: 2800000, guid: e470306b2a0935842a3dc6bdc1f3e813, type: 3}
+  _maskScale: 0
+  _maskTex: {fileID: 2800000, guid: 88a3d604a839e254b914fc85e80a88c6, type: 3}
 --- !u!114 &6421415103420535459
 MonoBehaviour:
   m_ObjectHideFlags: 3

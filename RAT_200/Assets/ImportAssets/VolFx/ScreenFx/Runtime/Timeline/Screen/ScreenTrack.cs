@@ -12,6 +12,8 @@ namespace ScreenFx
         public RenderMode _renderMode   = RenderMode.ScreenSpaceCamera;
         public int        _sortingOrder = 10000;
         [Tooltip("Alpha multiplayer for track assets, to control general flashes intensity")]
+        public float      _planeDist    = 10f;
+        [Tooltip("Alpha multiplayer for track assets, to control general flashes intensity")]
         [Range(0, 1)]
         public float      _alphaMul = 1f;
         [Layer]
@@ -27,6 +29,7 @@ namespace ScreenFx
             mixer._renderMode   = _renderMode;
             mixer._weight       = _alphaMul;
             mixer._layer        = _layer;
+            mixer._planeDist    = _planeDist;
             mixer._name         = name;
 
             return mixerTrack;

@@ -4,9 +4,9 @@ AssetOrigin:
   serializedVersion: 1
   productId: 300643
   packageName: VolFx - VFX Toolkit (Post Processing, Timeline Tracks, Shaders, Tools)
-  packageVersion: 2.9.1
+  packageVersion: 2.10.4
   assetPath: Assets/ImportAssets/VolFx/Samples/VolFx/Sprites/AnOldFriend/nt-src.ase
-  uploadId: 777194
+  uploadId: 827094
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -155,7 +155,7 @@ ScriptedImporter:
   asepriteLayers:
   - layerIndex: 0
     uuid:
-      value0: 1966372153
+      value0: 0
       value1: 0
       value2: 0
       value3: 0

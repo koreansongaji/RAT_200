@@ -584,6 +584,7 @@ GameObject:
   m_Component:
   - component: {fileID: 364862457}
   - component: {fileID: 364862458}
+  - component: {fileID: 364862459}
   m_Layer: 0
   m_Name: SetUrp
   m_TagString: Untagged
@@ -646,6 +647,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 0
+--- !u!114 &364862459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 364862456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5126b23331eb488997471e4afe5e8b75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &377577387
 GameObject:
   m_ObjectHideFlags: 0
