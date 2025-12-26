@@ -6,6 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="9a50adee-ec7a-4782-bb48-036fabc44743" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.RAT_200/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RAT_200/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Develop/UI/Title.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Develop/UI/Title.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Develop/UI/Title.unity.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Develop/UI/Title.unity.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/Friend Rat/FriendRatMovement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Friend Rat/FriendRatMovement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/UI/OptionPage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/UI/OptionPage.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/UI/TitlePage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/UI/TitlePage.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Shader/Settings/PC_Renderer.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shader/Settings/PC_Renderer.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -59,7 +64,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "git-widget-placeholder": "feature/friendRat",
+    "git-widget-placeholder": "feature/UI/Title",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -143,6 +148,7 @@
       <workItem from="1763032383609" duration="3200000" />
       <workItem from="1766428375691" duration="7394000" />
       <workItem from="1766676377894" duration="3295000" />
+      <workItem from="1766681745935" duration="1073000" />
     </task>
     <servers />
   </component>
