@@ -15,10 +15,10 @@ MonoBehaviour:
   active: 1
   m_Sensitive:
     m_OverrideState: 1
-    m_Value: 0.383
+    m_Value: 0.371
   m_Thickness:
-    m_OverrideState: 1
-    m_Value: 0.29
+    m_OverrideState: 0
+    m_Value: 0.173
   m_Color:
     m_OverrideState: 1
     m_Value:

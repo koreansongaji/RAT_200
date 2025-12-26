@@ -45,6 +45,9 @@ public class SafePuzzleController : MonoBehaviour, IMicroHidePlayerPreference
     int ansSpade, ansHeart, ansDiamond, ansClub;
     bool opened;
 
+    [Header("Success")]
+    public DrawerItemDispenser dispenser;
+
     void Awake()
     {
         // Enter 버튼 눌렀을 때 시도
@@ -109,6 +112,8 @@ public class SafePuzzleController : MonoBehaviour, IMicroHidePlayerPreference
         }
         // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
         // 필요하면 효과음/연출 추가
+
+        dispenser.Dispense();
     }
 
     void ShowFail()
