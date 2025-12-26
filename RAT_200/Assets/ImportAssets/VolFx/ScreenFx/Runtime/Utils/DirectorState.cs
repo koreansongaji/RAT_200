@@ -2,11 +2,12 @@ using System;
 using UnityEngine;
 using UnityEngine.Playables;
 
-//  ScreenFx © NullTale - https://twitter.com/NullTale/
+//  ScreenFx © NullTale - https://x.com/NullTale
 namespace ScreenFx
 {
     [DefaultExecutionOrder(-10)]
     [RequireComponent(typeof(PlayableDirector))]
+    [AddComponentMenu("VolFx/DirectorState")]
     public class DirectorState : MonoBehaviour
     {
         [Tooltip("Speed relative")]

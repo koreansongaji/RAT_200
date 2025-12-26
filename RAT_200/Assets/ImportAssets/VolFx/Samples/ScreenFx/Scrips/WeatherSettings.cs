@@ -1,9 +1,10 @@
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-//  ScreenFx © NullTale - https://twitter.com/NullTale/
+//  ScreenFx © NullTale - https://x.com/NullTale
 namespace ScreenFx
 {
+    #pragma warning disable CS0618
     [VolumeComponentMenuForRenderPipeline("Weather (ScreenFxSample)", typeof(UniversalRenderPipeline))]
     internal class WeatherSettings : VolumeComponent
     {

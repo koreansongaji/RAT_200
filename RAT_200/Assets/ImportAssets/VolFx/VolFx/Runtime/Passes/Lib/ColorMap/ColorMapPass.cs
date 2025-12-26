@@ -23,7 +23,8 @@ namespace VolFx
         private Dictionary<Texture2D, Texture2D> _paletteCache = new Dictionary<Texture2D, Texture2D>();
         private Texture2D                        _palTex;
 
-        private                 bool _usePalettePrev;
+        private bool  _usePalettePrev;
+        private float _motion;
 
         // =======================================================================
         public static class LutGenerator
@@ -147,7 +148,10 @@ namespace VolFx
             var settings = Stack.GetComponent<ColorMapVol>();
 
             if (settings.IsActive() == false)
+            {
+                _motion = 0f;
                 return false;
+            }
             
             
             var palette = settings.m_Palette.value as Texture2D;
@@ -178,17 +182,21 @@ namespace VolFx
             
             var grad = settings.m_Gradient.value;
             _texOver.filterMode = grad._grad.mode == GradientMode.Fixed ? FilterMode.Point : FilterMode.Bilinear;
+            _texOver.wrapMode   = TextureWrapMode.Clamp;
             _texOver.SetPixels(grad._pixels);
             _texOver.Apply();
             
+            _motion += settings.m_Motion.value * Time.deltaTime;
+
             mat.SetTexture(s_Gradient, _texOver);
             
             mat.SetFloat(s_Intensity, settings.m_Weight.value);
-            var mask = new Vector4(settings.m_Mask.value.x, settings.m_Mask.value.y, settings.m_Offset.value, 0f);
+            
+            var stretch = settings.m_Stretch.value >= 0f ? Mathf.Lerp(1, 7, Mathf.Pow(settings.m_Stretch.value, 3)) : Mathf.Lerp(1, 0, Mathf.Abs(settings.m_Stretch.value));
+            var mask = new Vector4(settings.m_Mask.value.x, settings.m_Mask.value.y, settings.m_Offset.value + _motion, stretch);
             if (mask.x == mask.y)
                 mask.x += 0.01f;
 
-                
             mat.SetVector(s_Mask, mask);
 
             return true;

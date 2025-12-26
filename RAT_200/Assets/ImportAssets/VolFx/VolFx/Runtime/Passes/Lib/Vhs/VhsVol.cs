@@ -31,6 +31,8 @@ namespace VolFx
         public ClampedFloatParameter _scale      = new ClampedFloatParameter(1, .3f, 3f);
         [Tooltip("Grain flickering")]
         public ClampedFloatParameter _flickering = new ClampedFloatParameter(0f, -1f, 1f);
+        [Tooltip("Line distortion")]
+        public BoolParameter         _lines = new BoolParameter(true, false);
         
         [Header("Glow")]
         [Tooltip("Crt glow color")]

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -36,8 +37,14 @@ namespace ScreenFx
                 Time.timeScale = 1f;
         }
 
-        private void Start()
+        private IEnumerator Start()
         {
+            if (transform.parent != null)
+            {
+                transform.SetParent(null);
+                yield return null;
+            }
+            
             DontDestroyOnLoad(gameObject);
         }
 

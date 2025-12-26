@@ -45,7 +45,7 @@ namespace ScreenFx
         public Canvas Canvas => m_Canvas;
 
         // =======================================================================
-        public ScreenOverlay(int sortingOrder, RenderMode mode, int layer, string title)
+        public ScreenOverlay(int sortingOrder, RenderMode mode, int layer, float planeDist, string title)
         {
             var go = new GameObject($"Scr_{title}", typeof(Canvas));
             go.hideFlags = HideFlags.DontSave;
@@ -56,7 +56,7 @@ namespace ScreenFx
             m_Canvas.renderMode    = mode;
             m_Canvas.worldCamera   = UnityEngine.Camera.main;
             m_Canvas.sortingOrder  = sortingOrder;
-            m_Canvas.planeDistance = 10f;
+            m_Canvas.planeDistance = planeDist;
             // 
             m_Canvas.transform.SetParent(ScreenFx.Instance.transform, false);
 

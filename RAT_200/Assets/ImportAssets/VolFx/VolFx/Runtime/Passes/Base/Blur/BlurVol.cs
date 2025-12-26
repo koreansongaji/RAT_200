@@ -16,7 +16,7 @@ namespace VolFx
         public ClampedFloatParameter m_Radial = new ClampedFloatParameter(0, 0, 1);
 
         [Tooltip("Number of blur samples")]
-        public ClampedIntParameter m_Samples = new ClampedIntParameter(9, 3, 18);
+        public NoInterpClampedIntParameter m_Samples = new NoInterpClampedIntParameter(9, 3, 18);
 
         [Tooltip("Aspect ratio control. Negative = horizontal bias, Positive = vertical bias.")]
         public ClampedFloatParameter m_Aspect = new ClampedFloatParameter(0, -1, 1);

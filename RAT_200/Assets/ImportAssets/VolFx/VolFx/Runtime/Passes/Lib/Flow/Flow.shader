@@ -83,7 +83,7 @@ Shader "Hidden/Vol/Flow"
 	            half4 col  = tex2D(_MainTex, i.uv);
 	            half4 flow = tex2D(_FlowTex, frac(rotate(i.uv - float2(.5, .5), _Tiling.w) * _scale + float2(.5, .5) + _offset
 #ifdef _MOTION
-	            	+ sampleFlow(i.uv)
+	            	+ sampleFlow(i.uv + _Data.w)
 #endif
 	            	));
 	        	

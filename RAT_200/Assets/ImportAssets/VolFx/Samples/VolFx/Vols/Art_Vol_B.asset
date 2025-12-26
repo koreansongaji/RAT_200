@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e3b43e232564d52b710c4bdc0cd6e42, type: 3}
   m_Name: ColorMapVol
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   m_Weight:
     m_OverrideState: 1
     m_Value: 0.805
@@ -83,6 +83,12 @@ MonoBehaviour:
       - {r: 0.9902236, g: 1, b: 0.6745283, a: 1}
       - {r: 0.9902236, g: 1, b: 0.6745283, a: 1}
   m_Offset:
+    m_OverrideState: 0
+    m_Value: 0
+  m_Motion:
+    m_OverrideState: 0
+    m_Value: 0
+  m_Stretch:
     m_OverrideState: 0
     m_Value: 0
   m_Mask:

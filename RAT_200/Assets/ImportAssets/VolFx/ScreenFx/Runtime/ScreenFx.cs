@@ -35,6 +35,7 @@ namespace ScreenFx
             {
                 if (s_Instance == null)
                 {
+                    #pragma warning disable CS0618
                     s_Instance = FindObjectOfType<ScreenFxPool>();
                     if (s_Instance == null)
                     {
@@ -168,8 +169,7 @@ namespace ScreenFx
             // =======================================================================
             IEnumerator _screenFlash()
             {
-                using var handle = new ScreenOverlay(sortingOreder, mode, 0, "static_call_screen");
-                var startTime    = Time.time;
+                using var handle = new ScreenOverlay(sortingOreder, mode, 0, 1f, "static_call_screen");
                 var duration     = alpha.keys[1].time - alpha.keys[0].time;
                 var endTime      = Time.time + duration;
                 var alphaInitial = color.a;

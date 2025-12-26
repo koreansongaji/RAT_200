@@ -845,6 +845,9 @@ MonoBehaviour:
   m_Weight:
     m_OverrideState: 1
     m_Value: 0
+  m_WeightOverride:
+    m_OverrideState: 1
+    m_Value: 0
   m_Value:
     m_OverrideState: 1
     m_Value: 0
@@ -945,6 +948,112 @@ MonoBehaviour:
   m_OffsetY:
     m_OverrideState: 1
     m_Value: 0
+--- !u!114 &-2315144173762692363
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a2c9bdbf96c02f4fbbfabe167dee7f8, type: 3}
+  m_Name: WarpVol
+  m_EditorClassIdentifier: 
+  active: 1
+  _intensity:
+    m_OverrideState: 1
+    m_Value: 0
+  _depth:
+    m_OverrideState: 1
+    m_Value: 2
+  _color:
+    m_OverrideState: 1
+    m_Value:
+      _grad:
+        serializedVersion: 2
+        key0: {r: 1, g: 1, b: 1, a: 1}
+        key1: {r: 1, g: 1, b: 1, a: 1}
+        key2: {r: 0, g: 0, b: 0, a: 0}
+        key3: {r: 0, g: 0, b: 0, a: 0}
+        key4: {r: 0, g: 0, b: 0, a: 0}
+        key5: {r: 0, g: 0, b: 0, a: 0}
+        key6: {r: 0, g: 0, b: 0, a: 0}
+        key7: {r: 0, g: 0, b: 0, a: 0}
+        ctime0: 0
+        ctime1: 65535
+        ctime2: 0
+        ctime3: 0
+        ctime4: 0
+        ctime5: 0
+        ctime6: 0
+        ctime7: 0
+        atime0: 0
+        atime1: 65535
+        atime2: 0
+        atime3: 0
+        atime4: 0
+        atime5: 0
+        atime6: 0
+        atime7: 0
+        m_Mode: 0
+        m_ColorSpace: -1
+        m_NumColorKeys: 2
+        m_NumAlphaKeys: 2
+      _pixels:
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+  _emission:
+    m_OverrideState: 1
+    m_Value: {r: 0, g: 0, b: 0, a: 0}
+  _distort:
+    m_OverrideState: 1
+    m_Value: 0
+  _size:
+    m_OverrideState: 1
+    m_Value: 0.7
+  _hardness:
+    m_OverrideState: 1
+    m_Value: 0.583
+  _count:
+    m_OverrideState: 1
+    m_Value: 0.5
+  _density:
+    m_OverrideState: 1
+    m_Value: 2.3
+  _speed:
+    m_OverrideState: 1
+    m_Value: 3
 --- !u!114 &-2285609346004352214
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1028,6 +1137,12 @@ MonoBehaviour:
       - {r: 0.9677419, g: 0.9677419, b: 0.9677419, a: 0}
       - {r: 1, g: 1, b: 1, a: 0}
   m_Offset:
+    m_OverrideState: 1
+    m_Value: 0
+  m_Motion:
+    m_OverrideState: 1
+    m_Value: 0
+  m_Stretch:
     m_OverrideState: 1
     m_Value: 0
   m_Mask:
@@ -1228,6 +1343,279 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 0
   tint:
+    m_OverrideState: 1
+    m_Value: 0
+--- !u!114 &-879056705915188023
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fd354fb10688b1468753f5060c90dc6, type: 3}
+  m_Name: ComicsVol
+  m_EditorClassIdentifier: 
+  active: 1
+  m_ColorWeight:
+    m_OverrideState: 1
+    m_Value: 0
+  m_Colors:
+    m_OverrideState: 1
+    m_Value:
+      _grad:
+        serializedVersion: 2
+        key0: {r: 0, g: 0, b: 0, a: 1}
+        key1: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+        key2: {r: 1, g: 1, b: 1, a: 0}
+        key3: {r: 0, g: 0, b: 0, a: 0}
+        key4: {r: 0, g: 0, b: 0, a: 0}
+        key5: {r: 0, g: 0, b: 0, a: 0}
+        key6: {r: 0, g: 0, b: 0, a: 0}
+        key7: {r: 0, g: 0, b: 0, a: 0}
+        ctime0: 19661
+        ctime1: 45875
+        ctime2: 65535
+        ctime3: 0
+        ctime4: 0
+        ctime5: 0
+        ctime6: 0
+        ctime7: 0
+        atime0: 0
+        atime1: 65535
+        atime2: 0
+        atime3: 0
+        atime4: 0
+        atime5: 0
+        atime6: 0
+        atime7: 0
+        m_Mode: 1
+        m_ColorSpace: -1
+        m_NumColorKeys: 3
+        m_NumAlphaKeys: 2
+      _colorPixels:
+      - {r: 0, g: 0, b: 0, a: 1}
+      - {r: 0, g: 0, b: 0, a: 1}
+      - {r: 0, g: 0, b: 0, a: 1}
+      - {r: 0, g: 0, b: 0, a: 1}
+      - {r: 0, g: 0, b: 0, a: 1}
+      - {r: 0, g: 0, b: 0, a: 1}
+      - {r: 0, g: 0, b: 0, a: 1}
+      - {r: 0, g: 0, b: 0, a: 1}
+      - {r: 0, g: 0, b: 0, a: 1}
+      - {r: 0, g: 0, b: 0, a: 1}
+      - {r: 0.5, g: 0.5, b: 0.5, a: 1}
+      - {r: 0.5, g: 0.5, b: 0.5, a: 1}
+      - {r: 0.5, g: 0.5, b: 0.5, a: 1}
+      - {r: 0.5, g: 0.5, b: 0.5, a: 1}
+      - {r: 0.5, g: 0.5, b: 0.5, a: 1}
+      - {r: 0.5, g: 0.5, b: 0.5, a: 1}
+      - {r: 0.5, g: 0.5, b: 0.5, a: 1}
+      - {r: 0.5, g: 0.5, b: 0.5, a: 1}
+      - {r: 0.5, g: 0.5, b: 0.5, a: 1}
+      - {r: 0.5, g: 0.5, b: 0.5, a: 1}
+      - {r: 0.5, g: 0.5, b: 0.5, a: 1}
+      - {r: 0.5, g: 0.5, b: 0.5, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      _ditherPixels:
+      - {r: 0, g: 0, b: 0, a: 1}
+      - {r: 0, g: 0, b: 0, a: 0.89247584}
+      - {r: 0, g: 0, b: 0, a: 0.7849517}
+      - {r: 0, g: 0, b: 0, a: 0.6774276}
+      - {r: 0, g: 0, b: 0, a: 0.56990343}
+      - {r: 0, g: 0, b: 0, a: 0.46237928}
+      - {r: 0, g: 0, b: 0, a: 0.35485518}
+      - {r: 0, g: 0, b: 0, a: 0.24733102}
+      - {r: 0, g: 0, b: 0, a: 0.13980687}
+      - {r: 0, g: 0, b: 0, a: 0.03228277}
+      - {r: 0, g: 0, b: 0, a: 0.9435675}
+      - {r: 0, g: 0, b: 0, a: 0.8629223}
+      - {r: 0, g: 0, b: 0, a: 0.78227717}
+      - {r: 0, g: 0, b: 0, a: 0.701632}
+      - {r: 0, g: 0, b: 0, a: 0.6209868}
+      - {r: 0, g: 0, b: 0, a: 0.54034173}
+      - {r: 0, g: 0, b: 0, a: 0.45969653}
+      - {r: 0, g: 0, b: 0, a: 0.37905127}
+      - {r: 0, g: 0, b: 0, a: 0.29840618}
+      - {r: 0, g: 0, b: 0, a: 0.21776098}
+      - {r: 0, g: 0, b: 0, a: 0.1371159}
+      - {r: 0, g: 0, b: 0, a: 0.056470633}
+      - {r: 0.5, g: 0.5, b: 0.5, a: 0.9677666}
+      - {r: 0.5, g: 0.5, b: 0.5, a: 0.8602369}
+      - {r: 0.5, g: 0.5, b: 0.5, a: 0.75270736}
+      - {r: 0.5, g: 0.5, b: 0.5, a: 0.64517766}
+      - {r: 0.5, g: 0.5, b: 0.5, a: 0.53764814}
+      - {r: 0.5, g: 0.5, b: 0.5, a: 0.43011844}
+      - {r: 0.5, g: 0.5, b: 0.5, a: 0.32258892}
+      - {r: 0.5, g: 0.5, b: 0.5, a: 0.21505922}
+      - {r: 0.5, g: 0.5, b: 0.5, a: 0.1075297}
+      - {r: 0.5, g: 0.5, b: 0.5, a: 0}
+  m_Measure:
+    m_OverrideState: 1
+    m_Value:
+      _curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 0
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      _pixels:
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+  m_DitherWeight:
+    m_OverrideState: 1
+    m_Value: 1
+  m_DitherPower:
+    m_OverrideState: 1
+    m_Value: 0.26
+  m_DitherScale:
+    m_OverrideState: 1
+    m_Value: 5
+  m_PatternSpeed:
+    m_OverrideState: 1
+    m_Value: 0
+  m_OutlineWeight:
+    m_OverrideState: 1
+    m_Value:
+      _curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 0
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      _pixels:
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0, g: 0, b: 0, a: 0}
+  m_Thickness:
+    m_OverrideState: 1
+    m_Value: 0.5
+  m_Sharpness:
+    m_OverrideState: 1
+    m_Value: 0.5
+  m_Mode:
+    m_OverrideState: 1
+    m_Value: 0
+  m_OulineColor:
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 0, b: 1, a: 1}
+    hdr: 0
+  m_FancyWeight:
+    m_OverrideState: 1
+    m_Value: 0
+  m_DitherTex:
+    m_OverrideState: 1
+    m_Value: {fileID: 0}
+    dimension: 1
+  m_ShadeWeight:
+    m_OverrideState: 1
+    m_Value: 1
+  m_Depth:
     m_OverrideState: 1
     m_Value: 0
 --- !u!114 &-581120513425526550
@@ -1814,7 +2202,6 @@ MonoBehaviour:
   - {fileID: 1188025097576841821}
   - {fileID: 7247224656434738405}
   - {fileID: -2285609346004352214}
-  - {fileID: -349858639650839051}
   - {fileID: -5715595232349836960}
   - {fileID: -2359035947863883670}
   - {fileID: -1189202946079165499}
@@ -1833,9 +2220,115 @@ MonoBehaviour:
   - {fileID: -3414442198056732665}
   - {fileID: 8281470871711608506}
   - {fileID: 4763358934110460804}
-  - {fileID: 7332431046936151817}
-  - {fileID: 659798255207556889}
   - {fileID: -7581365228997210026}
+  - {fileID: -879056705915188023}
+  - {fileID: 451055921982375691}
+  - {fileID: -2315144173762692363}
+--- !u!114 &451055921982375691
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 811610bff6fc5af458d2f8870606b8d0, type: 3}
+  m_Name: JpegVol
+  m_EditorClassIdentifier: 
+  active: 1
+  _intensity:
+    m_OverrideState: 1
+    m_Value: 0
+  _blockSize:
+    m_OverrideState: 1
+    m_Value: 7
+  _quantization:
+    m_OverrideState: 1
+    m_Value: 15
+  _distortionScale:
+    m_OverrideState: 1
+    m_Value: 0
+  _applyToY:
+    m_OverrideState: 1
+    m_Value: 0
+  _applyToChroma:
+    m_OverrideState: 1
+    m_Value: 0
+  _applyToGlitch:
+    m_OverrideState: 1
+    m_Value: 0
+  _fps:
+    m_OverrideState: 1
+    m_Value: 0
+  _fpsBreak:
+    m_OverrideState: 1
+    m_Value: 0
+  _fpsLag:
+    m_OverrideState: 1
+    m_Value:
+      _curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+  _fpsBlending:
+    m_OverrideState: 1
+    m_Value: {fileID: 0}
+    dimension: 1
+  _quantSpread:
+    m_OverrideState: 1
+    m_Value: 0
+  _scanlineDrift:
+    m_OverrideState: 1
+    m_Value: 0
+  _scanlineRes:
+    m_OverrideState: 1
+    m_Value: 720
+  _scanlinesFps:
+    m_OverrideState: 1
+    m_Value: 120
+  _channelShiftPow:
+    m_OverrideState: 1
+    m_Value: 0
+  _channelShiftX:
+    m_OverrideState: 1
+    m_Value: 0
+  _channelShiftY:
+    m_OverrideState: 1
+    m_Value: 0
+  _channelShiftSpread:
+    m_OverrideState: 1
+    m_Value: 0
+  _noise:
+    m_OverrideState: 1
+    m_Value: 0
+  _noiseBilinear:
+    m_OverrideState: 1
+    m_Value: 0
+  _distortionTex:
+    m_OverrideState: 1
+    m_Value: {fileID: 0}
+    dimension: 1
 --- !u!114 &659798255207556889
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -2364,6 +2857,9 @@ MonoBehaviour:
   _flickering:
     m_OverrideState: 1
     m_Value: 0
+  _lines:
+    m_OverrideState: 1
+    m_Value: 1
   _color:
     m_OverrideState: 1
     m_Value: {r: 1, g: 0, b: 0, a: 1}
@@ -2973,6 +3469,12 @@ MonoBehaviour:
   m_Fps:
     m_OverrideState: 1
     m_Value: 3
+  m_Motion:
+    m_OverrideState: 1
+    m_Value: 0
+  m_Smooth:
+    m_OverrideState: 1
+    m_Value: 1
   m_ContourDeviation:
     m_OverrideState: 1
     m_Value: 0
@@ -2996,6 +3498,9 @@ MonoBehaviour:
   m_Blending:
     m_OverrideState: 1
     m_Value: 0.1
+  m_FramesLerp:
+    m_OverrideState: 1
+    m_Value: 3
 --- !u!114 &7332431046936151817
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -3219,6 +3724,9 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: {fileID: 0}
   m_MotionPower:
+    m_OverrideState: 1
+    m_Value: 0
+  m_MotionMove:
     m_OverrideState: 1
     m_Value: 0
 --- !u!114 &9001657382290151224

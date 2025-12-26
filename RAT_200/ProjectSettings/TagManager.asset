@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Keypad3D
+  - Display
+  - Keypad2D
   layers:
   - Default
   - TransparentFX
@@ -27,7 +30,7 @@ TagManager:
   - Draggable
   - 
   - 
-  - 
+  - Obstacle
   - 
   - 
   - 

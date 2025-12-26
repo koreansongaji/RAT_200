@@ -19,6 +19,7 @@ namespace ScreenFx
         private ScreenOverlay _handle;
         public float          _weight;
         public int            _layer;
+        public float          _planeDist;
         public string         _name;
 
         public Camera        _captureCamera;  // камера для скриншота (можно назначить извне)
@@ -26,7 +27,7 @@ namespace ScreenFx
         // =======================================================================
         public override void OnBehaviourPlay(Playable playable, FrameData info)
         {
-            _handle = new ScreenOverlay(_sortingOrder, _renderMode, _layer, _name);
+            _handle = new ScreenOverlay(_sortingOrder, _renderMode, _layer, _planeDist, _name);
         }
 
         public override void OnBehaviourPause(Playable playable, FrameData info)

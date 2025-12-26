@@ -3,7 +3,7 @@ Shader "VolumetricFog"
        Properties
     {
         _Color("Color", Color) = (1, 1, 1, 1)
-        _MaxDistance("Max distance", float) = 100
+        _MaxDistance("Max distance", Range(0.1, 20)) = 10
         _StepSize("Step size", Range(0.1, 20)) = 1
         _DensityMultiplier("Density multiplier", Range(0, 10)) = 1
         _NoiseOffset("Noise offset", float) = 0
@@ -58,6 +58,8 @@ Shader "VolumetricFog"
 
             half4 frag(Varyings IN) : SV_Target
             {
+                // return half4(GetAdditionalLightsCount().xxx * 0.1, 1);
+                
                 float4 col = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, IN.texcoord);
                 float depth = SampleSceneDepth(IN.texcoord);
                 float3 worldPos = ComputeWorldSpacePosition(IN.texcoord, depth, UNITY_MATRIX_I_VP);
@@ -80,13 +82,23 @@ Shader "VolumetricFog"
                     if (density > 0)
                     {
                         Light mainLight = GetMainLight(TransformWorldToShadowCoord(rayPos));
-                        fogCol.rgb += mainLight.color.rgb * _LightContribution.rgb * henyey_greenstein(dot(rayDir, mainLight.direction), _LightScattering) * density * mainLight.shadowAttenuation * _StepSize;
+                        fogCol.rgb += mainLight.color.rgb * 
+                                    _LightContribution.rgb *
+                                        henyey_greenstein(dot(rayDir, mainLight.direction), _LightScattering) * 
+                                            density * mainLight.shadowAttenuation * 
+                                                _StepSize;
 
                         // 추가 광원(Spot/Point 포함) 기여 누적
-                        uint additionalLightCount = GetAdditionalLightsCount();
+                        // uint additionalLightCount = GetAdditionalLightsCount();
+                        [unroll(5)]
+                        uint additionalLightCount = 5u;
                         for (uint li = 0u; li < additionalLightCount; li++)
                         {
-                            Light addLight = GetAdditionalLight(li, rayPos);
+                            // Light addLight = GetAdditionalLight(li, rayPos);
+                            Light addLight = GetAdditionalPerObjectLight(li, rayPos);
+                            // GetAdditionalPerObjectLight
+                            
+                            if (dot(addLight.color.rgb, addLight.color.rgb) == 0) continue;
                             // 스팟 앵글/범위 등은 URP가 attenuation에 반영함
                             // addLight.distanceAttenuation * addLight.shadowAttenuation * addLight.direction 등 사용
                             float3 L = addLight.direction; // 라이트→표면 방향(URP 표준)

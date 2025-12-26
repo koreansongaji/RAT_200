@@ -1,139 +1,72 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
-public class PlayerHiderOnMicro : MonoBehaviour
+/// <summary>
+/// MicroZoom(어느 퍼즐이든 상관없이) 상태일 때 플레이어 모델을 숨기는 스크립트.
+/// - CloseupCamManager.InMicro 전역 상태만 보고 판단한다.
+/// - modelRoot 아래의 렌더러들만 껐다 켜기 때문에 콜라이더/에이전트는 그대로 남는다.
+/// </summary>
+public class PlayerHideOnMicro : MonoBehaviour
 {
-    public enum Mode { HostOptIn, Always, Never }
+    [Header("숨길 모델 루트 (없으면 이 오브젝트 기준)")]
+    [SerializeField] Transform modelRoot;
 
-    [Header("Refs")]
-    [Tooltip("이 Micro 상태를 구독합니다.")]
-    public MicroZoomSession micro;
-    [Tooltip("플레이어 모델의 루트 Transform (여기 하위의 Renderer를 토글)")]
-    public Transform playerRoot;
+    [Header("Micro 아닐 때도 강제로 항상 보이게 할지")]
+    [SerializeField] bool forceShowWhenNotMicro = true;
 
-    [Header("Behavior")]
-    public Mode hideMode = Mode.HostOptIn;
-    [Tooltip("숨긴 동안 그림자만 남길지 선택(렌더는 안 보이고 그림자는 보임)")]
-    public bool shadowsOnly = false;
-
-    // 내부
-    readonly List<Renderer> _renderers = new();
-    readonly List<bool> _prevEnabled = new();
-    readonly List<ShadowCastingMode> _prevShadow = new();
+    Renderer[] _renderers;
+    bool _lastVisible = true;
+    bool _initialized = false;
 
     void Awake()
     {
-        //if (!micro) micro = FindObjectOfType<MicroZoomSession>();
-        if (!playerRoot)
-        {
-            var p = GameObject.FindGameObjectWithTag("Player");
-            if (p) playerRoot = p.transform;
-        }
-
+        if (!modelRoot) modelRoot = transform;
         CacheRenderers();
     }
 
-    void OnEnable()
+    void OnValidate()
     {
-        if (micro)
-        {
-            micro.OnEnterMicro.AddListener(OnEnterMicro);
-            micro.OnExitMicro.AddListener(OnExitMicro);
-        }
-    }
-
-    void OnDisable()
-    {
-        if (micro)
-        {
-            micro.OnEnterMicro.RemoveListener(OnEnterMicro);
-            micro.OnExitMicro.RemoveListener(OnExitMicro);
-        }
-        // 안전 복원
-        ShowPlayer();
+        if (!modelRoot) modelRoot = transform;
+        CacheRenderers();
     }
 
     void CacheRenderers()
     {
-        _renderers.Clear();
-        _prevEnabled.Clear();
-        _prevShadow.Clear();
+        if (!modelRoot) return;
+        _renderers = modelRoot.GetComponentsInChildren<Renderer>(includeInactive: true);
+        _initialized = true;
+    }
 
-        if (!playerRoot) return;
-        playerRoot.GetComponentsInChildren(true, _renderers);
+    void LateUpdate()
+    {
+        if (!_initialized) CacheRenderers();
 
-        for (int i = 0; i < _renderers.Count; i++)
+        bool inMicro = CloseupCamManager.InMicro;   // ★ 전역 Micro 상태만 사용
+
+        // Micro 중에는 무조건 숨김
+        bool shouldVisible = !inMicro;
+
+        // 옵션: Micro가 아닐 땐 강제로 보여주기
+        if (!inMicro && !forceShowWhenNotMicro)
         {
-            _prevEnabled.Add(_renderers[i].enabled);
-            _prevShadow.Add(_renderers[i].shadowCastingMode);
+            // forceShowWhenNotMicro == false 인 경우,
+            // 외부에서 SetActive(false) 해놓은 건 건드리지 않게 하려면
+            // 여기서 아무 것도 안 해도 되지만,
+            // 일단은 shouldVisible = _lastVisible 유지할 수도 있음.
         }
+
+        if (shouldVisible == _lastVisible) return; // 상태 변화 없음 → 패스
+        _lastVisible = shouldVisible;
+
+        SetVisible(shouldVisible);
     }
 
-    void OnEnterMicro()
+    void SetVisible(bool visible)
     {
-        if (hideMode == Mode.Never) return;
-        if (hideMode == Mode.Always) { HidePlayer(); return; }
-
-        // HostOptIn: 호스트가 원할 때만
-        if (ShouldHideByHost()) HidePlayer();
-    }
-
-    void OnExitMicro()
-    {
-        ShowPlayer();
-    }
-
-    bool ShouldHideByHost()
-    {
-        if (!micro) return false;
-
-        // MicroZoomSession가 찾은 Host를 우리도 같은 규칙으로 추적
-        Component host =
-            micro ? (micro.GetComponent<IMicroSessionHost>() as Component
-                  ?? micro.GetComponentInChildren<IMicroSessionHost>() as Component
-                  ?? micro.GetComponentInParent<IMicroSessionHost>() as Component)
-                  : null;
-
-        var pref = host as IMicroHidePlayerPreference;
-        return pref != null && pref.HidePlayerDuringMicro;
-    }
-
-    void HidePlayer()
-    {
-        if (_renderers.Count == 0) CacheRenderers();
-
-        for (int i = 0; i < _renderers.Count; i++)
+        if (_renderers == null) return;
+        for (int i = 0; i < _renderers.Length; i++)
         {
-            var r = _renderers[i];
-            if (!r) continue;
-
-            // 상태 저장(1회만)
-            if (i >= _prevEnabled.Count) _prevEnabled.Add(r.enabled);
-            if (i >= _prevShadow.Count) _prevShadow.Add(r.shadowCastingMode);
-
-            if (shadowsOnly)
-            {
-                r.enabled = true;
-                r.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
-            }
-            else
-            {
-                r.enabled = false;
-            }
-        }
-    }
-
-    void ShowPlayer()
-    {
-        for (int i = 0; i < _renderers.Count; i++)
-        {
-            var r = _renderers[i];
-            if (!r) continue;
-
-            // 저장했던 상태로 복원
-            if (i < _prevEnabled.Count) r.enabled = _prevEnabled[i];
-            if (i < _prevShadow.Count) r.shadowCastingMode = _prevShadow[i];
+            if (_renderers[i] == null) continue;
+            _renderers[i].enabled = visible;
         }
     }
 }

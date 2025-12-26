@@ -24,6 +24,8 @@ namespace VolFx
         [Header("Gradient")]
         public GradientParameter     m_Gradient  = new GradientParameter(Default, false);
         public ClampedFloatParameter m_Offset    = new ClampedFloatParameter(0, 0, 1f);
+        public ClampedFloatParameter m_Motion    = new ClampedFloatParameter(0, -1f, 1f);
+        public ClampedFloatParameter m_Stretch   = new ClampedFloatParameter(0, -1, 1f);
         public FloatRangeParameter   m_Mask      = new FloatRangeParameter(new Vector2(0, 1), 0, 1);
         
         [Header("Palette")]

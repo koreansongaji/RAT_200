@@ -5,6 +5,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 300643
   packageName: VolFx - VFX Toolkit (Post Processing, Timeline Tracks, Shaders, Tools)
-  packageVersion: 2.9.1
+  packageVersion: 2.10.4
   assetPath: Assets/ImportAssets/VolFx/VolFx/Runtime/Passes/Lib/Glitch/GlitchPass.cs
-  uploadId: 777194
+  uploadId: 827094

@@ -17,6 +17,7 @@ namespace VolFx
         // =======================================================================
         private void Start()
         {
+            Debug.Log($"Urp Asset {_urp.name} was set as a main");
             QualitySettings.renderPipeline = _urp;
             _onStart.Invoke();
         }

@@ -1,8 +1,10 @@
+using System;
 using UnityEngine;
 
 namespace VolFx
 {
     [ExecuteAlways]
+    [AddComponentMenu("")]
     public class AmbientLight : MonoBehaviour
     {
         public float _intensity;

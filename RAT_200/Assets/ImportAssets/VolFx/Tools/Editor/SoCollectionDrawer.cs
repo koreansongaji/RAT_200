@@ -80,6 +80,9 @@ namespace VolFx.Tools.Editor
             catch (Exception e)
             {
                 bug = true;
+                
+                if (e.Message == "Not a Bug")
+                    bug = false;
             }
             
             if (m_List == null || bug)

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: f64d17520b85ad64790e293db7d98b7f
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 133344
+  packageName: Polygonal Water
+  packageVersion: 1.2.0
+  assetPath: Assets/Polygonal Water/Scenes/Demo/Clouds.prefab
+  uploadId: 766409

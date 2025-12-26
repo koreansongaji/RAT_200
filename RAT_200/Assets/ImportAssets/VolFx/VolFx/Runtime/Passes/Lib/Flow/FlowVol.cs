@@ -36,6 +36,9 @@ namespace VolFx
         [Tooltip("Offset power applied from motion texture")]
         [InspectorName("Power")]
         public ClampedFloatParameter m_MotionPower = new ClampedFloatParameter(0f, 0f, .3f, false);
+        [Tooltip("Animation of motion texture (offset over time)")]
+        [InspectorName("Move")]
+        public ClampedFloatParameter m_MotionMove = new ClampedFloatParameter(0f, -.3f, .3f, false);
         
         // =======================================================================
         public bool IsActive() => active && (m_Fade.value > 0f || m_Strain.value > 0f || m_Flow.value != Vector3.zero);

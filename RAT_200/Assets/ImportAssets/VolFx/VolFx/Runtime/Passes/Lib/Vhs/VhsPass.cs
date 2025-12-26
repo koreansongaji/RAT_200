@@ -39,6 +39,7 @@ namespace VolFx
 		private                 float _playTimeShades;
 		private                 float _yScanline;
 		private                 float _xScanline;
+		private					bool  _lineDis;
 
 		protected override bool   Invert     => true;
 
@@ -76,7 +77,12 @@ namespace VolFx
         }
 
         // =======================================================================
-        public override bool Validate(Material mat)
+		public override void Init()
+		{
+			_lineDis = false;
+		}
+
+		public override bool Validate(Material mat)
         {
             var settings = Stack.GetComponent<VhsVol>();
 
@@ -97,6 +103,16 @@ namespace VolFx
             
 			if (_xScanline <= 0 || Random.value < 0.05)
 				_xScanline = Random.value;
+			
+			if (settings._lines.value != _lineDis)
+			{
+				if (settings._lines.value)
+					mat.EnableKeyword("_LINE_DISTORTION_ON");
+				else
+					mat.DisableKeyword("_LINE_DISTORTION_ON");
+				
+				_lineDis = settings._lines.value;
+			}
             
 			mat.SetColor(s_Glitch, glitch);
 
