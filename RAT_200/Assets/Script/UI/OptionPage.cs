@@ -8,6 +8,11 @@ public class OptionPage : MonoBehaviour
     [SerializeField] private Transform _slideInPosition;
     [SerializeField] private TitlePage _titlePage;
 
+    /// <summary>
+    /// 옵션 페이지가 화면에 표시될 때의 기준 위치를 반환합니다.
+    /// </summary>
+    public Vector3 GetInPosition() => _slideInPosition.position;
+
     private Tween _currentTween;
     private bool _isTransitioning;
 
@@ -42,7 +47,9 @@ public class OptionPage : MonoBehaviour
         OptionManager.Instance.OptionData.BGMsoundVolume = volume;
         AudioManager.Instance.SetBGMVolume(OptionManager.Instance.OptionData.BGMsoundVolume);
     }
-    //------------- 페이지 이동 함수 (DOTween) -------------------
+    /// <summary>
+    /// 옵션 페이지를 닫고 타이틀 페이지로 돌아갑니다.
+    /// </summary>
     public void BackToTitle()
     {
         if (_isTransitioning || _titlePage == null) return;
@@ -92,6 +99,9 @@ public class OptionPage : MonoBehaviour
             .OnKill(() => onComplete?.Invoke()); // 중간에 Kill돼도 다음 단계 진행
     }
 
+    /// <summary>
+    /// 옵션 페이지를 설정된 화면 안 위치로 이동시킵니다.
+    /// </summary>
     public void SlideInOptionPage(float duration = 0.5f, Ease ease = Ease.OutCubic, Action onComplete = null)
     {
         KillTween();
