@@ -20,15 +20,54 @@ public enum Sound
     new private void Awake()
     {
         base.Awake();
-        // 초기 대입 제거
         Init();
-        Clear();
+        // Clear(); <- 이 부분이 불러온 클립들을 다 지우고 있었습니다. 삭제하세요!
     }
 
     private void Start()
     {
-        
+    
     }
+
+    private Coroutine _bgmFadeCoroutine;
+
+    public void PlayBgmWithFade(AudioClip clip, float fadeDuration = 1.0f)
+    {
+        if (clip == null) return;
+        if (_bgmFadeCoroutine != null) StopCoroutine(_bgmFadeCoroutine);
+        _bgmFadeCoroutine = StartCoroutine(CoFadeBGM(clip, fadeDuration));
+    }
+
+    private System.Collections.IEnumerator CoFadeBGM(AudioClip clip, float duration)
+    {
+        AudioSource bgmSource = _audioSources[(int)Sound.BGM];
+        float targetVolume = Mathf.Clamp01(MasterVolume * BGMVolume);
+
+        // 1. 기존 소리가 있다면 페이드 아웃
+        if (bgmSource.isPlaying)
+        {
+            float startVolume = bgmSource.volume;
+            for (float t = 0; t < duration; t += Time.deltaTime)
+            {
+                bgmSource.volume = Mathf.Lerp(startVolume, 0, t / duration);
+                yield return null;
+            }
+        }
+
+        // 2. 곡 교체 및 페이드 인
+        bgmSource.clip = clip;
+        bgmSource.Play();
+
+        for (float t = 0; t < duration; t += Time.deltaTime)
+        {
+            bgmSource.volume = Mathf.Lerp(0, targetVolume, t / duration);
+            yield return null;
+        }
+
+        bgmSource.volume = targetVolume;
+        _bgmFadeCoroutine = null;
+    }
+
     new private void OnApplicationQuit()
     {
         base.OnApplicationQuit();
@@ -40,8 +79,10 @@ public enum Sound
         {
             root = new GameObject { name = "Sound" };
             Object.DontDestroyOnLoad(root);
-            string[] soundNames = System.Enum.GetNames(typeof(Sound)); // "Bgm", "Effect"
-            for (int i = 0; i < soundNames.Length - 1; i++)
+            
+            // Enum 순회 시 MaxCount 제외
+            string[] soundNames = System.Enum.GetNames(typeof(Sound));
+            for (int i = 0; i < (int)Sound.MaxCount; i++)
             {
                 GameObject go = new GameObject { name = soundNames[i] };
                 _audioSources[i] = go.AddComponent<AudioSource>();
@@ -50,7 +91,24 @@ public enum Sound
                 go.transform.parent = root.transform;
             }
 
-            _audioSources[(int)Sound.BGM].loop = true; // bgm play
+            _audioSources[(int)Sound.BGM].loop = true;
+        }
+
+        // 딕셔너리가 비어있을 때만 리소스를 로드합니다.
+        if (_audioClips.Count == 0)
+        {
+            AudioClip[] clips = Resources.LoadAll<AudioClip>("Sounds");
+            foreach (AudioClip clip in clips)
+            {
+                // GetOrAddAudioClip 로직과 일치시키기 위해 "Sounds/" 접두사를 붙여 저장할 수 있습니다.
+                // 혹은 파일 이름만 키로 사용해도 됩니다. 여기서는 기존 코드 호환성을 위해 경로를 맞춥니다.
+                string key = $"Sounds/{clip.name}";
+                if (!_audioClips.ContainsKey(key))
+                {
+                    _audioClips.Add(key, clip);
+                }
+            }
+            Debug.Log($"총 {_audioClips.Count}개의 사운드 리소스를 로드했습니다.");
         }
     }
 
@@ -66,7 +124,8 @@ public enum Sound
         _audioClips.Clear();
     }
 
-    public void Play(AudioClip audioClip, Sound type = Sound.Effect, float pitch = 1.0f)
+    // 세 번째 매개변수로 volumeScale을 추가하고 기본값을 1.0f로 설정합니다.
+    public void Play(AudioClip audioClip, Sound type = Sound.Effect, float pitch = 1.0f, float volumeScale = 1.0f)
     {
         if (audioClip == null)
         {
@@ -89,13 +148,14 @@ public enum Sound
         else // Effect start
         {
             AudioSource audioSource = _audioSources[(int)Sound.Effect];
-            audioSource.volume = Mathf.Clamp01(MasterVolume * EffectVolume); // Master 적용
+            // 최종 볼륨에 volumeScale을 곱해줍니다.
+            float finalVolume = Mathf.Clamp01(MasterVolume * EffectVolume) * volumeScale;
             audioSource.pitch = pitch;
-            audioSource.PlayOneShot(audioClip, Mathf.Clamp01(MasterVolume * EffectVolume)); // PlayOneShot 볼륨도 적용
+            audioSource.PlayOneShot(audioClip, finalVolume);
         }
     }
 
-    public void Play(string path, string _type = "Effect", float pitch = 1.0f)
+    public void Play(string path, string _type = "Effect", float pitch = 1.0f, float volumeScale = 1.0f)
     {
         Sound type = Sound.Effect;
         if (_type == "BGM")
@@ -107,7 +167,8 @@ public enum Sound
             type = Sound.Effect;
         }
         AudioClip audioClip = GetOrAddAudioClip(path, type);
-        Play(audioClip, type, pitch);
+        // 아래의 Play 함수 호출 시 volumeScale을 전달합니다.
+        Play(audioClip, type, pitch, volumeScale);
     }
 
     AudioClip GetOrAddAudioClip(string path, Sound type = Sound.Effect)
