@@ -129,6 +129,44 @@ public class PlayerScriptedMover : MonoBehaviour
         _busy = false;
     }
 
+    // ▼▼▼ [추가] 경로(Path)를 따라 이동하는 함수 ▼▼▼
+    public void MovePathWithCam(Vector3[] path, float duration, Ease ease,
+                                CinemachineCamera vcam, int onPriority = 10)
+    {
+        if (_busy) return;
+        _busy = true;
+        _finalizeGuard = false;
+
+        // 1) NavMesh 정지 & 입력 잠금 (기존과 동일)
+        if (agent.hasPath) agent.ResetPath();
+        agent.isStopped = true;
+        agent.velocity = Vector3.zero;
+        if (ratInput != null) ratInput.Click.Disable();
+        agent.updatePosition = false;
+
+        // 애니메이션 가속
+        if (animator) animator.speed = _baseAnimSpeed * climbAnimMultiplier;
+
+        // 카메라 전환
+        if (vcam) vcam.Priority = onPriority;
+
+        // 소음 시작
+        StartClimbNoise();
+
+        // 2) ★ DOPath로 경로 이동 실행
+        _moveTween?.Kill();
+        _moveTween = transform.DOPath(path, duration, PathType.Linear, PathMode.Full3D)
+                              .SetEase(ease)
+                              .SetUpdate(UpdateType.Normal)
+                              .SetLink(gameObject, LinkBehaviour.KillOnDestroy)
+                              .OnUpdate(() =>
+                              {
+                                  if (agent) agent.nextPosition = transform.position;
+                              })
+                              .OnComplete(() => FinalizeTween(true))
+                              .OnKill(() => FinalizeTween(false));
+    }
+
     void StartClimbNoise()
     {
         if (!climbNoise) return;
