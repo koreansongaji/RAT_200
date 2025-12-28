@@ -36,7 +36,7 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
 
     // ▼▼▼ [수정] 플레이어 이동 관련 변수 삭제 & 연출용 변수 추가 ▼▼▼
     [Header("성공 연출 (Bridge)")]
-    public LabToFridgeBridgeManager bridgeManager; // ★ 필수 연결: 책 다리/밧줄 연출 관리자
+    public LabToFridgeManager bridgeManager; // ★ 필수 연결: 책 다리/밧줄 연출 관리자
     public CinemachineCamera bridgeSideCam;        // ★ 필수 연결: 책 다리 쪽 사이드 카메라
     public float bridgeCamDuration = 2.5f;         // 카메라가 비추고 있을 시간
 
