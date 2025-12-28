@@ -9,7 +9,7 @@ public static class CloseupCamManager
 
     public const int CloseOn = 20;
     public const int CloseOff = 0;
-    public const int MicroOn = 30;
+    public const int MicroOn = 50;
     public const int MicroOff = 0;
 
     public static void Activate(CinemachineCamera cam)

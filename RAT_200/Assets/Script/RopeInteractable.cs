@@ -31,6 +31,8 @@ public class RopeInteractable : BaseInteractable
 
     public override void Interact(PlayerInteractor i)
     {
+        Debug.Log("Rope Interaction Start!");
+        
         var mover = i.GetComponent<PlayerScriptedMover>();
         if (!mover || !topPoint || !bottomPoint) return;
 

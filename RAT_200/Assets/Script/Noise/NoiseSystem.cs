@@ -7,13 +7,18 @@ public class NoiseSystem : MonoBehaviour
     public static NoiseSystem Instance { get; private set; }
 
     [Header("Settings")]
-    [Min(0f)] public float decayPerSecond = 0.02f;        // ★ 기획: 초당 2% 감소 → 0.02
-    [Min(0f)] public float waitBeforeDecay = 2f;          // ★ 마지막 소음 후 5초 대기
+    [Min(0f)] public float decayPerSecond = 0.02f;
+    [Min(0f)] public float waitBeforeDecay = 2f;
     [Range(0f, 1f)] public float surveillanceThreshold = 0.8f;
     [Range(0f, 0.2f)] public float thresholdHysteresis = 0.05f;
 
     [Header("Runtime (read-only)")]
     [Range(0f, 1f)] public float current01 = 0f;
+
+    // ▼▼▼ [추가] 에디터 제어용 플래그 ▼▼▼
+    [Header("Debug")]
+    [Tooltip("체크하면 소음이 더 이상 증가하지 않습니다.")]
+    public bool isDebugPaused = false;
 
     public event Action<float> OnValueChanged;
     public event Action OnThresholdEntered;
@@ -32,8 +37,6 @@ public class NoiseSystem : MonoBehaviour
     readonly Dictionary<int, Source> _sources = new();
     readonly Dictionary<UnityEngine.Object, List<int>> _ownerIndex = new();
     bool _aboveThreshold;
-
-    // ★ 마지막으로 "소음이 추가된" 시간 (Impulse or Continuous)
     float _lastNoiseTime = -999f;
 
     void Awake()
@@ -50,7 +53,6 @@ public class NoiseSystem : MonoBehaviour
         _aboveThreshold = false;
     }
 
-    // ===== Continuous 소음 소스 관리 =====
     public int BeginContinuous(UnityEngine.Object owner, string tag, float ratePerSecond)
     {
         if (owner == null) owner = this;
@@ -106,13 +108,21 @@ public class NoiseSystem : MonoBehaviour
         }
     }
 
-    // ===== Impulse 소음 (즉시 한 번에 튀어오르는 소리) =====
     public void FireImpulse(float add01)
     {
+        // ▼▼▼ [수정] 일시정지 상태면 소음 증가 차단 ▼▼▼
+        if (isDebugPaused)
+        {
+#if UNITY_EDITOR
+            Debug.Log($"[NoiseSystem] FireImpulse blocked (Amount: {add01}) because System is Paused.");
+#endif
+            return;
+        }
+
         if (add01 <= 0f) return;
 
         current01 = Mathf.Clamp01(current01 + add01);
-        _lastNoiseTime = Time.time;                 // ★ 마지막 소음 시각 갱신
+        _lastNoiseTime = Time.time;
 
         OnValueChanged?.Invoke(current01);
         CheckThresholdTransition();
@@ -122,17 +132,15 @@ public class NoiseSystem : MonoBehaviour
     {
         float dt = Time.deltaTime;
 
-        // 1) 현재 활성화된 Continuous 소음 소스들의 rate 합
         float sumRate = 0f;
         foreach (var s in _sources.Values)
             if (s.active) sumRate += s.ratePerSecond;
 
         bool hasContinuousNoise = sumRate > 0f;
 
-        if (hasContinuousNoise)
+        // ▼▼▼ [수정] 일시정지 상태가 아닐 때만 소음 증가 처리 ▼▼▼
+        if (hasContinuousNoise && !isDebugPaused)
         {
-            // 2) Continuous 소음이 있는 동안은 계속 게이지를 올리고,
-            //    "마지막 소음 발생 시각"을 매 프레임 갱신한다.
             _lastNoiseTime = Time.time;
 
             float afterAcc = Mathf.Clamp01(current01 + sumRate * dt);
@@ -143,11 +151,10 @@ public class NoiseSystem : MonoBehaviour
             }
 
             CheckThresholdTransition();
-            return; // ★ 소리가 나는 동안에는 절대 감소 X
+            return;
         }
 
-        // 3) Continuous 소음이 없을 때만,
-        //    "마지막 소음 발생 후 waitBeforeDecay 초가 지났다면" 서서히 감소
+        // 감소 로직 (일시정지여도 소음이 줄어드는 건 허용할지, 아예 멈출지 결정. 여기서는 줄어들게 둠)
         if (current01 > 0f && Time.time - _lastNoiseTime >= waitBeforeDecay)
         {
             float afterDecay = Mathf.Max(0f, current01 - decayPerSecond * dt);
@@ -180,13 +187,13 @@ public class NoiseSystem : MonoBehaviour
 
     public void SetLevel01(float value01)
     {
+        // 강제 설정의 경우 디버그여도 허용할지 차단할지 선택. 일단 차단하지 않음 (수동 조작은 가능하도록).
         float v = Mathf.Clamp01(value01);
         if (Mathf.Approximately(v, current01)) return;
 
         current01 = v;
-        _lastNoiseTime = Time.time;      // 이 시점을 '마지막 소음 시각'으로 간주
+        _lastNoiseTime = Time.time;
         OnValueChanged?.Invoke(current01);
         CheckThresholdTransition();
     }
-
 }

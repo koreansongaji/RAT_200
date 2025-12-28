@@ -1,16 +1,14 @@
 using UnityEngine;
 using DG.Tweening;
-using System.Collections;
-using Unity.Cinemachine;
 
 public class LadderClimbInteractable : BaseInteractable
 {
     [Header("Target 매핑")]
-    public ClimbTarget target;            // 이 사다리가 연결된 오브젝트
+    public ClimbTarget target;            // 도착 지점 정보
 
     [Header("State / Threshold")]
-    public float yThreshold = 1.0f;
-    Vector3 _preClimbPos;                 // 오르기 직전 위치 저장
+    public float yThreshold = 1.0f;       // 위/아래 판별 높이
+    Vector3 _preClimbPos;                 // 내려올 위치 기억용
     bool _hasPreClimbPos;
 
     [Header("Tween")]
@@ -32,42 +30,36 @@ public class LadderClimbInteractable : BaseInteractable
 
         if (!isAbove)
         {
-            // 올라가기
+            // [올라가기]
             _preClimbPos = i.transform.position;
             _hasPreClimbPos = true;
 
-            // 클로즈업 활성화
-            if (target.closeVCam)
-                CloseupCamManager.Activate(target.closeVCam);
-
+            // ★ 카메라 인자(vcam)에 null을 넣습니다. (트리거가 알아서 할 것임)
             mover.MoveToWorldWithCam(
-                target.climbPoint.position, duration, ease,
-                target.closeVCam, CloseupCamManager.CloseOn, true
+                target.climbPoint.position,
+                duration,
+                ease,
+                null, // 카메라 없음!
+                0     // 우선순위 0!
             );
         }
         else
         {
-            // 내려오기 (기록된 원래 자리로)
+            // [내려오기]
             Vector3 downPos = _hasPreClimbPos ? _preClimbPos : i.transform.position;
 
+            // ★ 여기도 카메라는 null입니다.
             mover.MoveToWorldWithCam(
-                downPos, duration, ease,
-                target.closeVCam, CloseupCamManager.CloseOff, true
+                downPos,
+                duration,
+                ease,
+                null,
+                0
             );
-            i.StartCoroutine(ReleaseCamAfter(duration * 1.02f));
+
+            // 원래 있던 코루틴(카메라 끄기) 삭제됨
         }
     }
 
-    IEnumerator ReleaseCamAfter(float t)
-    {
-        yield return new WaitForSeconds(t);
-        if (target && target.closeVCam)
-            CloseupCamManager.Deactivate(target.closeVCam);
-    }
-
-    void OnDisable()
-    {
-        if (target && target.closeVCam)
-            CloseupCamManager.Deactivate(target.closeVCam);
-    }
+    // OnDisable(카메라 끄기) 삭제됨
 }
