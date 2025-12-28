@@ -198,12 +198,17 @@ public class ResearcherController : MonoBehaviour
         _currentFocusTarget = player; // 플레이어 고정
         OnPlayerCaught?.Invoke();
 
-        if (handModel)
-        {
-            handModel.gameObject.SetActive(true);
-            handModel.DOMove(player.position, 0.4f).SetEase(Ease.InExpo).OnComplete(() => OnGameOver?.Invoke());
-        }
-        else OnGameOver?.Invoke();
+        //if (handModel)
+        //{
+        //    handModel.gameObject.SetActive(true);
+        //    handModel.DOMove(player.position, 0.4f).SetEase(Ease.InExpo).OnComplete(() => OnGameOver?.Invoke());
+        //}
+        //else OnGameOver?.Invoke();
+
+        if (GameLoopManager.Instance)
+            GameLoopManager.Instance.TriggerGameOver();
+        else
+            OnGameOver?.Invoke();
     }
 
     void StartCaptureNPC()
