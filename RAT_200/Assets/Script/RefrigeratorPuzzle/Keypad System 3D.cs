@@ -88,6 +88,9 @@ namespace KeyPad3DScript
                InputField.text = "wrong";
                ClickSound.Play();
 
+               // 공용 퍼즐 실패 사운드
+               CommonSoundController.Instance?.PlayPuzzleFail();
+
                StartCoroutine(Reset());
             }
          }
@@ -110,7 +113,12 @@ namespace KeyPad3DScript
          if (mb != null)
          {
              var tap = mb.GetComponent<Task1.TaskAnimationPlay>();
-             if (tap != null) tap.PlayOpen();
+             if (tap != null) {
+                 tap.PlayOpen();
+
+                 // 공용 퍼즐 성공 사운드
+                 CommonSoundController.Instance?.PlayPuzzleSuccess();
+             }
          }
 
          StartCoroutine(Reset());
@@ -134,6 +142,3 @@ namespace KeyPad3DScript
 
    }
 }
-   
-
-

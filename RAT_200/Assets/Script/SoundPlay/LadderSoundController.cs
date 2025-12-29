@@ -13,9 +13,9 @@ public class LadderSoundController : MonoBehaviour
     private void Awake()
     {
         // 리소스가 할당되지 않았을 경우 기본 경로에서 로드 시도
-        if (_placeLadderClip == null) _placeLadderClip = Resources.Load<AudioClip>("Sounds/place_ladder");
-        if (_fixLadderClip == null) _fixLadderClip = Resources.Load<AudioClip>("Sounds/fix_ladder");
-        if (_climbLadderClip == null) _climbLadderClip = Resources.Load<AudioClip>("Sounds/climb_ladder");
+        if (_placeLadderClip == null) _placeLadderClip = Resources.Load<AudioClip>("Sounds/Effect/Ladder/place_ladder");
+        if (_fixLadderClip == null) _fixLadderClip = Resources.Load<AudioClip>("Sounds/Effect/Ladder/fix_ladder");
+        if (_climbLadderClip == null) _climbLadderClip = Resources.Load<AudioClip>("Sounds/Effect/Ladder/climb_ladder");
     }
 
     /// <summary>

@@ -95,7 +95,7 @@ public class SafePuzzleController : MonoBehaviour, IMicroHidePlayerPreference
             (club && club.CurrentValue == ansClub);
 
         if (ok) OpenDoor();
-        else ShowFail();
+        else { ShowFail(); CommonSoundController.Instance?.PlayPuzzleFail(); }
     }
 
     void OpenDoor()
@@ -110,8 +110,14 @@ public class SafePuzzleController : MonoBehaviour, IMicroHidePlayerPreference
         {
             linkedPart.DOLocalRotate(linkedPartOpenEuler, openSec).SetEase(openEase);
         }
-        // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+        // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
         // 필요하면 효과음/연출 추가
+
+        // 공용 사운드 재생 (금고 열림)
+        CommonSoundController.Instance?.PlayDoorOpen();
+
+        // 공용 퍼즐 성공 사운드
+        CommonSoundController.Instance?.PlayPuzzleSuccess();
 
         dispenser.Dispense();
     }

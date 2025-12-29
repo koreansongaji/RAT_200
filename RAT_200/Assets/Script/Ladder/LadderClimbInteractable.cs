@@ -3,17 +3,25 @@ using DG.Tweening;
 
 public class LadderClimbInteractable : BaseInteractable
 {
-    [Header("Target ¸ÅÇÎ")]
-    public ClimbTarget target;            // µµÂø ÁöÁ¡ Á¤º¸
+    [Header("Target ï¿½ï¿½ï¿½ï¿½")]
+    public ClimbTarget target;            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     [Header("State / Threshold")]
-    public float yThreshold = 1.0f;       // À§/¾Æ·¡ ÆÇº° ³ôÀÌ
-    Vector3 _preClimbPos;                 // ³»·Á¿Ã À§Ä¡ ±â¾ï¿ë
+    public float yThreshold = 1.0f;       // ï¿½ï¿½/ï¿½Æ·ï¿½ ï¿½Çºï¿½ ï¿½ï¿½ï¿½ï¿½
+    Vector3 _preClimbPos;                 // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
     bool _hasPreClimbPos;
 
     [Header("Tween")]
     public float duration = 0.6f;
     public Ease ease = Ease.InOutSine;
+
+    // Ladder sound controller (optional)
+    [SerializeField] private LadderSoundController _ladderSoundController;
+
+    void Awake()
+    {
+        if (_ladderSoundController == null) _ladderSoundController = GetComponent<LadderSoundController>();
+    }
 
     public override bool CanInteract(PlayerInteractor i)
     {
@@ -30,25 +38,33 @@ public class LadderClimbInteractable : BaseInteractable
 
         if (!isAbove)
         {
-            // [¿Ã¶ó°¡±â]
+      
+            
+
+            // [ï¿½Ã¶ó°¡±ï¿½]
             _preClimbPos = i.transform.position;
             _hasPreClimbPos = true;
 
-            // ¡Ú Ä«¸Ş¶ó ÀÎÀÚ(vcam)¿¡ nullÀ» ³Ö½À´Ï´Ù. (Æ®¸®°Å°¡ ¾Ë¾Æ¼­ ÇÒ °ÍÀÓ)
+            // ì‚¬ìš´ë“œ: ì˜¤ë¥´ê¸° ì‹œì‘ ì‹œ ì¬ìƒ
+            _ladderSoundController?.PlayClimbLadder();
+            
+            // ï¿½ï¿½ Ä«ï¿½Ş¶ï¿½ ï¿½ï¿½ï¿½ï¿½(vcam)ï¿½ï¿½ nullï¿½ï¿½ ï¿½Ö½ï¿½ï¿½Ï´ï¿½. (Æ®ï¿½ï¿½ï¿½Å°ï¿½ ï¿½Ë¾Æ¼ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
             mover.MoveToWorldWithCam(
                 target.climbPoint.position,
                 duration,
                 ease,
-                null, // Ä«¸Ş¶ó ¾øÀ½!
-                0     // ¿ì¼±¼øÀ§ 0!
+                null, // Ä«ï¿½Ş¶ï¿½ ï¿½ï¿½ï¿½ï¿½!
+                0     // ï¿½ì¼±ï¿½ï¿½ï¿½ï¿½ 0!
             );
         }
         else
         {
-            // [³»·Á¿À±â]
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½Ïµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ú¸ï¿½ï¿½ï¿½)
             Vector3 downPos = _hasPreClimbPos ? _preClimbPos : i.transform.position;
 
-            // ¡Ú ¿©±âµµ Ä«¸Ş¶ó´Â nullÀÔ´Ï´Ù.
+            // ì‚¬ìš´ë“œ: ë‚´ë¦´ ë•Œ ì¬ìƒ
+            _ladderSoundController?.PlayClimbLadder();
+
             mover.MoveToWorldWithCam(
                 downPos,
                 duration,
@@ -57,9 +73,9 @@ public class LadderClimbInteractable : BaseInteractable
                 0
             );
 
-            // ¿ø·¡ ÀÖ´ø ÄÚ·çÆ¾(Ä«¸Ş¶ó ²ô±â) »èÁ¦µÊ
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Ú·ï¿½Æ¾(Ä«ï¿½Ş¶ï¿½ ï¿½ï¿½ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         }
     }
 
-    // OnDisable(Ä«¸Ş¶ó ²ô±â) »èÁ¦µÊ
+    // OnDisable(Ä«ï¿½Ş¶ï¿½ ï¿½ï¿½ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 }
