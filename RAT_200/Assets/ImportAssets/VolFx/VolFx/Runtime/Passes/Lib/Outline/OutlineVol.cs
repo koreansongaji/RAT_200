@@ -10,8 +10,15 @@ namespace VolFx
     [Serializable, VolumeComponentMenu("VolFx/Outline")]
     public sealed class OutlineVol : VolumeComponent, IPostProcessComponent
     {
+        [Header("Custom Setting For Rat_200")]
+        public ClampedFloatParameter m_NormalOutlineSensitive = new ClampedFloatParameter(1, 0, 5);
+        public ClampedFloatParameter m_ColorOutlineSensitive = new ClampedFloatParameter(1, 0, 5);
+
+        [Space(15f)]
+
         [Tooltip("Outline strength")]
         public ClampedFloatParameter m_Sensitive = new ClampedFloatParameter(0, 0, 1);
+
         [Tooltip("Outline thickness")]
         public ClampedFloatParameter m_Thickness = new ClampedFloatParameter(0.15f, 0, 1);
         [Tooltip("Outline color defined by gradient")][FormerlySerializedAs("m_Outline")]

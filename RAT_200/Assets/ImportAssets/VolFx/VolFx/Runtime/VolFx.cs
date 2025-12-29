@@ -1233,6 +1233,9 @@ namespace VolFx
         {
             if (renderingData.cameraData.cameraType != CameraType.Game && (Application.isPlaying == false && renderingData.cameraData.cameraType != CameraType.SceneView))
                 return;
+
+            //노멀 강제 활성화
+            _execution.ConfigureInput(ScriptableRenderPassInput.Normal);
             
 #if UNITY_EDITOR
             if (_blit == null)

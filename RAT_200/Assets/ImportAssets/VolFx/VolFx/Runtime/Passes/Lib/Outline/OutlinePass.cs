@@ -10,6 +10,7 @@ namespace VolFx
     [ShaderName("Hidden/Vol/Outline")]
     public class OutlinePass : VolFx.Pass
     {
+        private static readonly int s_Rat_200_Data = Shader.PropertyToID("_CustomOutlineData");
         private static readonly int s_Data        = Shader.PropertyToID("_Data");
         private static readonly int s_GradientTex = Shader.PropertyToID("_GradientTex");
         private static readonly int s_Fill        = Shader.PropertyToID("_Fill");
@@ -117,7 +118,9 @@ namespace VolFx
 #endif
 
             mat.SetVector(s_Data, new Vector4(settings.m_Thickness.value.Remap(0, .005f) * thickMul, (settings.m_Sensitive.value / 5f).Remap(0, 50f) * sensMul, depthSpace));
-            
+
+            mat.SetVector(s_Rat_200_Data, new Vector4(settings.m_NormalOutlineSensitive.value, settings.m_ColorOutlineSensitive.value, 0, 0));
+
             if (_tex == null)
             {
                 _tex = new Texture2D(GradientValue.k_Width, 1, TextureFormat.RGBA32, false);
