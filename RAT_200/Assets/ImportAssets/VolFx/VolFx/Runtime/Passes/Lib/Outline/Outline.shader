@@ -43,6 +43,8 @@ Shader "Hidden/Vol/Outline"
             float4 _Data; // x - thickness, y - sensitive, z - depth space
             float4 _Fill;
 
+            float4 _CustomOutlineData; // x - normal outline thickness, y - color outline thickness
+
             #define _Sensitive _Data.y
             #define _Thickness _Data.x
             #define _Depth _Data.z
@@ -196,7 +198,7 @@ Shader "Hidden/Vol/Outline"
 
                 float diff_color = diff_color_up_down + diff_color_left_right;
                 
-                float diff = saturate(diff_normal + diff_color);
+                float diff = saturate(pow(diff_normal, _CustomOutlineData.x) + pow(diff_color, _CustomOutlineData.y));
 
                 return diff;
             }
