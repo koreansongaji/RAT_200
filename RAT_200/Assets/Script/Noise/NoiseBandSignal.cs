@@ -14,9 +14,10 @@ public class NoiseBandSignal : MonoBehaviour
         None = -1,
         B0_40 = 0,    // 0~40%
         B41_60 = 1,   // 41~60%
-        B61_90 = 2,   // 61~90%
-        B91_99 = 3,   // 91~99%
-        Full100 = 4   // 100%
+        B61_80 = 2,   // 61~80%
+        B81_90 = 3,   // 81~90%
+        B91_99 = 4,   // 91~99%
+        Full100 = 5   // 100%
     }
 
     [Header("���� �ɼ�")]
@@ -36,8 +37,11 @@ public class NoiseBandSignal : MonoBehaviour
     [Tooltip("41% ~ 60% ������ �������� �� ȣ��Ǵ� �̺�Ʈ.")]
     public UnityEvent onBand_41_60;
 
-    [Tooltip("61% ~ 90% ������ �������� �� ȣ��Ǵ� �̺�Ʈ.")]
-    public UnityEvent onBand_61_90;
+    [Tooltip("61% ~ 80% ������ �������� �� ȣ��Ǵ� �̺�Ʈ.")]
+    public UnityEvent onBand_61_80;
+
+    [Tooltip("81% ~ 90% ������ �������� �� ȣ��Ǵ� �̺�Ʈ.")]
+    public UnityEvent onBand_81_90;
 
     [Tooltip("91% ~ 99% ������ �������� �� ȣ��Ǵ� �̺�Ʈ.")]
     public UnityEvent onBand_91_99;
@@ -129,9 +133,10 @@ public class NoiseBandSignal : MonoBehaviour
     {
         if (percent <= 40) return NoiseBand.B0_40;
         if (percent <= 60) return NoiseBand.B41_60;
-        if (percent <= 90) return NoiseBand.B61_90;
+        if (percent <= 80) return NoiseBand.B61_80;
+        if (percent <= 90) return NoiseBand.B81_90;
         if (percent <= 99) return NoiseBand.B91_99;
-        return NoiseBand.Full100; // �������� 100%
+        return NoiseBand.Full100; // 100%에 도달
     }
 
     void InvokeBandEvent(NoiseBand band)
@@ -144,8 +149,11 @@ public class NoiseBandSignal : MonoBehaviour
             case NoiseBand.B41_60:
                 onBand_41_60?.Invoke();
                 break;
-            case NoiseBand.B61_90:
-                onBand_61_90?.Invoke();
+            case NoiseBand.B61_80:
+                onBand_61_80?.Invoke();
+                break;
+            case NoiseBand.B81_90:
+                onBand_81_90?.Invoke();
                 break;
             case NoiseBand.B91_99:
                 onBand_91_99?.Invoke();

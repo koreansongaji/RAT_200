@@ -210,12 +210,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  fridgeTop: {fileID: 0}
-  fridgeVCam: {fileID: 0}
-  moveDuration: 0.8
-  moveEase: 4
-  diamondCardPrefab: {fileID: 0}
-  cardSpawnPoint: {fileID: 0}
+  bridgeManager: {fileID: 0}
+  bridgeSideCam: {fileID: 0}
+  bridgeCamDuration: 2.5
   btnNa3D: {fileID: 1549480222}
   btnWater3D: {fileID: 1360602827}
   btnGel3D: {fileID: 1869550099}
@@ -498,8 +495,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43320b9f0c481e458c4ef54da68f5ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ladderSoundController: {fileID: 0}
   lengthLevel: 1
   currentSpot: {fileID: 0}
+  extraRungs: []
 --- !u!114 &41922695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -552,6 +551,7 @@ MonoBehaviour:
   yThreshold: 0.9
   duration: 0.6
   ease: 4
+  _ladderSoundController: {fileID: 0}
 --- !u!65 &41922698
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -785,6 +785,7 @@ MonoBehaviour:
   surveillanceThreshold: 0.8
   thresholdHysteresis: 0.05
   current01: 0
+  isDebugPaused: 0
 --- !u!4 &70985797
 Transform:
   m_ObjectHideFlags: 0
@@ -1553,6 +1554,7 @@ MonoBehaviour:
   yThreshold: 0.9
   duration: 0.6
   ease: 4
+  _ladderSoundController: {fileID: 0}
 --- !u!65 &159852434
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3094,7 +3096,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   climbPoint: {fileID: 0}
-  closeVCam: {fileID: 0}
 --- !u!65 &372941845
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3723,6 +3724,7 @@ MonoBehaviour:
   yThreshold: 0.9
   duration: 0.6
   ease: 4
+  _ladderSoundController: {fileID: 0}
 --- !u!114 &433142007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3735,8 +3737,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43320b9f0c481e458c4ef54da68f5ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ladderSoundController: {fileID: 0}
   lengthLevel: 1
   currentSpot: {fileID: 1446440365}
+  extraRungs: []
 --- !u!114 &433142008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3866,7 +3870,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   climbPoint: {fileID: 955511515}
-  closeVCam: {fileID: 1087534588}
 --- !u!1 &450746874
 GameObject:
   m_ObjectHideFlags: 0
@@ -4817,13 +4820,9 @@ MonoBehaviour:
   requiredDistance: 1.2
   sodiumId: Sodium
   gelId: Gel
-  drawer: {fileID: 578188778}
-  openLocalOffset: {x: 0, y: 0, z: 0.3}
-  duration: 0.5
-  ease: 4
-  openOnlyOnce: 1
-  disableColliderOnOpen: 0
-  OnOpen:
+  giveOnlyOnce: 1
+  disableColliderAfterGive: 0
+  OnInteract:
     m_PersistentCalls:
       m_Calls: []
   OnGive:
@@ -5366,6 +5365,7 @@ MonoBehaviour:
   yThreshold: 1
   duration: 0.6
   ease: 4
+  _ladderSoundController: {fileID: 0}
 --- !u!1 &687957684
 GameObject:
   m_ObjectHideFlags: 0
@@ -5678,7 +5678,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Rate 2:1:4 (Na:Water:Gel)
+  m_text: Rate 2:1:4
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6275,23 +6275,14 @@ MonoBehaviour:
   requiredDistance: 1.2
   sodiumId: Sodium
   gelId: Gel
-  drawer: {fileID: 821887848}
-  openLocalOffset: {x: -1.25, y: 0, z: 0}
-  duration: 0.5
-  ease: 4
-  openOnlyOnce: 1
-  disableColliderOnOpen: 0
-  OnOpen:
+  giveOnlyOnce: 1
+  disableColliderAfterGive: 0
+  OnInteract:
     m_PersistentCalls:
       m_Calls: []
   OnGive:
     m_PersistentCalls:
       m_Calls: []
---- !u!4 &821887848 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4430263094957992023, guid: 6684e229e752fef4388bb819afa70f47, type: 3}
-  m_PrefabInstance: {fileID: 821887844}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &821887849 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1608674243591792325, guid: 6684e229e752fef4388bb819afa70f47, type: 3}
@@ -6348,7 +6339,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   climbPoint: {fileID: 1229870443}
-  closeVCam: {fileID: 500513304}
 --- !u!114 &821887855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8237,10 +8227,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11bd0f70bb118ff41b8dc436b8549a36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  micro: {fileID: 0}
-  playerRoot: {fileID: 414077910}
-  hideMode: 0
-  shadowsOnly: 0
+  modelRoot: {fileID: 1090046941}
+  forceShowWhenNotMicro: 1
 --- !u!4 &1090046941
 Transform:
   m_ObjectHideFlags: 0
@@ -10492,7 +10480,7 @@ Light:
   serializedVersion: 11
   m_Type: 0
   m_Color: {r: 0.9764151, g: 0.9764151, b: 0.9764151, a: 1}
-  m_Intensity: 100
+  m_Intensity: 1
   m_Range: 7.6216726
   m_SpotAngle: 89.642235
   m_InnerSpotAngle: 71.1893
@@ -10868,7 +10856,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   climbPoint: {fileID: 1649076574}
-  closeVCam: {fileID: 450746875}
 --- !u!4 &1446440363
 Transform:
   m_ObjectHideFlags: 0
@@ -11243,6 +11230,7 @@ MonoBehaviour:
   yThreshold: 1
   duration: 0.6
   ease: 4
+  _ladderSoundController: {fileID: 0}
 --- !u!65 &1473191376
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11406,6 +11394,7 @@ MonoBehaviour:
   yThreshold: 0.9
   duration: 0.6
   ease: 4
+  _ladderSoundController: {fileID: 0}
 --- !u!65 &1488247344
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11518,6 +11507,7 @@ MonoBehaviour:
   yThreshold: 0.9
   duration: 0.6
   ease: 4
+  _ladderSoundController: {fileID: 0}
 --- !u!65 &1493495038
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12662,7 +12652,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5038edd7af33a2240838914d1d80dd97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainKey: 287
+  itemGiveKey: 287
+  noiseToggleKey: 286
   requireShift: 1
   requireCtrl: 0
   requireAlt: 0
@@ -12836,7 +12827,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   climbPoint: {fileID: 0}
-  closeVCam: {fileID: 1903128472}
 --- !u!65 &1775774483
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13734,7 +13724,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Rate 2:1:4 (Na:Water:Gel)
+  m_text: Rate 2:1:4
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -14271,11 +14261,14 @@ MonoBehaviour:
   openLocalEuler: {x: 0, y: 85, z: 0}
   openSec: 0.5
   openEase: 3
+  linkedPart: {fileID: 0}
+  linkedPartOpenEuler: {x: 0, y: 0, z: -90}
   paperPrefab: {fileID: 0}
   paperSpawnPoint: {fileID: 0}
   paperFormat: "\u2660 {0}\n\u2665 {1}\n\u2666 {2}\n\u2663 {3}"
   randomSeed: 0
   hidePlayerDuringMicro: 1
+  dispenser: {fileID: 0}
 --- !u!65 &2019276631
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15171,12 +15164,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  fridgeTop: {fileID: 0}
-  fridgeVCam: {fileID: 0}
-  moveDuration: 0.8
-  moveEase: 4
-  diamondCardPrefab: {fileID: 0}
-  cardSpawnPoint: {fileID: 0}
+  bridgeManager: {fileID: 0}
+  bridgeSideCam: {fileID: 0}
+  bridgeCamDuration: 2.5
   btnNa3D: {fileID: 1582981799}
   btnWater3D: {fileID: 750932293}
   btnGel3D: {fileID: 379685331}
