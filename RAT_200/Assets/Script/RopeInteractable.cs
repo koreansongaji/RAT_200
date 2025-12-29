@@ -4,23 +4,27 @@ using Unity.Cinemachine;
 
 public class RopeInteractable : BaseInteractable
 {
-    [Header("ÁÂÇ¥ ¼³Á¤")]
-    [Tooltip("¹åÁÙÀÇ ¼öÁ÷ Áß½ÉÃà(X, Z ÁÂÇ¥ ±âÁØ). ºñ¿öµÎ¸é ÀÌ ¿ÀºêÁ§Æ® »ç¿ë.")]
+    [Header("ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß½ï¿½ï¿½ï¿½(X, Z ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½). ï¿½ï¿½ï¿½ï¿½Î¸ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½.")]
     public Transform ropeAxis;
 
-    public Transform topPoint;    // ²À´ë±â ÂøÁö ÁöÁ¡
-    public Transform bottomPoint; // ¹Ù´Ú ÂøÁö ÁöÁ¡
+    public Transform topPoint;    // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    public Transform bottomPoint; // ï¿½Ù´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-    [Header("¼³Á¤")]
-    public float duration = 2.0f; // ÀÌµ¿ ½Ã°£
+    [Header("ï¿½ï¿½ï¿½ï¿½")]
+    public float duration = 2.0f; // ï¿½Ìµï¿½ ï¿½Ã°ï¿½
     public Ease ease = Ease.InOutQuad;
 
-    [Header("Ä«¸Þ¶ó (¼±ÅÃ)")]
+    [Header("Ä«ï¿½Þ¶ï¿½ (ï¿½ï¿½ï¿½ï¿½)")]
     public CinemachineCamera ropeCamera;
+
+    [SerializeField] private RopeSoundController _ropeSoundController;
 
     void Awake()
     {
         if (!ropeAxis) ropeAxis = transform;
+        if(_ropeSoundController == null) _ropeSoundController = GetComponent<RopeSoundController>();
+        if(_ropeSoundController == null) _ropeSoundController = gameObject.AddComponent<RopeSoundController>();
     }
 
     public override bool CanInteract(PlayerInteractor i)
@@ -32,36 +36,38 @@ public class RopeInteractable : BaseInteractable
     public override void Interact(PlayerInteractor i)
     {
         Debug.Log("Rope Interaction Start!");
-        
+
         var mover = i.GetComponent<PlayerScriptedMover>();
         if (!mover || !topPoint || !bottomPoint) return;
 
-        // 1. ¸ñÀûÁö °áÁ¤ (´õ ¸Õ ÂÊÀ¸·Î)
+        _ropeSoundController.PlayRopeSound();
+
+        // 1. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
         float distToTop = Vector3.Distance(i.transform.position, topPoint.position);
         float distToBottom = Vector3.Distance(i.transform.position, bottomPoint.position);
 
         bool goingUp = distToTop > distToBottom;
         Transform targetLandPoint = goingUp ? topPoint : bottomPoint;
 
-        // 2. °æ·Î ¿þÀÌÆ÷ÀÎÆ®(Waypoints) °è»ê [Áß¿ä!]
-        // Path: [¹ÐÂø ÁöÁ¡] -> [¼öÁ÷ ÀÌµ¿ ÁöÁ¡] -> [ÂøÁö ÁöÁ¡]
+        // 2. ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®(Waypoints) ï¿½ï¿½ï¿½ [ï¿½ß¿ï¿½!]
+        // Path: [ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½] -> [ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½] -> [ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½]
 
         Vector3 playerPos = i.transform.position;
-        Vector3 axisPos = ropeAxis.position; // ¹åÁÙÀÇ X, Z
+        Vector3 axisPos = ropeAxis.position; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ X, Z
 
-        // W1: ÇöÀç ³ôÀÌ¿¡¼­ ¹åÁÙ X, Z·Î ¹ÐÂø
+        // W1: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ X, Zï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         Vector3 alignPoint = new Vector3(axisPos.x, playerPos.y, axisPos.z);
 
-        // W2: ¹åÁÙ X, Z¸¦ À¯ÁöÇÑ Ã¤·Î ¸ñÇ¥ ³ôÀÌ±îÁö µî¹Ý
+        // W2: ï¿½ï¿½ï¿½ï¿½ X, Zï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¤ï¿½ï¿½ ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½Ì±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         Vector3 climbPoint = new Vector3(axisPos.x, targetLandPoint.position.y, axisPos.z);
 
-        // W3: ÂøÁö ÁöÁ¡ (Landing)
+        // W3: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (Landing)
         Vector3 landPoint = targetLandPoint.position;
 
         Vector3[] path = new Vector3[] { alignPoint, climbPoint, landPoint };
 
-        // 3. ÀÌµ¿ ¸í·É
-        int camPriority = (ropeCamera != null) ? 100 : 0; // È¤Àº CloseupCamManager.CloseOn
+        // 3. ï¿½Ìµï¿½ ï¿½ï¿½ï¿½
+        int camPriority = (ropeCamera != null) ? 100 : 0; // È¤ï¿½ï¿½ CloseupCamManager.CloseOn
 
         mover.MovePathWithCam(
             path,

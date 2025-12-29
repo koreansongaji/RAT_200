@@ -395,7 +395,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: -0.6, y: -0.202, z: 0.25}
-  m_LocalScale: {x: 0.14, y: 0.02, z: 0.14}
+  m_LocalScale: {x: 0.15999994, y: 0.019999983, z: 0.1600002}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6620878311694928793}
@@ -473,8 +473,9 @@ MonoBehaviour:
   ease: 6
   suit: 0
   ledText: {fileID: 0}
-  requireMicroZoom: 0
+  requireMicroZoom: 1
   micro: {fileID: 0}
+  _safeDial: {fileID: 8300000, guid: d31ead8d5a183414c880e7db523023c9, type: 3}
 --- !u!65 &3174006132453655450
 BoxCollider:
   m_ObjectHideFlags: 0

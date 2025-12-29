@@ -32,6 +32,7 @@ public class Ladder : MonoBehaviour
     {
         if (lengthLevel < 4) // �ִ� ���� 4 ����
         {
+            _ladderSoundController.PlayFixLadder();
             lengthLevel++;
             UpdateVisuals();
             Debug.Log($"[Ladder] Level Up! Current Level: {lengthLevel}");
@@ -79,6 +80,6 @@ public class Ladder : MonoBehaviour
         // ������ ��Ȱ��ȭ(����)
         var climb = GetComponent<LadderClimbInteractable>();
         if (climb) climb.target = null;
-        _ladderSoundController.PlayPlaceLadder();
+        //_ladderSoundController.PlayPlaceLadder();
     }
 }
