@@ -14,5 +14,9 @@ public class DoorAnimInteractable : BaseInteractable
 
         _opened = !_opened;
         animator.SetBool(boolName, _opened);
+
+        // 공용 사운드 재생
+        if (_opened) CommonSoundController.Instance?.PlayDoorOpen();
+        else CommonSoundController.Instance?.PlayDoorClose();
     }
 }

@@ -1,26 +1,36 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(LadderPlacementController))]
 public class Ladder : MonoBehaviour
 {
+
+    [SerializeField] private LadderSoundController _ladderSoundController;
+
+    private void Awake()
+    {
+        if(_ladderSoundController == null) _ladderSoundController = GetComponent<LadderSoundController>();
+        if(_ladderSoundController == null) Debug.LogError("No LadderSoundController found on " + gameObject.name);
+    }
     [Header("Data")]
-    [Range(0, 4)] public int lengthLevel = 0; // ¡Ú 0ºÎÅÍ ½ÃÀÛ!
+    [Range(0, 4)] public int lengthLevel = 0; // ï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!
     public LadderPlaceSpot currentSpot;
 
+
     [Header("Visuals")]
-    [Tooltip("·¹º§ 1, 2, 3, 4°¡ µÉ ¶§ ¼ø¼­´ë·Î ÄÑÁú °¡·Î´ë ¿ÀºêÁ§Æ®µé (ÃÑ 4°³ ¿¬°á)")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ 1, 2, 3, 4ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ (ï¿½ï¿½ 4ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)")]
     public GameObject[] extraRungs;
 
     void Start()
     {
-        // ½ÃÀÛ ½Ã ·¹º§ 0 »óÅÂ(´Ù ²¨Áü)·Î ÃÊ±âÈ­
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 0 ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ ï¿½Ê±ï¿½È­
         UpdateVisuals();
     }
 
-    // °¡·Î´ë ¾ÆÀÌÅÛ(RungPickup)ÀÌ È£ÃâÇÏ´Â ÇÔ¼ö
+    // ï¿½ï¿½ï¿½Î´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(RungPickup)ï¿½ï¿½ È£ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ô¼ï¿½
     public void AddRung()
     {
-        if (lengthLevel < 4) // ÃÖ´ë ·¹º§ 4 Á¦ÇÑ
+        if (lengthLevel < 4) // ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ 4 ï¿½ï¿½ï¿½ï¿½
         {
             lengthLevel++;
             UpdateVisuals();
@@ -30,23 +40,24 @@ public class Ladder : MonoBehaviour
 
     void UpdateVisuals()
     {
-        // extraRungs[0] : ·¹º§ 1 ÀÌ»óÀÏ ¶§ ÄÑÁü
-        // extraRungs[1] : ·¹º§ 2 ÀÌ»óÀÏ ¶§ ÄÑÁü ...
+        // extraRungs[0] : ï¿½ï¿½ï¿½ï¿½ 1 ï¿½Ì»ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // extraRungs[1] : ï¿½ï¿½ï¿½ï¿½ 2 ï¿½Ì»ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ...
         for (int i = 0; i < extraRungs.Length; i++)
         {
             if (extraRungs[i] != null)
             {
-                // ¡Ú Á¶°Ç ¼öÁ¤: (i + 1) ·¹º§ºÎÅÍ º¸ÀÓ
+                // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: (i + 1) ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 bool shouldActive = lengthLevel >= (i + 1);
                 extraRungs[i].SetActive(shouldActive);
             }
         }
     }
 
-    // ... (AttachTo, Detach µî ±âÁ¸ ÄÚµå´Â ±×´ë·Î À¯Áö) ...
+    // ... (AttachTo, Detach ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½ï¿½ ï¿½×´ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½) ...
     public void AttachTo(LadderPlaceSpot spot, bool alignRotation = true)
     {
         if (!spot || !spot.ladderAnchor) return;
+
         if (currentSpot) currentSpot.occupied = false;
 
         transform.position = spot.ladderAnchor.position;
@@ -54,8 +65,10 @@ public class Ladder : MonoBehaviour
         currentSpot = spot;
         spot.occupied = true;
 
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         var climb = GetComponent<LadderClimbInteractable>();
         if (climb && spot.climbTarget) climb.target = spot.climbTarget;
+        _ladderSoundController.PlayPlaceLadder();
     }
 
     public void Detach()
@@ -63,7 +76,9 @@ public class Ladder : MonoBehaviour
         if (currentSpot) currentSpot.occupied = false;
         currentSpot = null;
 
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­(ï¿½ï¿½ï¿½ï¿½)
         var climb = GetComponent<LadderClimbInteractable>();
         if (climb) climb.target = null;
+        _ladderSoundController.PlayPlaceLadder();
     }
 }

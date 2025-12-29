@@ -6,12 +6,12 @@ using System.Collections;
 public class KeypadController : MonoBehaviour
 {
     [Header("Settings")]
-    [Tooltip("ºñ¹Ğ¹øÈ£ (ÃÖ´ë 5ÀÚ¸® ±ÇÀå)")]
+    [Tooltip("ï¿½ï¿½Ğ¹ï¿½È£ (ï¿½Ö´ï¿½ 5ï¿½Ú¸ï¿½ ï¿½ï¿½ï¿½ï¿½)")]
     [SerializeField] private string password = "1234";
     [SerializeField] private int maxChars = 5;
 
     [Header("UI Refs")]
-    [SerializeField] private TextMeshPro inputDisplay; // È­¸é¿¡ Ç¥½ÃµÉ ÅØ½ºÆ®
+    [SerializeField] private TextMeshPro inputDisplay; // È­ï¿½é¿¡ Ç¥ï¿½Ãµï¿½ ï¿½Ø½ï¿½Æ®
 
     [Header("Audio (Optional)")]
     [SerializeField] private AudioSource audioSource;
@@ -20,22 +20,22 @@ public class KeypadController : MonoBehaviour
     [SerializeField] private AudioClip successClip;
 
     [Header("Events")]
-    public UnityEvent OnCorrectPassword; // Á¤´ä ¸ÂÃèÀ» ¶§ (¹® ¿­±â µî ¿¬°á)
-    public UnityEvent OnWrongPassword;   // Æ²·ÈÀ» ¶§
+    public UnityEvent OnCorrectPassword; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ (ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+    public UnityEvent OnWrongPassword;   // Æ²ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 
-    // ³»ºÎ »óÅÂ
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private string _currentInput = "";
-    private bool _isLocked = false;      // Á¤´ä ¸ÂÃá ÈÄ Àá±İ
-    private bool _isResetting = false;   // Æ²¸®°í ÃÊ±âÈ­ Áß
+    private bool _isLocked = false;      // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½
+    private bool _isResetting = false;   // Æ²ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½ï¿½
 
     void Start()
     {
         if (inputDisplay) inputDisplay.text = "";
     }
 
-    // --- ¿ÜºÎ(PressableButton3D)¿¡¼­ È£ÃâÇÒ ÇÔ¼öµé ---
+    // --- ï¿½Üºï¿½(PressableButton3D)ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ ---
 
-    // ¼ıÀÚ ¹öÆ° (0~9)ÀÌ È£Ãâ
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ° (0~9)ï¿½ï¿½ È£ï¿½ï¿½
     public void InputNumber(int number)
     {
         if (_isLocked || _isResetting) return;
@@ -46,7 +46,7 @@ public class KeypadController : MonoBehaviour
         PlaySound(beepClip);
     }
 
-    // Áö¿ì±â ¹öÆ° (C)ÀÌ È£Ãâ
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ° (C)ï¿½ï¿½ È£ï¿½ï¿½
     public void InputClear()
     {
         if (_isLocked || _isResetting) return;
@@ -56,24 +56,32 @@ public class KeypadController : MonoBehaviour
         PlaySound(beepClip);
     }
 
-    // È®ÀÎ ¹öÆ° (Enter)ÀÌ È£Ãâ
+    // È®ï¿½ï¿½ ï¿½ï¿½Æ° (Enter)ï¿½ï¿½ È£ï¿½ï¿½
     public void InputEnter()
     {
         if (_isLocked || _isResetting) return;
 
         if (_currentInput == password)
         {
-            // Á¤´ä
+            // ï¿½ï¿½ï¿½ï¿½
             _isLocked = true;
             if (inputDisplay) inputDisplay.text = "PASS";
             PlaySound(successClip);
-            OnCorrectPassword?.Invoke(); // ¡Ú ¿©±â¿¡ ¹® ¿­±â ¿¬°á
+
+            // ê³µìš© í¼ì¦ ì„±ê³µ ì‚¬ìš´ë“œ
+            CommonSoundController.Instance?.PlayPuzzleSuccess();
+
+            OnCorrectPassword?.Invoke(); // ï¿½ï¿½ ï¿½ï¿½ï¿½â¿¡ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         }
         else
         {
-            // ¿À´ä
+            // ï¿½ï¿½ï¿½ï¿½
             if (inputDisplay) inputDisplay.text = "ERR";
             PlaySound(errorClip);
+
+            // ê³µìš© í¼ì¦ ì‹¤íŒ¨ ì‚¬ìš´ë“œ
+            CommonSoundController.Instance?.PlayPuzzleFail();
+
             OnWrongPassword?.Invoke();
             StartCoroutine(ResetRoutine());
         }

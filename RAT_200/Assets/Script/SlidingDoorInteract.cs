@@ -4,7 +4,7 @@ using DG.Tweening;
 public class SlidingDoorInteractable : BaseInteractable
 {
     [Header("Target")]
-    [Tooltip("¿òÁ÷ÀÏ ´ë»ó (ºñ¿öµÎ¸é ÀÚ±â ÀÚ½Å)")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½Î¸ï¿½ ï¿½Ú±ï¿½ ï¿½Ú½ï¿½)")]
     [SerializeField] Transform drawer;
 
     [Header("Sliding Settings")]
@@ -13,8 +13,8 @@ public class SlidingDoorInteractable : BaseInteractable
     [SerializeField] Ease ease = Ease.InOutSine;
 
     [Header("Initial State & Restrictions")]
-    [SerializeField] bool startOpened = false;   // ½ÃÀÛ ½Ã ¿­¸° »óÅÂ ¿©ºÎ
-    [SerializeField] bool openOnlyOnce = false;  // ¡Ú Ãß°¡: ÇÑ ¹ø ¿­¸é ´İÀ» ¼ö ¾øÀ½
+    [SerializeField] bool startOpened = false;   // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    [SerializeField] bool openOnlyOnce = false;  // ï¿½ï¿½ ï¿½ß°ï¿½: ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     bool _opened;
     bool _isAnimating;
@@ -37,7 +37,7 @@ public class SlidingDoorInteractable : BaseInteractable
     {
         if (_isAnimating) return false;
 
-        // ¡Ú Ãß°¡µÈ ·ÎÁ÷: ÇÑ¹ø¸¸ ¿­±â ¿É¼ÇÀÌ ÄÑÁ®ÀÖ°í, ÀÌ¹Ì ¿­·ÁÀÖ´Ù¸é »óÈ£ÀÛ¿ë ºÒ°¡
+        // ï¿½ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: ï¿½Ñ¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½É¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö°ï¿½, ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö´Ù¸ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½Ò°ï¿½
         if (openOnlyOnce && _opened) return false;
 
         return true;
@@ -62,6 +62,9 @@ public class SlidingDoorInteractable : BaseInteractable
                       .SetEase(ease)
                       .SetLink(gameObject, LinkBehaviour.KillOnDestroy)
                       .OnComplete(() => _isAnimating = false);
+
+        // ê³µìš© ì‚¬ìš´ë“œ ì¬ìƒ (ìŠ¬ë¼ì´ë“œí˜• ë¬¸)
+        CommonSoundController.Instance?.PlayDoorSlide();
 
         var noise = GetComponent<TweenNoiseAdapter>();
         _tween = TweenNoiseAdapter.WithNoise(t, noise);

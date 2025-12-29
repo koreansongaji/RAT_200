@@ -34,9 +34,8 @@ public class TitlePage : MonoBehaviour
 
     private void Start()
     {
-        // 처음에 타이틀을 보여주고 시간을 멈춤
+        // 처음에 타이틀을 보여줌 (Time.timeScale 제거)
         _isPageHidden = false;
-        Time.timeScale = 0f; 
         
         SlideInTitlePage();
         if(_titleBGM == null) _titleBGM = Resources.Load<AudioClip>("Sounds/BGM/bgm_title");
@@ -45,7 +44,7 @@ public class TitlePage : MonoBehaviour
 
     private void Update()
     {
-        // 1. 게임 중 ESC를 누르면 타이틀을 켜고 시간을 멈춤
+        // 1. 게임 중 ESC를 누르면 타이틀을 켬 (Time.timeScale 제거)
         if (_isPageHidden && Input.GetKeyDown(KeyCode.Escape))
         {
             OpenMenu();
@@ -55,7 +54,6 @@ public class TitlePage : MonoBehaviour
     private void OpenMenu()
     {
         _isPageHidden = false;
-        Time.timeScale = 0f; // 시간 정지
         SlideInTitlePage();
     }
 
@@ -74,16 +72,15 @@ public class TitlePage : MonoBehaviour
             Debug.LogWarning("[TitlePage] BgmController is not assigned.");
         }
 
-        // 2. 타이틀을 치우고 시간을 흐르게 함
+        // 2. 타이틀을 치우고 게임 상태로 전환 (Time.timeScale 제거)
         SlideOutTitlePage(onComplete: () => 
         {
             _isPageHidden = true;
             _isTransitioning = false;
-            Time.timeScale = 1f; 
         });
     }
 
-    // 옵션 페이지 열기 (이미 시간은 0인 상태이므로 위치만 이동)
+    // 옵션 페이지 열기 (위치만 이동)
     public void OnOpenOptionPage()
     {
         if (_isTransitioning || _optionPage == null) return;
@@ -98,7 +95,6 @@ public class TitlePage : MonoBehaviour
         });
     }
     
-    // UpdateTimeScale 함수는 이제 필요 없으므로 삭제해도 됩니다.
     /// <summary>
     /// 타이틀 페이지를 설정된 화면 밖 위치로 이동시킵니다.
     /// </summary>

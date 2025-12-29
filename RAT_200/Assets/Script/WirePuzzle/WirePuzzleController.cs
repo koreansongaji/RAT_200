@@ -3,15 +3,15 @@ using UnityEngine.Events;
 using TMPro;
 using DG.Tweening;
 
-/// 4¿ÍÀÌ¾î¡¿3´Ü ³ôÀÌ ÆÛÁñ ÄÁÆ®·Ñ·¯.
-/// - ¸ñÇ¥: ¸ðµç W°¡ ³ôÀÌ 0
-/// - ¹öÆ° ¿µÇâ(¹®Á¦ Á¤ÀÇ): 
+/// 4ï¿½ï¿½ï¿½Ì¾î¡¿3ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½Ñ·ï¿½.
+/// - ï¿½ï¿½Ç¥: ï¿½ï¿½ï¿½ Wï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 0
+/// - ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½): 
 ///   B1:(1,0,1,0)  B2:(0,1,0,1)  B3:(1,1,1,0)  B4:(0,1,1,1)
-/// - °¢ ¹öÆ°Àº ¿µÇâ¹Þ´Â ¿ÍÀÌ¾îÀÇ ³ôÀÌ¸¦ +1(mod 3) ½ÃÅ´
-/// - 8È¸ ÀÌ»ó ´©¸£¸é ½ÇÆÐ(Noise 100%)
+/// - ï¿½ï¿½ ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Þ´ï¿½ ï¿½ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¸ï¿½ +1(mod 3) ï¿½ï¿½Å´
+/// - 8È¸ ï¿½Ì»ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(Noise 100%)
 public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroHidePlayerPreference
 {
-    public bool hidePlayerDuringMicro = true; // ÆÛÁñº°·Î Åä±Û
+    public bool hidePlayerDuringMicro = true; // ï¿½ï¿½ï¿½ñº°·ï¿½ ï¿½ï¿½ï¿½
     public bool HidePlayerDuringMicro => hidePlayerDuringMicro;
 
     [Header("Wires (Transforms at current piece root)")]
@@ -20,7 +20,7 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
     public Transform w3;
     public Transform w4;
 
-    [Header("Local snap positions for levels (0=¿¬°á,1=À§,2=±×º¸´Ù À§)")]
+    [Header("Local snap positions for levels (0=ï¿½ï¿½ï¿½ï¿½,1=ï¿½ï¿½,2=ï¿½×ºï¿½ï¿½ï¿½ ï¿½ï¿½)")]
     public Vector3 level0Local = new(0f, 0.00f, 0f);
     public Vector3 level1Local = new(0f, 0.04f, 0f);
     public Vector3 level2Local = new(0f, 0.08f, 0f);
@@ -33,15 +33,15 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
     public PressableButton3D b3;
     public PressableButton3D b4;
 
-    [Header("UI (¼±ÅÃ)")]
-    public TMP_Text txtMovesLeft;      // "Moves: 0/7" µî
-    public TMP_Text[] wireDebugTexts;  // W1~W4 ³ôÀÌ µð¹ö±× Ç¥±â(¼±ÅÃ)
-    public Canvas worldCanvas;         // ¼¼¼Ç Áß¿¡¸¸ ON
+    [Header("UI (ï¿½ï¿½ï¿½ï¿½)")]
+    public TMP_Text txtMovesLeft;      // "Moves: 0/7" ï¿½ï¿½
+    public TMP_Text[] wireDebugTexts;  // W1~W4 ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½)
+    public Canvas worldCanvas;         // ï¿½ï¿½ï¿½ï¿½ ï¿½ß¿ï¿½ï¿½ï¿½ ON
 
     [Header("Rules")]
-    [Tooltip("¹öÆ° ´©¸§ È½¼ö 8 ÀÌ»óÀÌ¸é ½ÇÆÐ")]
-    public int failAtPresses = 8;      // 8 ÀÌ»óÀÌ¸é ½ÇÆÐ
-    [Tooltip("ÃÊ±â ³ôÀÌ (0/1/2)")]
+    [Tooltip("ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½ È½ï¿½ï¿½ 8 ï¿½Ì»ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½")]
+    public int failAtPresses = 8;      // 8 ï¿½Ì»ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½
+    [Tooltip("ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½ï¿½ (0/1/2)")]
     [Range(0, 2)] public int w1Init = 0;
     [Range(0, 2)] public int w2Init = 1;
     [Range(0, 2)] public int w3Init = 2;
@@ -51,7 +51,7 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
     public UnityEvent OnSolved;
     public UnityEvent OnFailed;
 
-    // ¼¼¼Ç »óÅÂ
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     bool _session;
     int[] _h = new int[4];  // W1..W4
     int _pressCount;
@@ -60,7 +60,7 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
 
     Vector3[] _baseLocalPos = new Vector3[4];
 
-    // ¹öÆ°¡æ¿ÍÀÌ¾î ¿µÇâ (ÇÏµåÄÚµå: ¹®Á¦ Á¤ÀÇ ±×´ë·Î)
+    // ï¿½ï¿½Æ°ï¿½ï¿½ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½Ïµï¿½ï¿½Úµï¿½: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½×´ï¿½ï¿½)
     // rows: B1..B4, cols: W1..W4
     static readonly bool[,] INFL = new bool[4, 4] {
         { true,  false, true,  false }, // B1
@@ -69,7 +69,7 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         { false, true,  true,  true  }  // B4
     };
 
-    // Å¬·¡½º ÇÊµå¿¡ °¡µå Ãß°¡
+    // Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½Êµå¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
     bool _ending = false;
 
     void Awake()
@@ -78,7 +78,7 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         WireButtons();
         if (worldCanvas) worldCanvas.enabled = false;
 
-        // ÃÊ±â ¹èÄ¡°ª Ä³½Ã (¿¡µðÅÍ¿¡¼­ ¹èÄ¡ÇÑ ±×´ë·Î º¸Á¸)
+        // ï¿½Ê±ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ Ä³ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½×´ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
         CacheBaseLocalPositions();
     }
 
@@ -101,18 +101,18 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
     // ===== BaseInteractable =====
     public override bool CanInteract(PlayerInteractor i)
     {
-        // ¼¼¼Ç Áß Áßº¹ ÁøÀÔ ¹æÁö
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ßºï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         return !_session;
     }
 
     public override void Interact(PlayerInteractor i)
     {
-        // Micro ¼¼¼Ç ¿£Æ®¸®´Â µû·Î MicroEntryInteractableÀ» ½áµµ µÇ°í,
-        // ÆÛÁñÀÌ Á÷Á¢ Micro¸¦ ¿­¾îµµ µÊ. ¿©±â¼­´Â Micro°¡ ºÙ¾îÀÖ´Ù¸é ±×ÂÊÀ¸·Î ÁøÀÔ¸¸ À§ÀÓ.
+        // Micro ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ MicroEntryInteractableï¿½ï¿½ ï¿½áµµ ï¿½Ç°ï¿½,
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Microï¿½ï¿½ ï¿½ï¿½ï¿½îµµ ï¿½ï¿½. ï¿½ï¿½ï¿½â¼­ï¿½ï¿½ Microï¿½ï¿½ ï¿½Ù¾ï¿½ï¿½Ö´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ô¸ï¿½ ï¿½ï¿½ï¿½ï¿½.
         if (_session) return;
         _lastPlayer = i;
         if (_micro && _micro.TryEnter(i)) return;
-        // Micro°¡ ¾øÀ» ¶§ Á÷Á¢ ½ÃÀÛ
+        // Microï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         StartSession();
     }
 
@@ -138,7 +138,7 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         _pressCount = 0;
         _h[0] = w1Init; _h[1] = w2Init; _h[2] = w3Init; _h[3] = w4Init;
 
-        // È¤½Ã ·±Å¸ÀÓ¿¡ ÇÁ¸®ÆÕ Àç¹èÄ¡µÆÀ» ¼ö ÀÖÀ¸´Ï ¼¼¼Ç ½ÃÀÛ ¶§µµ ÇÑ ¹ø ´õ Ä³½Ã
+        // È¤ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½Ó¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ Ä³ï¿½ï¿½
         CacheBaseLocalPositions();
 
         if (worldCanvas) worldCanvas.enabled = true;
@@ -167,7 +167,7 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
     {
         if (!_session || _ending) return;
 
-        // ¹öÆ° ¿µÇâ Àû¿ë (+1 mod 3)
+        // ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (+1 mod 3)
         for (int w = 0; w < 4; w++)
             if (INFL[bIndex, w])
                 _h[w] = (_h[w] + 1) % 3;
@@ -177,28 +177,34 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         SnapAll();
         RefreshTexts();
 
-        // ¼º°ø Ã¼Å©
+        // ï¿½ï¿½ï¿½ï¿½ Ã¼Å©
         if (_h[0] == 0 && _h[1] == 0 && _h[2] == 0 && _h[3] == 0)
         {
             _ending = true;
             SetButtonsInteractable(false);
             OnSolved?.Invoke();
 
-            // Micro Á¾·á À¯µµ ¡æ IMicroSessionHost.OnMicroExit ¡æ CancelSession()
+            // ê³µìš© ì‚¬ìš´ë“œ ìž¬ìƒ: ì™€ì´ì–´ í¼ì¦ ì„±ê³µ (ìŠ¤íŒŒí¬ ì†Œë¦¬)
+            CommonSoundController.Instance?.PlaySpark();
+
+            // Micro ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ IMicroSessionHost.OnMicroExit ï¿½ï¿½ CancelSession()
             if (_micro) _micro.Exit();
             else CancelSession();
             return;
         }
 
-        // ½ÇÆÐ Ã¼Å©
+        // ï¿½ï¿½ï¿½ï¿½ Ã¼Å©
         if (_pressCount >= failAtPresses)
         {
             _ending = true;
             SetButtonsInteractable(false);
 
-            // ¼ÒÀ½ 100%
+            // ï¿½ï¿½ï¿½ï¿½ 100%
             if (NoiseSystem.Instance) NoiseSystem.Instance.FireImpulse(1f);
             OnFailed?.Invoke();
+
+            // ê³µìš© ì‚¬ìš´ë“œ ìž¬ìƒ: ì™€ì´ì–´ í¼ì¦ ì‹¤íŒ¨ (í“¨ì¦ˆ ìŠ¤íŒŒí¬ ì†Œë¦¬)
+            CommonSoundController.Instance?.PlaySpark();
 
             if (_micro) _micro.Exit();
             else CancelSession();
@@ -217,7 +223,7 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
     {
         if (!t) return;
 
-        // level0/1/2LocalÀÇ y¸¸ »ç¿ë (x/z´Â ÃÊ±â°ª À¯Áö)
+        // level0/1/2Localï¿½ï¿½ yï¿½ï¿½ ï¿½ï¿½ï¿½ (x/zï¿½ï¿½ ï¿½Ê±â°ª ï¿½ï¿½ï¿½ï¿½)
         float y = h switch
         {
             0 => level0Local.y,
@@ -225,11 +231,11 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
             _ => level2Local.y
         };
 
-        // ÃÊ±â ¹èÄ¡ÇÑ x/z¸¦ »ç¿ë
+        // ï¿½Ê±ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ x/zï¿½ï¿½ ï¿½ï¿½ï¿½
         var basePos = _baseLocalPos[index];
         var target = new Vector3(basePos.x, y, basePos.z);
 
-        // Áßº¹ Æ®À© ¹æÁö
+        // ï¿½ßºï¿½ Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         t.DOKill();
         t.DOLocalMove(target, snapDuration).SetEase(snapEase);
     }

@@ -1,30 +1,30 @@
 using UnityEngine;
 using DG.Tweening;
-using UnityEngine.Events; // ÀÌº¥Æ® »ç¿ëÀ» À§ÇØ Ãß°¡
+using UnityEngine.Events; // ï¿½Ìºï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
 
 public class DoorInteractable : BaseInteractable
 {
     [Header("Door Target")]
-    [Tooltip("½ÇÁ¦·Î È¸ÀüÇÒ Transform. ºñ¿ì¸é ÀÌ ½ºÅ©¸³Æ®°¡ ºÙÀº ¿ÀºêÁ§Æ®¸¦ »ç¿ë.")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ Transform. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½.")]
     [SerializeField] private Transform door;
 
     [Header("Open Settings")]
-    [Tooltip("´ÝÈù »óÅÂ¿¡¼­ YÃàÀ¸·Î ¸î µµ ¿­¸±Áö(+´Â ÇÑÂÊ, -´Â ¹Ý´ë ¹æÇâ).")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ Yï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(+ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, -ï¿½ï¿½ ï¿½Ý´ï¿½ ï¿½ï¿½ï¿½ï¿½).")]
     [SerializeField] private float openAngle = 90f;
-    [Tooltip("¿ÞÂÊ/¿À¸¥ÂÊ ¹® ¹æÇâÀÌ ¹Ý´ëÀÏ ¶§ Ã¼Å©ÇÏ¸é °¢µµ°¡ ¹Ý´ë·Î Àû¿ëµÊ.")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ý´ï¿½ï¿½ï¿½ ï¿½ï¿½ Ã¼Å©ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ý´ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½.")]
     [SerializeField] private bool invertDirection = false;
     [SerializeField] private bool startOpened = false;
 
     [Header("Restrictions")]
     [SerializeField] private bool openOnlyOnce = false;
 
-    // ¡å¡å¡å [Ãß°¡] Àá±Ý ±â´É ¡å¡å¡å
+    // ï¿½ï¿½ï¿½ï¿½ [ï¿½ß°ï¿½] ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     [Header("Lock Settings")]
-    [Tooltip("Ã¼Å©µÇ¸é Å¬¸¯ÇØµµ ¾È ¿­¸². ¿ÜºÎ(Å°ÆÐµå µî)¿¡¼­ Unlock ÇØÁà¾ß ÇÔ.")]
+    [Tooltip("Ã¼Å©ï¿½Ç¸ï¿½ Å¬ï¿½ï¿½ï¿½Øµï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. ï¿½Üºï¿½(Å°ï¿½Ðµï¿½ ï¿½ï¿½)ï¿½ï¿½ï¿½ï¿½ Unlock ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½.")]
     public bool isLocked = false;
-    [Tooltip("Àá°ÜÀÖÀ» ¶§ Å¬¸¯ÇÏ¸é ½ÇÇàµÉ ÀÌº¥Æ® (¿¹: 'Àá°ÜÀÖ´Ù' ¸Þ½ÃÁö, ´úÄÈ°Å¸®´Â ¼Ò¸®)")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® (ï¿½ï¿½: 'ï¿½ï¿½ï¿½ï¿½Ö´ï¿½' ï¿½Þ½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½È°Å¸ï¿½ï¿½ï¿½ ï¿½Ò¸ï¿½)")]
     public UnityEvent OnTryLockedInteract;
-    // ¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
     [Header("Tween")]
     [SerializeField] private float duration = 0.4f;
@@ -57,22 +57,22 @@ public class DoorInteractable : BaseInteractable
     {
         if (_isAnimating) return false;
 
-        // ÇÑ¹ø¸¸ ¿­±â ¸ðµåÀÌ°í ÀÌ¹Ì ¿­·ÁÀÖÀ¸¸é ºÒ°¡
+        // ï¿½Ñ¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ì°ï¿½ ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò°ï¿½
         if (openOnlyOnce && _isOpen) return false;
 
-        // ¡Ú Àá°ÜÀÖÀ¸¸é »óÈ£ÀÛ¿ë ºÒ°¡ (ÇÏÁö¸¸ Å¬¸¯ ½Ãµµ ÀÌº¥Æ®´Â ¹ß»ý½ÃÅ°±â À§ÇØ true¸¦ ¹ÝÈ¯ÇÏ°í Interact¿¡¼­ Ã³¸®ÇÒ ¼öµµ ÀÖÀ½.
-        // ¿©±â¼­´Â '¿­ ¼ö ¾øÀ½'À» ¸íÈ®È÷ ÇÏ±â À§ÇØ false¸¦ ¹ÝÈ¯ÇÏµÇ, 
-        // Å¬¸¯ ÇÇµå¹éÀÌ ÇÊ¿äÇÏ¸é ·ÎÁ÷À» Interact·Î ¿Å°Ü¾ß ÇÔ. 
-        // ÀÏ´ÜÀº Àá°ÜÀÖÀ¸¸é '»óÈ£ÀÛ¿ë ¸¶Å©'°¡ ¾È ¶ß°Ô false Ã³¸®)
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½Ò°ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ ï¿½Ãµï¿½ ï¿½Ìºï¿½Æ®ï¿½ï¿½ ï¿½ß»ï¿½ï¿½ï¿½Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ trueï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ï°ï¿½ Interactï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+        // ï¿½ï¿½ï¿½â¼­ï¿½ï¿½ 'ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½'ï¿½ï¿½ ï¿½ï¿½È®ï¿½ï¿½ ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ falseï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ïµï¿½, 
+        // Å¬ï¿½ï¿½ ï¿½Çµï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Interactï¿½ï¿½ ï¿½Å°Ü¾ï¿½ ï¿½ï¿½. 
+        // ï¿½Ï´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 'ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½ï¿½Å©'ï¿½ï¿½ ï¿½ï¿½ ï¿½ß°ï¿½ false Ã³ï¿½ï¿½)
         if (isLocked) return false;
 
         return base.CanInteract(i);
     }
 
-    // ÇÃ·¹ÀÌ¾î°¡ Á÷Á¢ Å¬¸¯ÇßÀ» ¶§
+    // ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
     public override void Interact(PlayerInteractor i)
     {
-        // CanInteract¿¡¼­ ÀÌ¹Ì °É·¯ÁöÁö¸¸, È¤½Ã ¸ð¸£´Ï Ã¼Å©
+        // CanInteractï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ ï¿½É·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, È¤ï¿½ï¿½ ï¿½ð¸£´ï¿½ Ã¼Å©
         if (isLocked)
         {
             OnTryLockedInteract?.Invoke();
@@ -86,7 +86,7 @@ public class DoorInteractable : BaseInteractable
         GetComponent<DrawerItemDispenser>()?.Dispense();
     }
 
-    // ³»ºÎ µ¿ÀÛ ·ÎÁ÷
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     void ToggleMove()
     {
         _isOpen = !_isOpen;
@@ -95,27 +95,31 @@ public class DoorInteractable : BaseInteractable
 
         Vector3 targetEuler = _isOpen ? _openedEuler : _closedEuler;
 
-        // ¼Ò¸® Àç»ý
+        // ï¿½Ò¸ï¿½ ï¿½ï¿½ï¿½
         if (sfxSource)
         {
             var clip = _isOpen ? openSound : closeSound;
             if (clip) sfxSource.PlayOneShot(clip);
         }
 
-        // Tween ½ÇÇà
+        // ê³µìš© ì‚¬ìš´ë“œ ìž¬ìƒ
+        if (_isOpen) CommonSoundController.Instance?.PlayDoorOpen();
+        else CommonSoundController.Instance?.PlayDoorClose();
+
+        // Tween ï¿½ï¿½ï¿½ï¿½
         var t = door.DOLocalRotate(targetEuler, duration)
             .SetEase(ease)
             .OnComplete(() => _isAnimating = false);
 
-        // ¼ÒÀ½ ½Ã½ºÅÛ ¿¬µ¿
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ã½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         var noise = GetComponent<TweenNoiseAdapter>();
         _tween = TweenNoiseAdapter.WithNoise(t, noise);
     }
 
-    // ¡å¡å¡å [Ãß°¡] ¿ÜºÎ¿¡¼­ È£ÃâÇÒ ÇÔ¼öµé (UnityEvent ¿¬°á¿ë) ¡å¡å¡å
+    // ï¿½ï¿½ï¿½ï¿½ [ï¿½ß°ï¿½] ï¿½ÜºÎ¿ï¿½ï¿½ï¿½ È£ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ (UnityEvent ï¿½ï¿½ï¿½ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½
 
     /// <summary>
-    /// Àá±ÝÀ» ÇØÁ¦ÇÏ°í ¹®À» ¿±´Ï´Ù. (ºñ¹Ð¹øÈ£ ¼º°ø ½Ã ¿¬°á)
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï´ï¿½. (ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
     /// </summary>
     public void UnlockAndOpen()
     {
@@ -124,7 +128,7 @@ public class DoorInteractable : BaseInteractable
     }
 
     /// <summary>
-    /// °­Á¦·Î ¿±´Ï´Ù (Àá±Ý »óÅÂ ¹«½Ã).
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï´ï¿½ (ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½).
     /// </summary>
     public void ForceOpen()
     {
@@ -132,7 +136,7 @@ public class DoorInteractable : BaseInteractable
     }
 
     /// <summary>
-    /// °­Á¦·Î ´Ý½À´Ï´Ù.
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ý½ï¿½ï¿½Ï´ï¿½.
     /// </summary>
     public void ForceClose()
     {
@@ -140,13 +144,13 @@ public class DoorInteractable : BaseInteractable
     }
 
     /// <summary>
-    /// Àá±Ý¸¸ ÇØÁ¦ÇÕ´Ï´Ù (¹®Àº ±×´ë·Î).
+    /// ï¿½ï¿½Ý¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½×´ï¿½ï¿½).
     /// </summary>
     public void UnlockOnly()
     {
         isLocked = true;
     }
-    // ¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
     void OnDisable()
     {
