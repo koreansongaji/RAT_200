@@ -8,162 +8,181 @@ using System.Collections;
 
 public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHidePlayerPreference
 {
-    [Header("�䱸 ���� �÷���(������ üũ, �Ҹ�X)")]
+    // ... (기존 변수들 생략) ...
+    [Header("필요 아이템 ID")]
     [SerializeField] string sodiumId = "Sodium";
     [SerializeField] string gelId = "Gel";
     [SerializeField] string waterInFlaskId = "WaterInFlask";
 
-    [Header("UI (���� �����̽�)")]
+    [Header("UI Refs (월드 스페이스)")]
     [SerializeField] Canvas panel;
     [SerializeField] Button btnSodium;
     [SerializeField] Button btnWater;
     [SerializeField] Button btnGel;
     [SerializeField] Button btnMix;
 
-    [Header("ī���� ǥ��(TMP)")]
+    [Header("카운터 표시(TMP)")]
     [SerializeField] TMP_Text txtNa;
     [SerializeField] TMP_Text txtWater;
     [SerializeField] TMP_Text txtGel;
     [SerializeField] TMP_Text txtRecipe;
 
-    [Header("�ʿ䷮(�⺻��)")]
-    [Min(0)][SerializeField] int needNa = 2;
-    [Min(0)][SerializeField] int needWater = 1;
-    [Min(0)][SerializeField] int needGel = 4;
+    [Header("정답 레시피")]
+    [Min(0)][SerializeField] int needNa = 3;
+    [Min(0)][SerializeField] int needWater = 4;
+    [Min(0)][SerializeField] int needGel = 2;
 
-    [Header("��� ó��")]
-    public UnityEvent OnMakeBigNoise; // ���� �� ���� �̺�Ʈ
-
-    // ���� [����] �÷��̾� �̵� ���� ���� ���� & ����� ���� �߰� ����
-    [Header("���� ���� (Bridge)")]
-    public LabToFridgeManager bridgeManager; // �� �ʼ� ����: å �ٸ�/���� ���� ������
-    public CinemachineCamera bridgeSideCam;        // �� �ʼ� ����: å �ٸ� �� ���̵� ī�޶�
-    public float bridgeCamDuration = 2.5f;         // ī�޶� ���߰� ���� �ð�
-
-    // (���� ���̾Ƹ�� ī��� BridgeManager���� �����̵� ī�带 ������ ������ ��ü�ǹǷ� �����ϰų� ���� ����)
-    // [SerializeField] GameObject diamondCardPrefab; 
-    // [SerializeField] Transform cardSpawnPoint;     
-    // �����������������������������������������
-
-    [Header("3D Buttons (optional)")]
+    [Header("3D Buttons (옵션)")]
     [SerializeField] PressableButton3D btnNa3D;
     [SerializeField] PressableButton3D btnWater3D;
     [SerializeField] PressableButton3D btnGel3D;
     [SerializeField] PressableButton3D btnMix3D;
 
-    // ���� ����
-    int _cNa, _cWater, _cGel;
-    bool _session;
+    [Header("Visuals (시험관 & 이펙트)")]
+    public GameObject tubeNaObj;
+    public GameObject tubeWaterObj;
+    public GameObject tubeGelObj;
+    public ParticleSystem steamParticle;
 
-    // ���� ĳ��
+    [Header("외부 연결")]
+    public LabToFridgeManager bridgeManager;
+    public CinemachineCamera bridgeSideCam;
+    public float steamShowDuration = 1.5f;
+    public float bridgeCamDuration = 3.0f;
+
+    // ★ [추가] 보상 카드 (스페이드 7)
+    [Header("Reward")]
+    [Tooltip("퍼즐 성공 시 등장할 카드 (스페이드 7)")]
+    public GameObject rewardCardObj;
+
+    [Header("Sound & Event")]
+    public UnityEvent OnMakeBigNoise;
+
+    int _cNa, _cWater, _cGel;
+    bool _hasPlacedNa, _hasPlacedWater, _hasPlacedGel;
+    bool _session;
+    bool _isSuccessSequence = false;
+    bool _isSolved = false;
     MicroZoomSession _micro;
 
-    public bool hidePlayerDuringMicro = true;
-    public bool HidePlayerDuringMicro => hidePlayerDuringMicro;
+    public bool HidePlayerDuringMicro => true;
 
     void Awake()
     {
-        if (panel) panel.enabled = false;
+        if (panel) panel.enabled = true;
         _micro = GetComponent<MicroZoomSession>();
+
+        if (tubeNaObj) tubeNaObj.SetActive(false);
+        if (tubeWaterObj) tubeWaterObj.SetActive(false);
+        if (tubeGelObj) tubeGelObj.SetActive(false);
+        if (steamParticle) steamParticle.Stop();
+
+        // ★ 시작 시 보상 카드는 숨김
+        if (rewardCardObj) rewardCardObj.SetActive(false);
+
         WireButtons();
         RefreshTexts();
+        if (txtRecipe) txtRecipe.text = $"Recipe: Na({needNa}) Water({needWater}) Gel({needGel})";
     }
+
+    // ... (중간 함수들은 기존과 동일, 생략) ...
+    // CanInteract, Interact, StartSession, CheckAndPlaceItem, SetButtonsState, CancelSession, Tap, Tap3D, RefreshTexts, Submit 등
 
     void WireButtons()
     {
-        if (btnSodium) btnSodium.onClick.AddListener(() => Tap(ref _cNa, needNa, btnSodium));
-        if (btnWater) btnWater.onClick.AddListener(() => Tap(ref _cWater, needWater, btnWater));
-        if (btnGel) btnGel.onClick.AddListener(() => Tap(ref _cGel, needGel, btnGel));
+        if (btnSodium) btnSodium.onClick.AddListener(() => Tap(ref _cNa, needNa));
+        if (btnWater) btnWater.onClick.AddListener(() => Tap(ref _cWater, needWater));
+        if (btnGel) btnGel.onClick.AddListener(() => Tap(ref _cGel, needGel));
         if (btnMix) btnMix.onClick.AddListener(Submit);
 
-        if (btnNa3D) btnNa3D.OnPressed.AddListener(() => Tap3D(ref _cNa, needNa, btnNa3D));
-        if (btnWater3D) btnWater3D.OnPressed.AddListener(() => Tap3D(ref _cWater, needWater, btnWater3D));
-        if (btnGel3D) btnGel3D.OnPressed.AddListener(() => Tap3D(ref _cGel, needGel, btnGel3D));
+        if (btnNa3D) btnNa3D.OnPressed.AddListener(() => Tap3D(ref _cNa, needNa));
+        if (btnWater3D) btnWater3D.OnPressed.AddListener(() => Tap3D(ref _cWater, needWater));
+        if (btnGel3D) btnGel3D.OnPressed.AddListener(() => Tap3D(ref _cGel, needGel));
         if (btnMix3D) btnMix3D.OnPressed.AddListener(Submit);
     }
 
-    public override bool CanInteract(PlayerInteractor i)
-    {
-        if (!i) return false;
-        bool hasAll = i.HasItem(sodiumId) && i.HasItem(gelId) && i.HasItem(waterInFlaskId);
-        return hasAll && !_session;
-    }
+    // --- 1. 진입 ---
+    public override bool CanInteract(PlayerInteractor i) => !_session && !_isSuccessSequence && !_isSolved;
 
     public override void Interact(PlayerInteractor i)
     {
-        if (_session) return;
-        if (!CanInteract(i))
-        {
-            Debug.Log("[ChemMixingStation] �䱸 ��ᰡ �����մϴ�.");
-            return;
-        }
-
-        if (_micro)
-        {
-            if (_micro.TryEnter(i))
-            {
-                Debug.Log("[ChemMixingStation] Enter Micro zoom");
-            }
-            return;
-        }
-        StartSession();
+        if (!CanInteract(i)) return;
+        if (_micro) _micro.TryEnter(i);
+        else StartSession(i);
     }
 
-    // ===== IMicroSessionHost ���� =====
-    public bool CanBeginMicro(PlayerInteractor player)
-    {
-        if (!player) return false;
-        bool hasAll = player.HasItem(sodiumId) && player.HasItem(gelId) && player.HasItem(waterInFlaskId);
-        return hasAll && !_session;
-    }
+    public bool CanBeginMicro(PlayerInteractor player) => !_session && !_isSuccessSequence && !_isSolved;
 
-    public void OnMicroEnter(PlayerInteractor player) => StartSession();
+    public void OnMicroEnter(PlayerInteractor player) => StartSession(player);
     public void OnMicroExit(PlayerInteractor player) => CancelSession();
 
-    // ===== ���� ���� =====
-    public void StartSession()
+    // --- 2. 세션 시작 ---
+    void StartSession(PlayerInteractor player)
     {
         _session = true;
-        _cNa = _cWater = _cGel = 0;
-
+        _cNa = 0; _cWater = 0; _cGel = 0;
         if (panel) panel.enabled = true;
 
-        bool interactableState = true;
-        SetBtnInteractable(btnSodium, btnNa3D, needNa > 0);
-        SetBtnInteractable(btnWater, btnWater3D, needWater > 0);
-        SetBtnInteractable(btnGel, btnGel3D, needGel > 0);
-        SetBtnInteractable(btnMix, btnMix3D, true);
+        if (player != null)
+        {
+            CheckAndPlaceItem(player, sodiumId, ref _hasPlacedNa, tubeNaObj);
+            CheckAndPlaceItem(player, waterInFlaskId, ref _hasPlacedWater, tubeWaterObj);
+            CheckAndPlaceItem(player, gelId, ref _hasPlacedGel, tubeGelObj);
+        }
 
+        bool allReady = _hasPlacedNa && _hasPlacedWater && _hasPlacedGel;
+        SetButtonsState(allReady);
         RefreshTexts();
+        if (txtRecipe) txtRecipe.text = $"Recipe: Na({needNa}) Water({needWater}) Gel({needGel})";
     }
 
-    // ����: ��ư Ȱ��ȭ �ϰ� ó��
-    void SetBtnInteractable(Button uiBtn, PressableButton3D worldBtn, bool active)
+    void CheckAndPlaceItem(PlayerInteractor player, string itemId, ref bool isPlaced, GameObject visualObj)
     {
-        if (uiBtn) uiBtn.interactable = active;
-        if (worldBtn) worldBtn.SetInteractable(active);
+        if (isPlaced) return;
+        if (player && player.HasItem(itemId))
+        {
+            player.RemoveItem(itemId);
+            isPlaced = true;
+            if (visualObj)
+            {
+                visualObj.SetActive(true);
+                visualObj.transform.DOKill();
+                Vector3 originalPos = visualObj.transform.localPosition;
+                visualObj.transform.localPosition = originalPos + Vector3.up * 0.2f;
+                visualObj.transform.DOLocalMove(originalPos, 0.5f).SetEase(Ease.OutBounce);
+            }
+            Debug.Log($"[ChemStation] {itemId} 설치 완료!");
+        }
     }
 
-    public void CancelSession() => EndSession(false);
+    void SetButtonsState(bool ready)
+    {
+        if (btnSodium) btnSodium.interactable = ready;
+        if (btnWater) btnWater.interactable = ready;
+        if (btnGel) btnGel.interactable = ready;
+        if (btnMix) btnMix.interactable = ready;
 
-    void EndSession(bool fromSubmit)
+        if (btnNa3D) btnNa3D.SetInteractable(ready);
+        if (btnWater3D) btnWater3D.SetInteractable(ready);
+        if (btnGel3D) btnGel3D.SetInteractable(ready);
+        if (btnMix3D) btnMix3D.SetInteractable(ready);
+    }
+
+    public void CancelSession()
     {
         _session = false;
-        if (panel) panel.enabled = false;
-        // Micro ����� Submit�̳� Exit ȣ��ο��� ó����
     }
 
-    void Tap(ref int counter, int need, Button src)
+    void Tap(ref int counter, int need)
     {
-        if (!_session || need <= 0) return;
+        if (!_session) return;
         counter++;
         RefreshTexts();
     }
 
-    void Tap3D(ref int counter, int need, PressableButton3D src)
+    void Tap3D(ref int counter, int need)
     {
         if (!_session) return;
-        if (need <= 0) { if (src) src.SetInteractable(false); return; }
         counter++;
         RefreshTexts();
     }
@@ -171,104 +190,71 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
     void RefreshTexts()
     {
         string Mark(int c, int n) => c > n ? $"<color=#ff6060>{c}</color>" : c.ToString();
-        if (txtNa) txtNa.text = $"Na: {Mark(_cNa, needNa)}/{needNa}";
-        if (txtWater) txtWater.text = $"Water: {Mark(_cWater, needWater)}/{needWater}";
-        if (txtGel) txtGel.text = $"Gel: {Mark(_cGel, needGel)}/{needGel}";
-        if (txtRecipe) txtRecipe.text = $"Rate 2:1:{needGel}";
+        if (txtNa) txtNa.text = $"Na: {Mark(_cNa, needNa)}";
+        if (txtWater) txtWater.text = $"Water: {Mark(_cWater, needWater)}";
+        if (txtGel) txtGel.text = $"Gel: {Mark(_cGel, needGel)}";
     }
 
-    // �ڡڡ� [���� ���� ����] �ڡڡ�
     void Submit()
     {
-        if (!_session) return;
+        if (!_session || _isSuccessSequence) return;
 
         bool success = (_cNa == needNa) && (_cWater == needWater) && (_cGel == needGel);
 
         if (!success)
         {
-            // ���� ��: ��� Micro Ż���ϰ� ���� �߻�
-            if (_micro && _micro.InMicro) _micro.Exit();
-
-            if (NoiseSystem.Instance) NoiseSystem.Instance.FireImpulse(1f);
+            Debug.Log("[ChemStation] 혼합 실패!");
+            if (NoiseSystem.Instance) NoiseSystem.Instance.FireImpulse(0.5f);
             OnMakeBigNoise?.Invoke();
-            Debug.Log("[ChemMixingStation] ȥ�� ����!");
-
-            // 공용 퍼즐 실패 사운드
             CommonSoundController.Instance?.PlayPuzzleFail();
-
-            EndSession(true);
+            if (_micro && _micro.InMicro) _micro.Exit();
             return;
         }
 
-        // === ���� �� ===
-        Debug.Log("[ChemMixingStation] ȥ�� ����!");
-
-        // 1. ����/�ð� ���� ���� (å ������, ���� ������)
-        if (bridgeManager)
-        {
-            bridgeManager.PlaySequence();
-        }
-
-        // 2. ī�޶� ��ȯ �ڷ�ƾ ����
-        // �� �߿�: ���⼭ _micro.Exit()�� ȣ������ �ʽ��ϴ�! (Lab ī�޶� ����)
-        StartCoroutine(Routine_ShowBridgeSequence());
-
-        // ���� ������ ���������� ���� (��ư ��Ȱ��ȭ ��)
-        EndSession(true);
-
-        // 공용 퍼즐 성공 사운드
+        Debug.Log("[ChemStation] 혼합 성공!");
         CommonSoundController.Instance?.PlayPuzzleSuccess();
+        _isSolved = true;
+
+        StartCoroutine(Routine_SuccessSequence());
     }
 
-    // �ڡڡ� [ī�޶� ������] �ڡڡ�
-    IEnumerator Routine_ShowBridgeSequence()
+    IEnumerator Routine_SuccessSequence()
     {
-        // 1. Bridge ī�޶� �ѱ� (Priority�� ���� �����ؼ� Lab ī�޶� ���)
-        // ����: BridgeSideCam�� Priority�� Micro(30)���� ���ƾ� �մϴ�. (��: 40~50)
-        if (bridgeSideCam)
-        {
-            bridgeSideCam.Priority = 100; // Ȯ���ϰ� ����
-            // Ȥ�� CloseupCamManager�� ���� �Լ��� �߰��ص� ��
-        }
+        _isSuccessSequence = true;
+        SetButtonsState(false);
+        if (panel) panel.enabled = false;
 
-        // 2. å �Ѿ����� ���� ����
+        if (steamParticle) steamParticle.Play();
+
+        // (선택) 증기가 나올 때 카드를 미리 켜두려면 여기서 SetActive(true) 해도 됩니다.
+
+        yield return new WaitForSeconds(steamShowDuration);
+
+        if (bridgeSideCam) bridgeSideCam.Priority = 100;
+        yield return new WaitForSeconds(0.5f);
+
+        if (bridgeManager) bridgeManager.PlaySequence();
         yield return new WaitForSeconds(bridgeCamDuration);
 
-        // 3. Bridge ī�޶� ���� -> Lab ī�޶�(Micro)�� �ؿ� ���� �����Ƿ� �ڿ������� ���ƿ�
-        if (bridgeSideCam)
+        if (bridgeSideCam) bridgeSideCam.Priority = 0;
+
+        if (_micro && _micro.InMicro) _micro.Exit();
+
+        // ★ [핵심] 모든 연출 종료 후 보상 카드 등장 (스페이드 7)
+        if (rewardCardObj)
         {
-            bridgeSideCam.Priority = 0;
+            rewardCardObj.SetActive(true);
         }
 
-        // 4. (���� ����) ��� Lab�� ������ �ڿ� �÷��̾� ������ �����ְ� �ʹٸ�:
-        // yield return new WaitForSeconds(0.5f);
-
-        // 5. ���� ��¥ ���� (�÷��̾� ���� ����, Room ��� ���������� ������ ESC �����ų� ���⼭ ���� ����)
-        // ���⼭�� "Lab ��� ���ƿͼ� ����" ���¸� �����Ϸ��� �Ʒ� ���� �ּ� ó���ϼ���.
-        // �ڵ����� ������ �Ϸ��� �ּ��� Ǫ����.
-        if (_micro && _micro.InMicro)
-            _micro.Exit();
+        _isSuccessSequence = false;
     }
 
-    // ===== API =====
+    public void BeginSessionFromExternal() => StartSession(null);
+    public void EndSessionFromExternal() => CancelSession();
+
     public void SetGelNeed(int newNeedGel)
     {
         needGel = Mathf.Max(0, newNeedGel);
-        bool canPress = _session ? (_cGel < needGel) : (needGel > 0);
-        SetBtnInteractable(btnGel, btnGel3D, canPress);
         RefreshTexts();
     }
-
-    public void BeginSessionFromExternal() => StartSession();
-    public void EndSessionFromExternal() => CancelSession();
-
-#if UNITY_EDITOR
-    void OnValidate()
-    {
-        if (needNa < 0) needNa = 0;
-        if (needWater < 0) needWater = 0;
-        if (needGel < 0) needGel = 0;
-        RefreshTexts();
-    }
-#endif
 }
