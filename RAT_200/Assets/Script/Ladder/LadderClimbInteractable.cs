@@ -5,17 +5,25 @@ using Unity.Cinemachine;
 
 public class LadderClimbInteractable : BaseInteractable
 {
-    [Header("Target ¸ÅÇÎ")]
-    public ClimbTarget target;            // ÀÌ »ç´Ù¸®°¡ ¿¬°áµÈ ¿ÀºêÁ§Æ®
+    [Header("Target ï¿½ï¿½ï¿½ï¿½")]
+    public ClimbTarget target;            // ï¿½ï¿½ ï¿½ï¿½Ù¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
 
     [Header("State / Threshold")]
     public float yThreshold = 1.0f;
-    Vector3 _preClimbPos;                 // ¿À¸£±â Á÷Àü À§Ä¡ ÀúÀå
+    Vector3 _preClimbPos;                 // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
     bool _hasPreClimbPos;
 
     [Header("Tween")]
     public float duration = 0.6f;
     public Ease ease = Ease.InOutSine;
+
+    // Ladder sound controller (optional)
+    [SerializeField] private LadderSoundController _ladderSoundController;
+
+    void Awake()
+    {
+        if (_ladderSoundController == null) _ladderSoundController = GetComponent<LadderSoundController>();
+    }
 
     public override bool CanInteract(PlayerInteractor i)
     {
@@ -32,13 +40,16 @@ public class LadderClimbInteractable : BaseInteractable
 
         if (!isAbove)
         {
-            // ¿Ã¶ó°¡±â
+            // ï¿½Ã¶ó°¡±ï¿½
             _preClimbPos = i.transform.position;
             _hasPreClimbPos = true;
 
-            // Å¬·ÎÁî¾÷ È°¼ºÈ­
+            // Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­
             if (target.closeVCam)
                 CloseupCamManager.Activate(target.closeVCam);
+
+            // ì‚¬ìš´ë“œ: ì˜¤ë¥´ê¸° ì‹œì‘ ì‹œ ì¬ìƒ
+            _ladderSoundController?.PlayClimbLadder();
 
             mover.MoveToWorldWithCam(
                 target.climbPoint.position, duration, ease,
@@ -47,8 +58,11 @@ public class LadderClimbInteractable : BaseInteractable
         }
         else
         {
-            // ³»·Á¿À±â (±â·ÏµÈ ¿ø·¡ ÀÚ¸®·Î)
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½Ïµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ú¸ï¿½ï¿½ï¿½)
             Vector3 downPos = _hasPreClimbPos ? _preClimbPos : i.transform.position;
+
+            // ì‚¬ìš´ë“œ: ë‚´ë¦´ ë•Œ ì¬ìƒ
+            _ladderSoundController?.PlayClimbLadder();
 
             mover.MoveToWorldWithCam(
                 downPos, duration, ease,

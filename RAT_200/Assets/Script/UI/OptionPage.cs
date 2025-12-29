@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 
 public class OptionPage : MonoBehaviour
@@ -7,6 +8,11 @@ public class OptionPage : MonoBehaviour
     [SerializeField] private Transform _slideOutPosition;
     [SerializeField] private Transform _slideInPosition;
     [SerializeField] private TitlePage _titlePage;
+
+    [Header("Volume Sliders")]
+    [SerializeField] private Slider _masterVolumeSlider;
+    [SerializeField] private Slider _bgmVolumeSlider;
+    [SerializeField] private Slider _effectVolumeSlider;
 
     /// <summary>
     /// 옵션 페이지가 화면에 표시될 때의 기준 위치를 반환합니다.
@@ -25,27 +31,33 @@ public class OptionPage : MonoBehaviour
             return;
         }
         transform.position = _slideOutPosition.position;
+
+        // 슬라이더 리스너 등록
+        if (_masterVolumeSlider != null) _masterVolumeSlider.onValueChanged.AddListener(OnMasterVolumeChange);
+        if (_bgmVolumeSlider != null) _bgmVolumeSlider.onValueChanged.AddListener(OnBgmVolumeChange);
+        if (_effectVolumeSlider != null) _effectVolumeSlider.onValueChanged.AddListener(OnEffectVolumeChange);
     }
+
     private void Start()
     {
-        OnBgmVolumeChange(OptionManager.Instance.OptionData.BGMsoundVolume);
-        OnEffectVolumeChange(OptionManager.Instance.OptionData.EffectsoundVolume);
-        OnMasterVolumeChange(OptionManager.Instance.OptionData.MastersoundVolume);
+        // 슬라이더 초기값 설정
+        if (_masterVolumeSlider != null) _masterVolumeSlider.value = OptionManager.Instance.OptionData.MastersoundVolume;
+        if (_bgmVolumeSlider != null) _bgmVolumeSlider.value = OptionManager.Instance.OptionData.BGMsoundVolume;
+        if (_effectVolumeSlider != null) _effectVolumeSlider.value = OptionManager.Instance.OptionData.EffectsoundVolume;
+
+        // 초기 볼륨 적용은 OptionManager.Start() 또는 여기서 직접 Slider 이벤트를 통해 발생함
     }
     public void OnMasterVolumeChange(float volume)
     {
-        OptionManager.Instance.OptionData.MastersoundVolume = volume;
-        AudioManager.Instance.SetMasterVolume(OptionManager.Instance.OptionData.MastersoundVolume);
+        OptionManager.Instance.OnMasterVolumeChange(volume);
     }
     public void OnEffectVolumeChange(float volume)
     {
-        OptionManager.Instance.OptionData.EffectsoundVolume = volume;
-        AudioManager.Instance.SetEffectVolume(OptionManager.Instance.OptionData.EffectsoundVolume);
+        OptionManager.Instance.OnEffectVolumeChange(volume);
     }
     public void OnBgmVolumeChange(float volume)
     {
-        OptionManager.Instance.OptionData.BGMsoundVolume = volume;
-        AudioManager.Instance.SetBGMVolume(OptionManager.Instance.OptionData.BGMsoundVolume);
+        OptionManager.Instance.OnBgmVolumeChange(volume);
     }
     /// <summary>
     /// 옵션 페이지를 닫고 타이틀 페이지로 돌아갑니다.

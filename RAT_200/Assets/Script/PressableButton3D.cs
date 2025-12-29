@@ -6,17 +6,17 @@ using DG.Tweening;
 public class PressableButton3D : MonoBehaviour
 {
     [Header("Visual")]
-    [Tooltip("¹öÆ° Ä¸(´­·Á ¿òÁ÷ÀÏ ÆÄÆ®). ÁöÁ¤ ¾øÀ¸¸é ÀÚ±â ÀÚ½Å.")]
+    [Tooltip("ï¿½ï¿½Æ° Ä¸(ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®). ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ú±ï¿½ ï¿½Ú½ï¿½.")]
     public Transform cap;
-    [Tooltip("¾Æ·¡·Î ³»·Á°¥ ¿ÀÇÁ¼Â(·ÎÄÃ).")]
+    [Tooltip("ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½).")]
     public Vector3 downLocalOffset = new(0f, -0.012f, 0f);
     public float tweenDuration = 0.06f;
     public Ease tweenEase = Ease.OutQuad;
 
-    [Header("FX (¼±ÅÃ)")]
+    [Header("FX (ï¿½ï¿½ï¿½ï¿½)")]
     public AudioSource sfxSource;
     public AudioClip sfxClick;
-    public Renderer indicatorRenderer; // »ö º¯È­¿ë(¼±ÅÃ)
+    public Renderer indicatorRenderer; // ï¿½ï¿½ ï¿½ï¿½È­ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½)
     public Color normalColor = Color.white;
     public Color disabledColor = Color.gray;
 
@@ -24,9 +24,9 @@ public class PressableButton3D : MonoBehaviour
     public bool interactable = true;
 
     [Header("Micro Gate")]
-    public bool requireMicroZoom = true;                // ¡ç ±âº» true·Î µÎ¸é Micro¿¡¼­¸¸ ÀÛµ¿
-    public MicroZoomSession micro;                      // ºñ¿öµÎ¸é ºÎ¸ğ¿¡¼­ ÀÚµ¿ Å½»ö
-    [SerializeField] bool autoToggleCollider = true;    // Micro ¾Æ´Ï¸é Äİ¶óÀÌ´õ ÀÚµ¿ Off
+    public bool requireMicroZoom = true;                // ï¿½ï¿½ ï¿½âº» trueï¿½ï¿½ ï¿½Î¸ï¿½ Microï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ûµï¿½
+    public MicroZoomSession micro;                      // ï¿½ï¿½ï¿½ï¿½Î¸ï¿½ ï¿½Î¸ğ¿¡¼ï¿½ ï¿½Úµï¿½ Å½ï¿½ï¿½
+    [SerializeField] bool autoToggleCollider = true;    // Micro ï¿½Æ´Ï¸ï¿½ ï¿½İ¶ï¿½ï¿½Ì´ï¿½ ï¿½Úµï¿½ Off
     Collider _col;
 
     public UnityEvent OnPressed;
@@ -110,16 +110,19 @@ public class PressableButton3D : MonoBehaviour
         if (!PassesMicroGate()) { PressVisual(false); return; }
         if (_isDown)
         {
-            // Å¬¸¯ ¿Ï·á·Î °£ÁÖ
+            // Å¬ï¿½ï¿½ ï¿½Ï·ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             OnPressed?.Invoke();
             if (sfxSource && sfxClick) sfxSource.PlayOneShot(sfxClick);
+
+            // ê³µìš© ë²„íŠ¼ í´ë¦­ ì‚¬ìš´ë“œ ì¬ìƒ (ìˆë‹¤ë©´)
+            CommonSoundController.Instance?.PlayButton();
         }
         PressVisual(false);
     }
 
     void OnMouseExit()
     {
-        // ´©¸¥ Ã¤·Î ¹Ù±ùÀ¸·Î ³ª°¡¸é º¹±Í
+        // ï¿½ï¿½ï¿½ï¿½ Ã¤ï¿½ï¿½ ï¿½Ù±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (_isDown) PressVisual(false);
     }
 

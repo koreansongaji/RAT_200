@@ -1,28 +1,28 @@
 using UnityEngine;
 using UnityEngine.Events;
-using DG.Tweening; // DOTween ÇÊ¼ö
+using DG.Tweening; // DOTween ï¿½Ê¼ï¿½
 
 public class ResearcherController : MonoBehaviour
 {
     public enum State
     {
-        Idle,           // ´ë±â
-        SummonIntro,    // 100% µµ´Ş ÈÄ 5ÃÊ°£ ´ë±â (¹ß¼Ò¸® µî)
-        Searching,      // 30ÃÊ ÀÏ¹İ ¼ö»ö (·£´ı/ÆĞÅÏ)
-        Focusing,       // Æ¯Á¤ ¼ÒÀ½ À§Ä¡ ÀÀ½Ã
-        Capture         // ÇÃ·¹ÀÌ¾î ¹ß°ß (°ÔÀÓ¿À¹ö)
+        Idle,           // ï¿½ï¿½ï¿½
+        SummonIntro,    // 100% ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 5ï¿½Ê°ï¿½ ï¿½ï¿½ï¿½ (ï¿½ß¼Ò¸ï¿½ ï¿½ï¿½)
+        Searching,      // 30ï¿½ï¿½ ï¿½Ï¹ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½)
+        Focusing,       // Æ¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
+        Capture         // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ß°ï¿½ (ï¿½ï¿½ï¿½Ó¿ï¿½ï¿½ï¿½)
     }
 
     [Header("Refs")]
-    [Tooltip("¹æ ÀüÃ¼¸¦ ºñÃß´Â Á¶¸í (¿¬±¸¿ø µîÀå ½Ã ²¨Áü).")]
+    [Tooltip("ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ß´ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½).")]
     public Light roomMainLight;
-    [Tooltip("½ÇÁ¦ Spot Light ÄÄÆ÷³ÍÆ®.")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ Spot Light ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®.")]
     public Light spotLight;
-    [Tooltip("ºûÀÌ È¸ÀüÇÒ Áß½ÉÃà (¹® À§ÂÊ). Eye Pivot.")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ ï¿½ß½ï¿½ï¿½ï¿½ (ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½). Eye Pivot.")]
     public Transform eyePivot;
-    [Tooltip("¹® ÈùÁö (¿­°í ´İ±â¿ë).")]
+    [Tooltip("ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½İ±ï¿½ï¿½).")]
     public Transform doorHinge;
-    [Tooltip("ÇÃ·¹ÀÌ¾î Transform (°¨Áö¿ë).")]
+    [Tooltip("ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ Transform (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½).")]
     public Transform player;
 
     [Header("Settings - Door")]
@@ -30,42 +30,49 @@ public class ResearcherController : MonoBehaviour
     public Vector3 doorClosedEuler = Vector3.zero;
 
     [Header("Settings - Timing")]
-    public float introDelay = 5f;        // 5ÃÊ ´ë±â
-    public float searchDuration = 30f;   // 30ÃÊ ¼ö»ö
-    public float focusDuration = 5f;     // 5ÃÊ ÀÀ½Ã
-    [Range(0f, 1f)] public float noiseResetLevel = 0.2f; // º¹±Í ½Ã 20%
+    public float introDelay = 5f;        // 5ï¿½ï¿½ ï¿½ï¿½ï¿½
+    public float searchDuration = 30f;   // 30ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    public float focusDuration = 5f;     // 5ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    [Range(0f, 1f)] public float noiseResetLevel = 0.2f; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 20%
 
     [Header("Settings - Detection")]
-    public LayerMask obstacleMask;       // ¼ûÀ» ¼ö ÀÖ´Â Àå¾Ö¹° ·¹ÀÌ¾î
-    public float catchDistance = 1.0f;   // (¿É¼Ç) ³Ê¹« °¡±î¿ì¸é Áï½Ã ÀâÈû
+    public LayerMask obstacleMask;       // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½Ö¹ï¿½ ï¿½ï¿½ï¿½Ì¾ï¿½
+    public float catchDistance = 1.0f;   // (ï¿½É¼ï¿½) ï¿½Ê¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     [Header("Settings - Scanning (Floor Target)")]
-    [Tooltip("¹æ ¹Ù´Ú Áß¾Ó.")]
+    [Tooltip("ï¿½ï¿½ ï¿½Ù´ï¿½ ï¿½ß¾ï¿½.")]
     public Transform roomCenter;
-    [Tooltip("¼ö»ö ¹üÀ§ (°¡·Î/¼¼·Î).")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½).")]
     public Vector2 scanAreaSize = new Vector2(8f, 8f);
-    [Tooltip("ºûÀÌ ÀÌµ¿ÇÏ´Â ¼Óµµ.")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½Ï´ï¿½ ï¿½Óµï¿½.")]
     public float scanMoveSpeed = 3f;
 
     [Header("Game Over")]
-    public Transform handModel; // ÀâÀ¸·¯ ¿À´Â ¼Õ
-    public UnityEvent OnGameOver; // °ÔÀÓ ¿À¹ö ÀÌº¥Æ®
+    public Transform handModel; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+    public UnityEvent OnGameOver; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ®
 
     [Header("Events")]
-    public UnityEvent OnSummonStarted;    // 100% µµ´Ş (ÀÎÆ®·Î ½ÃÀÛ)
-    public UnityEvent OnIntroFinished;    // 5ÃÊ µÚ (¹® ¿­¸², ¼ö»ö ½ÃÀÛ)
-    public UnityEvent OnSearchEnded;      // ¼ö»ö Á¾·á (¹® ´İÈû)
-    public UnityEvent OnPlayerCaught;     // ÇÃ·¹ÀÌ¾î ¹ß°ß
+    public UnityEvent OnSummonStarted;    // 100% ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+    public UnityEvent OnIntroFinished;    // 5ï¿½ï¿½ ï¿½ï¿½ (ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+    public UnityEvent OnSearchEnded;      // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+    public UnityEvent OnPlayerCaught;     // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ß°ï¿½
 
     // Internal State
     State _state = State.Idle;
     float _stateTimer;
-    Vector3 _scanTargetPos; // ºûÀÌ ¹Ù¶óº¸´Â ¹Ù´ÚÀÇ °¡»ó ÁöÁ¡
+    Vector3 _scanTargetPos; // ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¶óº¸´ï¿½ ï¿½Ù´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     Tween _scanTween;
     bool _subscribed;
 
-    // µîÀå Á÷ÈÄ Á¶»çÇÒ À§Ä¡¸¦ ±â¾ïÇÏ´Â º¯¼ö
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
     Vector3? _pendingFocusPos = null;
+
+    [Header("Sfx Clips")]
+    [SerializeField] private AudioClip _summonAlertClip;
+    [SerializeField] private AudioClip _doorCreakClip;
+    [SerializeField] private AudioClip _spotlightToggleClip;
+    [SerializeField] private AudioClip _lightBuzzClip;
+    [SerializeField] private AudioClip _caughtScareClip;
 
     void Start()
     {
@@ -73,8 +80,15 @@ public class ResearcherController : MonoBehaviour
         if (spotLight) spotLight.enabled = false;
         if (handModel) handModel.gameObject.SetActive(false);
 
-        // ÃÊ±â Å¸°ÙÀº ¹æ Áß¾ÓÀ¸·Î
+        // ì´ˆê¸° íƒ€ê²Ÿì€ ë°© ì¤‘ì•™ìœ¼ë¡œ
         if (roomCenter) _scanTargetPos = roomCenter.position;
+
+        // ë¦¬ì†ŒìŠ¤ ë¡œë“œ (í• ë‹¹ ì•ˆ ëœ ê²½ìš°)
+        if (_summonAlertClip == null) _summonAlertClip = Resources.Load<AudioClip>("Sounds/Effect/Researcher/alert");
+        if (_doorCreakClip == null) _doorCreakClip = Resources.Load<AudioClip>("Sounds/Effect/Universal/creak_a");
+        if (_spotlightToggleClip == null) _spotlightToggleClip = Resources.Load<AudioClip>("Sounds/Effect/Universal/button_b");
+        if (_lightBuzzClip == null) _lightBuzzClip = Resources.Load<AudioClip>("Sounds/Effect/Universal/spark");
+        if (_caughtScareClip == null) _caughtScareClip = Resources.Load<AudioClip>("Sounds/Effect/Rat/rat_death");
     }
 
     void OnEnable() => SubscribeNoiseSystem();
@@ -99,7 +113,7 @@ public class ResearcherController : MonoBehaviour
         }
     }
 
-    // ===== NoiseSystem Äİ¹é =====
+    // ===== NoiseSystem ï¿½İ¹ï¿½ =====
     void HandleNoiseChanged(float value01)
     {
         if (_state != State.Idle) return;
@@ -112,13 +126,17 @@ public class ResearcherController : MonoBehaviour
         _state = State.SummonIntro;
         _stateTimer = 0f;
         _pendingFocusPos = null;
-        OnSummonStarted?.Invoke(); // ¿©±â¼­ ¹ßÀÚ±¹ ¼Ò¸® Àç»ı
+        
+        // ì†Œí™˜ ì‹œì‘ íš¨ê³¼ìŒ (ê²½ê³ ìŒ)
+        if (_summonAlertClip != null) AudioManager.Instance.Play(_summonAlertClip, AudioManager.Sound.Effect, 1.0f, 0.8f);
+        
+        OnSummonStarted?.Invoke(); // ï¿½ï¿½ï¿½â¼­ ï¿½ï¿½ï¿½Ú±ï¿½ ï¿½Ò¸ï¿½ ï¿½ï¿½ï¿½
         Debug.Log("[Researcher] Summon Started (Wait 5s)");
     }
 
     void Update()
     {
-        // ºûÀÌ Ç×»ó Å¸°ÙÀ» ¹Ù¶óº¸µµ·Ï È¸Àü (ÀÚ¿¬½º·¯¿î 3Ãà È¸Àü)
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½×»ï¿½ Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¶óº¸µï¿½ï¿½ï¿½ È¸ï¿½ï¿½ (ï¿½Ú¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 3ï¿½ï¿½ È¸ï¿½ï¿½)
         if (eyePivot && (_state == State.Searching || _state == State.Focusing))
         {
             Vector3 dir = _scanTargetPos - eyePivot.position;
@@ -131,44 +149,44 @@ public class ResearcherController : MonoBehaviour
             case State.SummonIntro: UpdateSummonIntro(); break;
             case State.Searching: UpdateSearching(); break;
             case State.Focusing: UpdateFocusing(); break;
-            case State.Capture: /* °ÔÀÓ¿À¹ö ¿¬Ãâ Áß */ break;
+            case State.Capture: /* ï¿½ï¿½ï¿½Ó¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ */ break;
         }
     }
 
-    // [¼öÁ¤] 5ÃÊ ´ë±â ÈÄ ¹® ¿­¸± ¶§
+    // [ï¿½ï¿½ï¿½ï¿½] 5ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
     void UpdateSummonIntro()
     {
         _stateTimer += Time.deltaTime;
         if (_stateTimer >= introDelay)
         {
-            // ¹® ¿­±â
+            // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             if (doorHinge) doorHinge.DOLocalRotate(doorOpenEuler, 0.5f).SetEase(Ease.OutBack);
             if (spotLight) spotLight.enabled = true;
-            if (roomMainLight) roomMainLight.enabled = false; // ¹æ ºÒ ²ô±â
+            if (roomMainLight) roomMainLight.enabled = false; // ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
             OnIntroFinished?.Invoke();
 
-            // ¡å¡å¡å [ÇÙ½É ¼öÁ¤] ±â¾ïÇØµĞ ¼ÒÀ½ À§Ä¡°¡ ÀÖ´Â°¡? ¡å¡å¡å
+            // ï¿½ï¿½ï¿½ï¿½ [ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½] ï¿½ï¿½ï¿½ï¿½Øµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Ö´Â°ï¿½? ï¿½ï¿½ï¿½ï¿½
             if (_pendingFocusPos.HasValue)
             {
-                // ÀÖ´Ù -> ¹Ù·Î 'Á¶»ç(Focusing)' »óÅÂ·Î ÁøÀÔ
+                // ï¿½Ö´ï¿½ -> ï¿½Ù·ï¿½ 'ï¿½ï¿½ï¿½ï¿½(Focusing)' ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½ï¿½ï¿½
                 Debug.Log("[Researcher] Door Open -> Immediately Focusing on Target!");
                 _state = State.Focusing;
                 _stateTimer = 0f;
 
-                // ½Ã¼± Å¸°ÙÀ» ±â¾ïÇØµĞ À§Ä¡·Î ¼³Á¤
+                // ï¿½Ã¼ï¿½ Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Øµï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 _scanTargetPos = _pendingFocusPos.Value;
-                _pendingFocusPos = null; // »ç¿ëÇßÀ¸´Ï ÃÊ±âÈ­
+                _pendingFocusPos = null; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
             }
             else
             {
-                // ¾ø´Ù -> ±×³É 'ÀÏ¹İ ¼ö»ö(Searching)' ½ÃÀÛ
+                // ï¿½ï¿½ï¿½ï¿½ -> ï¿½×³ï¿½ 'ï¿½Ï¹ï¿½ ï¿½ï¿½ï¿½ï¿½(Searching)' ï¿½ï¿½ï¿½ï¿½
                 Debug.Log("[Researcher] Door Open -> Random Search Start");
                 _state = State.Searching;
                 _stateTimer = 0f;
                 PickNextRandomScanPoint();
             }
-            // ¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         }
     }
 
@@ -176,10 +194,10 @@ public class ResearcherController : MonoBehaviour
     {
         _stateTimer += Time.deltaTime;
 
-        // °¨Áö ·ÎÁ÷
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         DetectPlayer();
 
-        // ½Ã°£ Á¾·á Ã¼Å©
+        // ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã¼Å©
         if (_stateTimer >= searchDuration)
         {
             EndSearchAndResetNoise();
@@ -190,19 +208,19 @@ public class ResearcherController : MonoBehaviour
     {
         _stateTimer += Time.deltaTime;
 
-        // °¨Áö ·ÎÁ÷ (Á¶»ç Áß¿¡µµ µéÅ³ ¼ö ÀÖÀ½)
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ß¿ï¿½ï¿½ï¿½ ï¿½ï¿½Å³ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
         DetectPlayer();
 
         if (_stateTimer >= focusDuration)
         {
-            // Á¶»ç ³¡ -> ´Ù½Ã ·£´ı ¼ö»öÀ¸·Î º¹±Í
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ -> ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             _state = State.Searching;
-            _stateTimer = 0f; // ¼ö»ö Å¸ÀÌ¸Ó ¸®¼Â ¿©ºÎ´Â ±âÈ¹¿¡ µû¶ó °áÁ¤ (¿©±â¼± ÀüÃ¼ ½Ã°£ °øÀ¯ ¾È ÇÔ)
+            _stateTimer = 0f; // ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î´ï¿½ ï¿½ï¿½È¹ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½â¼± ï¿½ï¿½Ã¼ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½)
             PickNextRandomScanPoint();
         }
     }
 
-    // ===== °¨Áö ·ÎÁ÷ (Raycast & Spotlight Angle) =====
+    // ===== ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (Raycast & Spotlight Angle) =====
     void DetectPlayer()
     {
         if (!player || !spotLight) return;
@@ -210,15 +228,15 @@ public class ResearcherController : MonoBehaviour
         Vector3 toPlayer = player.position - eyePivot.position;
         float dist = toPlayer.magnitude;
 
-        // 1. ºûÀÇ °¢µµ ¾È¿¡ µé¾î¿Ô´Â°¡?
+        // 1. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½È¿ï¿½ ï¿½ï¿½ï¿½Ô´Â°ï¿½?
         float angle = Vector3.Angle(eyePivot.forward, toPlayer);
-        if (angle > spotLight.spotAngle * 0.5f) return; // ºû ¹ÛÀÓ
+        if (angle > spotLight.spotAngle * 0.5f) return; // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-        // 2. Àå¾Ö¹° °Ë»ç (Shadow Casting)
-        // ºûÀÇ ¿øÁ¡ºÎÅÍ ÇÃ·¹ÀÌ¾î±îÁö ·¹ÀÌ¸¦ ½úÀ» ¶§ Àå¾Ö¹°¿¡ ¸·È÷´ÂÁö
+        // 2. ï¿½ï¿½Ö¹ï¿½ ï¿½Ë»ï¿½ (Shadow Casting)
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         if (!Physics.Raycast(eyePivot.position, toPlayer.normalized, dist, obstacleMask))
         {
-            // Àå¾Ö¹°ÀÌ ¾ø´Ù¸é -> ÇÃ·¹ÀÌ¾î ³ëÃâµÊ -> °Ë°Å
+            // ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ù¸ï¿½ -> ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ -> ï¿½Ë°ï¿½
             StartCapture();
         }
     }
@@ -229,13 +247,13 @@ public class ResearcherController : MonoBehaviour
         _state = State.Capture;
 
         _scanTween?.Kill();
-        // ½Ã¼±À» ÇÃ·¹ÀÌ¾î¿¡°Ô °íÁ¤
+        // ï¿½Ã¼ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         _scanTargetPos = player.position;
 
         Debug.Log("[Researcher] CAUGHT YOU!");
-        OnPlayerCaught?.Invoke(); // ½ÉÀå¹Úµ¿ ¼Ò¸® µî
+        OnPlayerCaught?.Invoke(); // ï¿½ï¿½ï¿½ï¿½Úµï¿½ ï¿½Ò¸ï¿½ ï¿½ï¿½
 
-        // ¼Õ ¸ğµ¨ ¿¬Ãâ
+        // ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (handModel)
         {
             handModel.gameObject.SetActive(true);
@@ -248,33 +266,33 @@ public class ResearcherController : MonoBehaviour
         }
     }
 
-    // ===== Scanning Logic (¹Ù´Ú Å¸°Ù ÀÌµ¿) =====
+    // ===== Scanning Logic (ï¿½Ù´ï¿½ Å¸ï¿½ï¿½ ï¿½Ìµï¿½) =====
     void PickNextRandomScanPoint()
     {
         if (_state != State.Searching) return;
         if (!roomCenter) return;
 
-        // ·£´ı À§Ä¡ ¼±Á¤
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
         float rx = Random.Range(-scanAreaSize.x * 0.5f, scanAreaSize.x * 0.5f);
         float rz = Random.Range(-scanAreaSize.y * 0.5f, scanAreaSize.y * 0.5f);
         Vector3 nextPos = roomCenter.position + new Vector3(rx, 0, rz);
 
-        // ÇöÀç À§Ä¡¿¡¼­ ´ÙÀ½ À§Ä¡±îÁö °Å¸® ºñ·Ê ½Ã°£ °è»ê (ÀÏÁ¤ ¼Óµµ À¯Áö)
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½ ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ ï¿½ï¿½ï¿½ï¿½)
         float dist = Vector3.Distance(_scanTargetPos, nextPos);
         float moveTime = dist / scanMoveSpeed;
 
         _scanTween = DOTween.To(() => _scanTargetPos, x => _scanTargetPos = x, nextPos, moveTime)
                             .SetEase(Ease.InOutSine)
-                            .OnComplete(PickNextRandomScanPoint); // µµÂøÇÏ¸é ´ÙÀ½ Á¡À¸·Î
+                            .OnComplete(PickNextRandomScanPoint); // ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     }
 
-    // ===== ¿ÜºÎ ¾Ë¸²¿ë (NoiseTrapReportToResearcher¿¡¼­ È£Ãâ) =====
-    // [¼öÁ¤] ¿ÜºÎ ¾Ë¸²¿ë
+    // ===== ï¿½Üºï¿½ ï¿½Ë¸ï¿½ï¿½ï¿½ (NoiseTrapReportToResearcherï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½) =====
+    // [ï¿½ï¿½ï¿½ï¿½] ï¿½Üºï¿½ ï¿½Ë¸ï¿½ï¿½ï¿½
     public void NotifyNoiseEvent(Vector3 worldPos)
     {
         if (_state == State.Capture) return;
 
-        // °æ¿ì 1: ÀÌ¹Ì ³ª¿Í¼­ È°µ¿ ÁßÀÏ ¶§ -> Áï½Ã ÃÄ´Ùº½
+        // ï¿½ï¿½ï¿½ 1: ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½Í¼ï¿½ È°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ -> ï¿½ï¿½ï¿½ ï¿½Ä´Ùºï¿½
         if (_state == State.Searching || _state == State.Focusing)
         {
             Debug.Log($"[Researcher] Investigating Noise at {worldPos}");
@@ -285,7 +303,7 @@ public class ResearcherController : MonoBehaviour
             DOTween.To(() => _scanTargetPos, x => _scanTargetPos = x, worldPos, 0.5f)
                    .SetEase(Ease.OutCubic);
         }
-        // °æ¿ì 2: ´ë±â ÁßÀÌ°Å³ª, µîÀå ¿¬Ãâ(5ÃÊ) ÁßÀÏ ¶§ -> À§Ä¡¸¸ ±â¾ïÇØµÒ
+        // ï¿½ï¿½ï¿½ 2: ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì°Å³ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(5ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ -> ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Øµï¿½
         else if (_state == State.Idle || _state == State.SummonIntro)
         {
             _pendingFocusPos = worldPos;
@@ -293,7 +311,7 @@ public class ResearcherController : MonoBehaviour
         }
     }
 
-    // ===== ¼ö»ö Á¾·á ¹× º¹±Í =====
+    // ===== ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ =====
     void EndSearchAndResetNoise()
     {
         _state = State.Idle;
@@ -304,7 +322,7 @@ public class ResearcherController : MonoBehaviour
 
         OnSearchEnded?.Invoke();
 
-        // ¼ÒÀ½ °ÔÀÌÁö ¸®¼Â
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (NoiseSystem.Instance)
         {
             NoiseSystem.Instance.SetLevel01(noiseResetLevel);
@@ -317,10 +335,10 @@ public class ResearcherController : MonoBehaviour
 
     System.Collections.IEnumerator Routine_FlickerLightOn()
     {
-        // ¹® ´İÈ÷´Â ½Ã°£(0.5ÃÊ) Á¤µµ ±â´Ù·È´Ù°¡ ÄÑ±â ½ÃÀÛ
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½(0.5ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ù·È´Ù°ï¿½ ï¿½Ñ±ï¿½ ï¿½ï¿½ï¿½ï¿½
         yield return new WaitForSeconds(0.5f);
 
-        // Ä¡..Á÷.. (ÄÑÁ³´Ù ²¨Á³´Ù ¹İº¹)
+        // Ä¡..ï¿½ï¿½.. (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½İºï¿½)
         roomMainLight.enabled = true;
         yield return new WaitForSeconds(0.05f);
         roomMainLight.enabled = false;
@@ -329,13 +347,13 @@ public class ResearcherController : MonoBehaviour
         roomMainLight.enabled = true;
         yield return new WaitForSeconds(0.1f);
         roomMainLight.enabled = false;
-        yield return new WaitForSeconds(0.2f); // Àá±ñ ÅÒ
+        yield return new WaitForSeconds(0.2f); // ï¿½ï¿½ï¿½ ï¿½ï¿½
 
-        // Å¹! (¿ÏÀüÈ÷ ÄÑÁü)
+        // Å¹! (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
         roomMainLight.enabled = true;
     }
 
-    // ¿¡µğÅÍ ±âÁî¸ğ (¼ö»ö ¹üÀ§ È®ÀÎ¿ë)
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½Î¿ï¿½)
     void OnDrawGizmosSelected()
     {
         if (roomCenter)
@@ -350,19 +368,19 @@ public class ResearcherController : MonoBehaviour
         }
     }
 
-    // ¡å¡å¡å [»õ·Î Ãß°¡] °ÔÀÓ ½ÇÇà Áß¿¡ »¡°£ °ø(Å¸°Ù)°ú ½Ã¼±(¼±)À» ±×¸² ¡å¡å¡å
+    // ï¿½ï¿½ï¿½ï¿½ [ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½] ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½(Å¸ï¿½ï¿½)ï¿½ï¿½ ï¿½Ã¼ï¿½(ï¿½ï¿½)ï¿½ï¿½ ï¿½×¸ï¿½ ï¿½ï¿½ï¿½ï¿½
     void OnDrawGizmos()
     {
-        // °ÔÀÓ ÇÃ·¹ÀÌ ÁßÀÌ ¾Æ´Ï°Å³ª, ¼ö»ö/Á¶»ç »óÅÂ°¡ ¾Æ´Ï¸é ±×¸®Áö ¾ÊÀ½
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´Ï°Å³ï¿½, ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â°ï¿½ ï¿½Æ´Ï¸ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (!Application.isPlaying) return;
         if (_state != State.Searching && _state != State.Focusing) return;
 
         Gizmos.color = Color.red;
 
-        // 1. ¹Ù´ÚÀ» ±â¾î´Ù´Ï´Â Å¸°Ù (»¡°£ °ø)
+        // 1. ï¿½Ù´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ù´Ï´ï¿½ Å¸ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½)
         Gizmos.DrawSphere(_scanTargetPos, 0.3f);
 
-        // 2. ´«¿¡¼­ Å¸°ÙÀ¸·Î ½î´Â ·¹ÀÌÀú (»¡°£ ¼±)
+        // 2. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½)
         if (eyePivot)
         {
             Gizmos.DrawLine(eyePivot.position, _scanTargetPos);

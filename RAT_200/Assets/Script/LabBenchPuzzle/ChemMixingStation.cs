@@ -8,42 +8,42 @@ using System.Collections;
 
 public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHidePlayerPreference
 {
-    [Header("¿ä±¸ º¸À¯ ÇÃ·¡±×(º¸À¯¸¸ Ã¼Å©, ¼Ò¸ðX)")]
+    [Header("ï¿½ä±¸ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¼Å©, ï¿½Ò¸ï¿½X)")]
     [SerializeField] string sodiumId = "Sodium";
     [SerializeField] string gelId = "Gel";
     [SerializeField] string waterInFlaskId = "WaterInFlask";
 
-    [Header("UI (¿ùµå ½ºÆäÀÌ½º)")]
+    [Header("UI (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½)")]
     [SerializeField] Canvas panel;
     [SerializeField] Button btnSodium;
     [SerializeField] Button btnWater;
     [SerializeField] Button btnGel;
     [SerializeField] Button btnMix;
 
-    [Header("Ä«¿îÅÍ Ç¥½Ã(TMP)")]
+    [Header("Ä«ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½(TMP)")]
     [SerializeField] TMP_Text txtNa;
     [SerializeField] TMP_Text txtWater;
     [SerializeField] TMP_Text txtGel;
     [SerializeField] TMP_Text txtRecipe;
 
-    [Header("ÇÊ¿ä·®(±âº»°ª)")]
+    [Header("ï¿½Ê¿ä·®(ï¿½âº»ï¿½ï¿½)")]
     [Min(0)][SerializeField] int needNa = 2;
     [Min(0)][SerializeField] int needWater = 1;
     [Min(0)][SerializeField] int needGel = 4;
 
-    [Header("°á°ú Ã³¸®")]
-    public UnityEvent OnMakeBigNoise; // ½ÇÆÐ ½Ã ¼ÒÀ½ ÀÌº¥Æ®
+    [Header("ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½")]
+    public UnityEvent OnMakeBigNoise; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ®
 
-    // ¡å¡å¡å [¼öÁ¤] ÇÃ·¹ÀÌ¾î ÀÌµ¿ °ü·Ã º¯¼ö »èÁ¦ & ¿¬Ãâ¿ë º¯¼ö Ãß°¡ ¡å¡å¡å
-    [Header("¼º°ø ¿¬Ãâ (Bridge)")]
-    public LabToFridgeBridgeManager bridgeManager; // ¡Ú ÇÊ¼ö ¿¬°á: Ã¥ ´Ù¸®/¹åÁÙ ¿¬Ãâ °ü¸®ÀÚ
-    public CinemachineCamera bridgeSideCam;        // ¡Ú ÇÊ¼ö ¿¬°á: Ã¥ ´Ù¸® ÂÊ »çÀÌµå Ä«¸Þ¶ó
-    public float bridgeCamDuration = 2.5f;         // Ä«¸Þ¶ó°¡ ºñÃß°í ÀÖÀ» ½Ã°£
+    // ï¿½ï¿½ï¿½ï¿½ [ï¿½ï¿½ï¿½ï¿½] ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ & ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½
+    [Header("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (Bridge)")]
+    public LabToFridgeBridgeManager bridgeManager; // ï¿½ï¿½ ï¿½Ê¼ï¿½ ï¿½ï¿½ï¿½ï¿½: Ã¥ ï¿½Ù¸ï¿½/ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    public CinemachineCamera bridgeSideCam;        // ï¿½ï¿½ ï¿½Ê¼ï¿½ ï¿½ï¿½ï¿½ï¿½: Ã¥ ï¿½Ù¸ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½ Ä«ï¿½Þ¶ï¿½
+    public float bridgeCamDuration = 2.5f;         // Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½
 
-    // (±âÁ¸ ´ÙÀÌ¾Æ¸óµå Ä«µå´Â BridgeManager¿¡¼­ ½ºÆäÀÌµå Ä«µå¸¦ ¶³±¸´Â °ÍÀ¸·Î ´ëÃ¼µÇ¹Ç·Î »èÁ¦ÇÏ°Å³ª À¯Áö ¼±ÅÃ)
+    // (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¾Æ¸ï¿½ï¿½ Ä«ï¿½ï¿½ï¿½ BridgeManagerï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½ Ä«ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½Ç¹Ç·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
     // [SerializeField] GameObject diamondCardPrefab; 
     // [SerializeField] Transform cardSpawnPoint;     
-    // ¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
     [Header("3D Buttons (optional)")]
     [SerializeField] PressableButton3D btnNa3D;
@@ -51,11 +51,11 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
     [SerializeField] PressableButton3D btnGel3D;
     [SerializeField] PressableButton3D btnMix3D;
 
-    // ¼¼¼Ç »óÅÂ
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     int _cNa, _cWater, _cGel;
     bool _session;
 
-    // ³»ºÎ Ä³½Ã
+    // ï¿½ï¿½ï¿½ï¿½ Ä³ï¿½ï¿½
     MicroZoomSession _micro;
 
     public bool hidePlayerDuringMicro = true;
@@ -94,7 +94,7 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         if (_session) return;
         if (!CanInteract(i))
         {
-            Debug.Log("[ChemMixingStation] ¿ä±¸ Àç·á°¡ ºÎÁ·ÇÕ´Ï´Ù.");
+            Debug.Log("[ChemMixingStation] ï¿½ä±¸ ï¿½ï¿½á°¡ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.");
             return;
         }
 
@@ -109,7 +109,7 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         StartSession();
     }
 
-    // ===== IMicroSessionHost ±¸Çö =====
+    // ===== IMicroSessionHost ï¿½ï¿½ï¿½ï¿½ =====
     public bool CanBeginMicro(PlayerInteractor player)
     {
         if (!player) return false;
@@ -120,7 +120,7 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
     public void OnMicroEnter(PlayerInteractor player) => StartSession();
     public void OnMicroExit(PlayerInteractor player) => CancelSession();
 
-    // ===== ¼¼¼Ç ·ÎÁ÷ =====
+    // ===== ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ =====
     public void StartSession()
     {
         _session = true;
@@ -137,7 +137,7 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         RefreshTexts();
     }
 
-    // ÇïÆÛ: ¹öÆ° È°¼ºÈ­ ÀÏ°ý Ã³¸®
+    // ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½Æ° È°ï¿½ï¿½È­ ï¿½Ï°ï¿½ Ã³ï¿½ï¿½
     void SetBtnInteractable(Button uiBtn, PressableButton3D worldBtn, bool active)
     {
         if (uiBtn) uiBtn.interactable = active;
@@ -150,7 +150,7 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
     {
         _session = false;
         if (panel) panel.enabled = false;
-        // Micro Á¾·á´Â SubmitÀÌ³ª Exit È£ÃâºÎ¿¡¼­ Ã³¸®µÊ
+        // Micro ï¿½ï¿½ï¿½ï¿½ï¿½ Submitï¿½Ì³ï¿½ Exit È£ï¿½ï¿½Î¿ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½
     }
 
     void Tap(ref int counter, int need, Button src)
@@ -177,7 +177,7 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         if (txtRecipe) txtRecipe.text = $"Rate 2:1:{needGel}";
     }
 
-    // ¡Ú¡Ú¡Ú [Á¦Ãâ ·ÎÁ÷ ¼öÁ¤] ¡Ú¡Ú¡Ú
+    // ï¿½Ú¡Ú¡ï¿½ [ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½] ï¿½Ú¡Ú¡ï¿½
     void Submit()
     {
         if (!_session) return;
@@ -186,59 +186,66 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
 
         if (!success)
         {
-            // ½ÇÆÐ ½Ã: Áï½Ã Micro Å»ÃâÇÏ°í ¼ÒÀ½ ¹ß»ý
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½: ï¿½ï¿½ï¿½ Micro Å»ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½
             if (_micro && _micro.InMicro) _micro.Exit();
 
             if (NoiseSystem.Instance) NoiseSystem.Instance.FireImpulse(1f);
             OnMakeBigNoise?.Invoke();
-            Debug.Log("[ChemMixingStation] È¥ÇÕ ½ÇÆÐ!");
+            Debug.Log("[ChemMixingStation] È¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!");
+
+            // ê³µìš© í¼ì¦ ì‹¤íŒ¨ ì‚¬ìš´ë“œ
+            CommonSoundController.Instance?.PlayPuzzleFail();
+
             EndSession(true);
             return;
         }
 
-        // === ¼º°ø ½Ã ===
-        Debug.Log("[ChemMixingStation] È¥ÇÕ ¼º°ø!");
+        // === ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ===
+        Debug.Log("[ChemMixingStation] È¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!");
 
-        // 1. ¹°¸®/½Ã°¢ ¿¬Ãâ ½ÃÀÛ (Ã¥ ¶³¾îÁü, ¹åÁÙ ²÷¾îÁü)
+        // 1. ï¿½ï¿½ï¿½ï¿½/ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (Ã¥ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
         if (bridgeManager)
         {
             bridgeManager.PlaySequence();
         }
 
-        // 2. Ä«¸Þ¶ó ÀüÈ¯ ÄÚ·çÆ¾ ½ÃÀÛ
-        // ¡Ú Áß¿ä: ¿©±â¼­ _micro.Exit()¸¦ È£ÃâÇÏÁö ¾Ê½À´Ï´Ù! (Lab Ä«¸Þ¶ó À¯Áö)
+        // 2. Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½È¯ ï¿½Ú·ï¿½Æ¾ ï¿½ï¿½ï¿½ï¿½
+        // ï¿½ï¿½ ï¿½ß¿ï¿½: ï¿½ï¿½ï¿½â¼­ _micro.Exit()ï¿½ï¿½ È£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½! (Lab Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½)
         StartCoroutine(Routine_ShowBridgeSequence());
 
-        // ¼¼¼Ç ·ÎÁ÷¸¸ ³»ºÎÀûÀ¸·Î Á¾·á (¹öÆ° ºñÈ°¼ºÈ­ µî)
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½Æ° ï¿½ï¿½È°ï¿½ï¿½È­ ï¿½ï¿½)
         EndSession(true);
+
+        // ê³µìš© í¼ì¦ ì„±ê³µ ì‚¬ìš´ë“œ
+        CommonSoundController.Instance?.PlayPuzzleSuccess();
     }
 
-    // ¡Ú¡Ú¡Ú [Ä«¸Þ¶ó ½ÃÄö½º] ¡Ú¡Ú¡Ú
+    // ï¿½Ú¡Ú¡ï¿½ [Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½] ï¿½Ú¡Ú¡ï¿½
     IEnumerator Routine_ShowBridgeSequence()
     {
-        // 1. Bridge Ä«¸Þ¶ó ÄÑ±â (Priority¸¦ ³ô°Ô ¼³Á¤ÇØ¼­ Lab Ä«¸Þ¶ó¸¦ µ¤¾î¾¸)
-        // ÁÖÀÇ: BridgeSideCamÀÇ Priority´Â Micro(30)º¸´Ù ³ô¾Æ¾ß ÇÕ´Ï´Ù. (¿¹: 40~50)
+        // 1. Bridge Ä«ï¿½Þ¶ï¿½ ï¿½Ñ±ï¿½ (Priorityï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ Lab Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½î¾¸)
+        // ï¿½ï¿½ï¿½ï¿½: BridgeSideCamï¿½ï¿½ Priorityï¿½ï¿½ Micro(30)ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æ¾ï¿½ ï¿½Õ´Ï´ï¿½. (ï¿½ï¿½: 40~50)
         if (bridgeSideCam)
         {
-            bridgeSideCam.Priority = 100; // È®½ÇÇÏ°Ô ³ôÀÓ
-            // È¤Àº CloseupCamManager¿¡ º°µµ ÇÔ¼ö¸¦ Ãß°¡ÇØµµ µÊ
+            bridgeSideCam.Priority = 100; // È®ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½
+            // È¤ï¿½ï¿½ CloseupCamManagerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Øµï¿½ ï¿½ï¿½
         }
 
-        // 2. Ã¥ ³Ñ¾îÁö´Â ¿¬Ãâ °¨»ó
+        // 2. Ã¥ ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         yield return new WaitForSeconds(bridgeCamDuration);
 
-        // 3. Bridge Ä«¸Þ¶ó ²ô±â -> Lab Ä«¸Þ¶ó(Micro)°¡ ¹Ø¿¡ ÄÑÁ® ÀÖÀ¸¹Ç·Î ÀÚ¿¬½º·´°Ô µ¹¾Æ¿È
+        // 3. Bridge Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½ -> Lab Ä«ï¿½Þ¶ï¿½(Micro)ï¿½ï¿½ ï¿½Ø¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ ï¿½Ú¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æ¿ï¿½
         if (bridgeSideCam)
         {
             bridgeSideCam.Priority = 0;
         }
 
-        // 4. (¼±ÅÃ »çÇ×) Àá½Ã LabÀ» º¸¿©ÁØ µÚ¿¡ ÇÃ·¹ÀÌ¾î Á¶ÀÛÀ» µ¹·ÁÁÖ°í ½Í´Ù¸é:
+        // 4. (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½) ï¿½ï¿½ï¿½ Labï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ú¿ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö°ï¿½ ï¿½Í´Ù¸ï¿½:
         // yield return new WaitForSeconds(0.5f);
 
-        // 5. ÀÌÁ¦ ÁøÂ¥ Á¾·á (ÇÃ·¹ÀÌ¾î Á¶ÀÛ º¹±¸, Room ºä·Î º¹±ÍÇÒÁö´Â À¯Àú°¡ ESC ´©¸£°Å³ª ¿©±â¼­ °­Á¦ Á¾·á)
-        // ¿©±â¼­´Â "Lab ºä·Î µ¹¾Æ¿Í¼­ ¸ØÃã" »óÅÂ¸¦ À¯ÁöÇÏ·Á¸é ¾Æ·¡ ÁÙÀ» ÁÖ¼® Ã³¸®ÇÏ¼¼¿ä.
-        // ÀÚµ¿À¸·Î ³ª°¡°Ô ÇÏ·Á¸é ÁÖ¼®À» Çª¼¼¿ä.
+        // 5. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Â¥ ï¿½ï¿½ï¿½ï¿½ (ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, Room ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ESC ï¿½ï¿½ï¿½ï¿½ï¿½Å³ï¿½ ï¿½ï¿½ï¿½â¼­ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+        // ï¿½ï¿½ï¿½â¼­ï¿½ï¿½ "Lab ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æ¿Í¼ï¿½ ï¿½ï¿½ï¿½ï¿½" ï¿½ï¿½ï¿½Â¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ ï¿½Æ·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½ Ã³ï¿½ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½.
+        // ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½ï¿½ï¿½ Çªï¿½ï¿½ï¿½ï¿½.
         if (_micro && _micro.InMicro)
             _micro.Exit();
     }

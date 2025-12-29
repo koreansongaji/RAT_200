@@ -1,27 +1,37 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(LadderPlacementController))]
 public class Ladder : MonoBehaviour
 {
-    [Range(1, 4)] public int lengthLevel = 1; // ¾÷±×·¹ÀÌµå·Î Áõ°¡
-    public LadderPlaceSpot currentSpot;       // ÇöÀç ºÙ¾îÀÖ´Â ½½·Ô (¾øÀ¸¸é µé°í ´Ù´Ï´Â »óÅÂ)
+    [Range(1, 4)] public int lengthLevel = 1; // ï¿½ï¿½ï¿½×·ï¿½ï¿½Ìµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    public LadderPlaceSpot currentSpot;       // ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¾ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ù´Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½)
+    
+    [SerializeField] private LadderSoundController _ladderSoundController;
+
+    private void Awake()
+    {
+        if(_ladderSoundController == null) _ladderSoundController = GetComponent<LadderSoundController>();
+        if(_ladderSoundController == null) Debug.LogError("No LadderSoundController found on " + gameObject.name);
+    }
 
     public void AttachTo(LadderPlaceSpot spot, bool alignRotation = true)
     {
         if (!spot || !spot.ladderAnchor) return;
-
-        // ±âÁ¸ ½½·Ô ºñ¿ì±â
+        
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (currentSpot) currentSpot.occupied = false;
 
-        // ½º³À & Á¡À¯
+        // ï¿½ï¿½ï¿½ï¿½ & ï¿½ï¿½ï¿½ï¿½
         transform.position = spot.ladderAnchor.position;
         if (alignRotation) transform.rotation = spot.ladderAnchor.rotation;
         currentSpot = spot;
         spot.occupied = true;
 
-        // ¿À¸£±â Å¸°Ù ¿¬°á
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         var climb = GetComponent<LadderClimbInteractable>();
         if (climb && spot.climbTarget) climb.target = spot.climbTarget;
+        _ladderSoundController.PlayPlaceLadder();
     }
 
     public void Detach()
@@ -29,8 +39,9 @@ public class Ladder : MonoBehaviour
         if (currentSpot) currentSpot.occupied = false;
         currentSpot = null;
 
-        // ¿À¸£±â ºñÈ°¼ºÈ­(¼±ÅÃ)
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­(ï¿½ï¿½ï¿½ï¿½)
         var climb = GetComponent<LadderClimbInteractable>();
         if (climb) climb.target = null;
+        _ladderSoundController.PlayPlaceLadder();
     }
 }
