@@ -36,7 +36,7 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
 
     // ���� [����] �÷��̾� �̵� ���� ���� ���� & ����� ���� �߰� ����
     [Header("���� ���� (Bridge)")]
-    public LabToFridgeBridgeManager bridgeManager; // �� �ʼ� ����: å �ٸ�/���� ���� ������
+    public LabToFridgeManager bridgeManager; // �� �ʼ� ����: å �ٸ�/���� ���� ������
     public CinemachineCamera bridgeSideCam;        // �� �ʼ� ����: å �ٸ� �� ���̵� ī�޶�
     public float bridgeCamDuration = 2.5f;         // ī�޶� ���߰� ���� �ð�
 

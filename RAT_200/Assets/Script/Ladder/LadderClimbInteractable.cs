@@ -1,16 +1,14 @@
 using UnityEngine;
 using DG.Tweening;
-using System.Collections;
-using Unity.Cinemachine;
 
 public class LadderClimbInteractable : BaseInteractable
 {
     [Header("Target ����")]
-    public ClimbTarget target;            // �� ��ٸ��� ����� ������Ʈ
+    public ClimbTarget target;            // ���� ���� ����
 
     [Header("State / Threshold")]
-    public float yThreshold = 1.0f;
-    Vector3 _preClimbPos;                 // ������ ���� ��ġ ����
+    public float yThreshold = 1.0f;       // ��/�Ʒ� �Ǻ� ����
+    Vector3 _preClimbPos;                 // ������ ��ġ ����
     bool _hasPreClimbPos;
 
     [Header("Tween")]
@@ -40,20 +38,23 @@ public class LadderClimbInteractable : BaseInteractable
 
         if (!isAbove)
         {
-            // �ö󰡱�
+      
+            
+
+            // [�ö󰡱�]
             _preClimbPos = i.transform.position;
             _hasPreClimbPos = true;
 
-            // Ŭ����� Ȱ��ȭ
-            if (target.closeVCam)
-                CloseupCamManager.Activate(target.closeVCam);
-
             // 사운드: 오르기 시작 시 재생
             _ladderSoundController?.PlayClimbLadder();
-
+            
+            // �� ī�޶� ����(vcam)�� null�� �ֽ��ϴ�. (Ʈ���Ű� �˾Ƽ� �� ����)
             mover.MoveToWorldWithCam(
-                target.climbPoint.position, duration, ease,
-                target.closeVCam, CloseupCamManager.CloseOn, true
+                target.climbPoint.position,
+                duration,
+                ease,
+                null, // ī�޶� ����!
+                0     // �켱���� 0!
             );
         }
         else
@@ -65,23 +66,16 @@ public class LadderClimbInteractable : BaseInteractable
             _ladderSoundController?.PlayClimbLadder();
 
             mover.MoveToWorldWithCam(
-                downPos, duration, ease,
-                target.closeVCam, CloseupCamManager.CloseOff, true
+                downPos,
+                duration,
+                ease,
+                null,
+                0
             );
-            i.StartCoroutine(ReleaseCamAfter(duration * 1.02f));
+
+            // ���� �ִ� �ڷ�ƾ(ī�޶� ����) ������
         }
     }
 
-    IEnumerator ReleaseCamAfter(float t)
-    {
-        yield return new WaitForSeconds(t);
-        if (target && target.closeVCam)
-            CloseupCamManager.Deactivate(target.closeVCam);
-    }
-
-    void OnDisable()
-    {
-        if (target && target.closeVCam)
-            CloseupCamManager.Deactivate(target.closeVCam);
-    }
+    // OnDisable(ī�޶� ����) ������
 }
