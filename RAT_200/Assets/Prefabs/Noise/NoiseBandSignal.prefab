@@ -1,0 +1,158 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6434222441209080077
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7653929410633365678}
+  - component: {fileID: 2804227110807313698}
+  - component: {fileID: 171877835496213265}
+  m_Layer: 0
+  m_Name: NoiseBandSignal
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7653929410633365678
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6434222441209080077}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.268244, y: 0.48408175, z: 0.910398}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2804227110807313698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6434222441209080077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcedb2320d9bfe44794f38762959bf4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoSubscribeToNoiseSystem: 1
+  onlyWhenIncreasing: 0
+  fireOnStart: 1
+  onBand_0_40:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 171877835496213265}
+        m_TargetAssemblyTypeName: BgmController, Assembly-CSharp
+        m_MethodName: CheckBgmStep
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onBand_41_60:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 171877835496213265}
+        m_TargetAssemblyTypeName: BgmController, Assembly-CSharp
+        m_MethodName: CheckBgmStep
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onBand_61_80:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 171877835496213265}
+        m_TargetAssemblyTypeName: BgmController, Assembly-CSharp
+        m_MethodName: CheckBgmStep
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onBand_81_90:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 171877835496213265}
+        m_TargetAssemblyTypeName: BgmController, Assembly-CSharp
+        m_MethodName: CheckBgmStep
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onBand_91_99:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 171877835496213265}
+        m_TargetAssemblyTypeName: BgmController, Assembly-CSharp
+        m_MethodName: CheckBgmStep
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onBand_100:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 171877835496213265}
+        m_TargetAssemblyTypeName: BgmController, Assembly-CSharp
+        m_MethodName: CheckBgmStep
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  currentPercent: 0
+  currentBand: -1
+--- !u!114 &171877835496213265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6434222441209080077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3358442c18e9988428b45f9f9a6918cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _defaultBGM: {fileID: 8300000, guid: 3726ad3cff9ebfd4b8813c0147a332f2, type: 3}
+  _intenseBGM: {fileID: 8300000, guid: ab13091be7eda084aaad66b6c059501f, type: 3}
+  _researcherBGM: {fileID: 8300000, guid: 5f7493d2d4e64ed47bbae3d9a1d6739f, type: 3}
+  _noiseBandSignal: {fileID: 2804227110807313698}
