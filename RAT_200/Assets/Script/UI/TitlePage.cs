@@ -10,9 +10,11 @@ public class TitlePage : MonoBehaviour
     
     private Tween _currentTween;
     private bool _isTransitioning;
-    private bool _isPageHidden; // 페이지가 숨겨졌는지 상태 확인
+    private bool _isPageHidden;
 
-    [SerializeField] private AudioClip _audioClip;
+    [SerializeField] private AudioClip _titleBGM;
+    [SerializeField] private BgmController _bgmController;
+    
     private void Awake()
     {
         if (_slideOutPosition == null || _slideInPosition == null)
@@ -22,115 +24,81 @@ public class TitlePage : MonoBehaviour
             return;
         }
         transform.position = _slideOutPosition.position;
+
+        if (_bgmController == null)
+        {
+            Debug.LogError("[TitlePage] BgmController is not assigned.");
+            _bgmController = FindFirstObjectByType<BgmController>();
+        }
     }
 
     private void Start()
     {
+        // 처음에 타이틀을 보여주고 시간을 멈춤
+        _isPageHidden = false;
+        Time.timeScale = 0f; 
+        
         SlideInTitlePage();
-        AudioManager.Instance.Play(_audioClip, AudioManager.Sound.BGM);
+        if(_titleBGM == null) _titleBGM = Resources.Load<AudioClip>("Sounds/BGM/bgm_title");
+        AudioManager.Instance.Play(_titleBGM, AudioManager.Sound.BGM);
     }
-    
-    // TODO: 지금은 Update에서 Esc키 받는데 InputManager로 바꾸면 좋을 것 같음
+
     private void Update()
     {
-        // 페이지가 숨겨진 상태에서 ESC를 누르면 다시 나타남
+        // 1. 게임 중 ESC를 누르면 타이틀을 켜고 시간을 멈춤
         if (_isPageHidden && Input.GetKeyDown(KeyCode.Escape))
         {
-            SlideInTitlePage(onComplete: () => _isPageHidden = false);
+            OpenMenu();
         }
-
-        // TitlePage나 OptionPage가 화면에 있는지 확인하여 TimeScale 조절
-        UpdateTimeScale();
     }
 
-    /// <summary>
-    /// UI 페이지들의 가시성 상태에 따라 게임의 시간 흐름(TimeScale)을 제어합니다.
-    /// </summary>
-    private void UpdateTimeScale()
+    private void OpenMenu()
     {
-        bool isTitleVisible = (transform.position - _slideInPosition.position).sqrMagnitude < 0.01f;
-        bool isOptionVisible = _optionPage != null && (_optionPage.transform.position - _optionPage.GetInPosition()).sqrMagnitude < 0.01f;
-
-        if (isTitleVisible || isOptionVisible)
-        {
-            Time.timeScale = 0f;
-        }
-        else
-        {
-            Time.timeScale = 1f;
-        }
+        _isPageHidden = false;
+        Time.timeScale = 0f; // 시간 정지
+        SlideInTitlePage();
     }
 
-    /// <summary>
-    /// 게임을 시작합니다. 타이틀 페이지를 화면 밖으로 밀어내고 게임을 활성화합니다.
-    /// </summary>
     public void StartGame()
     {
         if (_isTransitioning) return;
+        _isTransitioning = true;
         
+        // 1. 게임 시작 버튼을 누르면 BGM을 기본(0~80)으로 교체
+        if (_bgmController != null)
+        {
+            _bgmController.PlayFirstStep();
+        }
+        else
+        {
+            Debug.LogWarning("[TitlePage] BgmController is not assigned.");
+        }
+
+        // 2. 타이틀을 치우고 시간을 흐르게 함
         SlideOutTitlePage(onComplete: () => 
         {
             _isPageHidden = true;
+            _isTransitioning = false;
+            Time.timeScale = 1f; 
         });
     }
 
-    /// <summary>
-    /// 애플리케이션을 종료합니다. 에디터에서는 재생 모드를 종료합니다.
-    /// </summary>
-    public void QuitGame()
-    {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
-    }
-
-    /// <summary>
-    /// 옵션 페이지를 엽니다. 현재 타이틀 페이지를 밖으로 밀어낸 후 옵션 페이지를 불러옵니다.
-    /// </summary>
+    // 옵션 페이지 열기 (이미 시간은 0인 상태이므로 위치만 이동)
     public void OnOpenOptionPage()
     {
         if (_isTransitioning || _optionPage == null) return;
         _isTransitioning = true;
 
-        KillTween();
-
-        // 타임아웃(실패 대비)
-        var timeout = DOVirtual.DelayedCall(1.2f, () => { _isTransitioning = false; }, ignoreTimeScale: true)
-            .SetUpdate(true);
-
-        // 이미 같은 위치면 즉시 다음 단계
-        if ((transform.position - _slideOutPosition.position).sqrMagnitude < 0.0001f)
+        SlideOutTitlePage(onComplete: () =>
         {
-            _optionPage.SlideInOptionPage(0.5f, Ease.OutCubic, () =>
+            _optionPage.SlideInOptionPage(onComplete: () => 
             {
-                if (timeout.IsActive()) timeout.Kill();
-                _isTransitioning = false;
-            });
-            return;
-        }
-
-        // 직렬 시퀀스
-        var seq = DOTween.Sequence();
-        seq.Append(transform.DOMove(_slideOutPosition.position, 0.5f).SetEase(Ease.InOutQuad).SetUpdate(true));
-        seq.AppendCallback(() =>
-        {
-            _optionPage.SlideInOptionPage(0.5f, Ease.OutCubic, () =>
-            {
-                if (timeout.IsActive()) timeout.Kill();
                 _isTransitioning = false;
             });
         });
-
-        _currentTween = seq
-            .SetUpdate(true)
-            .OnKill(() =>
-            {
-                if (timeout.IsActive()) timeout.Kill();
-                _isTransitioning = false;
-            });
     }
+    
+    // UpdateTimeScale 함수는 이제 필요 없으므로 삭제해도 됩니다.
     /// <summary>
     /// 타이틀 페이지를 설정된 화면 밖 위치로 이동시킵니다.
     /// </summary>
@@ -163,4 +131,17 @@ public class TitlePage : MonoBehaviour
             _currentTween.Kill();
         _currentTween = null;
     }
+        /// <summary>
+        /// 애플리케이션을 종료합니다. 에디터에서는 재생 모드를 종료합니다.
+        /// </summary>
+        public void QuitGame()
+        {
+            #if UNITY_EDITOR
+                // 유니티 에디터에서 실행 중일 때
+                UnityEditor.EditorApplication.isPlaying = false;
+            #else
+                // 실제 빌드된 게임에서 실행 중일 때
+                Application.Quit();
+            #endif
+        }
 }

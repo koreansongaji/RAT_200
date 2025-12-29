@@ -6,12 +6,19 @@
   <component name="ChangeListManager">
     <list default="true" id="9a50adee-ec7a-4782-bb48-036fabc44743" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.RAT_200/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RAT_200/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Develop/UI/Title.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Develop/UI/Title.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Develop/UI/Title.unity.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Develop/UI/Title.unity.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/Friend Rat/FriendRatMovement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Friend Rat/FriendRatMovement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/UI/OptionPage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/UI/OptionPage.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ImportAssets/2D Cards Game Art Pack/Demo/Demo.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ImportAssets/2D Cards Game Art Pack/Demo/Demo.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Manager/AudioManager.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Manager/AudioManager.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/UI/Canvas.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/UI/Canvas.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Sound.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Sound/BGM.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Sound/BGM/CTRL S - SpaceTimeThought.mp3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Sound/BGM/CTRL S - SpaceTimeThought.mp3.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Sound/Effect.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/MainScene 1.unity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/MainScene 1.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/Manager/AudioManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Manager/AudioManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/Noise/NoiseBandSignal.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Noise/NoiseBandSignal.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Script/UI/TitlePage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/UI/TitlePage.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Shader/Settings/PC_Renderer.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shader/Settings/PC_Renderer.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +51,16 @@
     <setting file="file://$PROJECT_DIR$/Assets/Script/Manager/OptionManager.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/Manager/Singleton.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/RefrigeratorPuzzle/OpenRefrigerator.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Script/SoundPlay/BgmController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Script/SoundPlay/CommonSoundController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Script/SoundPlay/FridgeSoundController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Script/SoundPlay/LabBenchSoundController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Script/SoundPlay/NoiseTrapSoundController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Script/SoundPlay/RatSoundController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Script/SoundPlay/SafeSoundController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Script/SoundPlay/WirePuzzleSoundController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/UI/OptionPage.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Script/UI/UIButtonSound.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@a73638a9fb22/Editor/TMP/TMP_BaseEditorPanel.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProblemsViewState">
@@ -58,21 +74,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "git-widget-placeholder": "feature/UI/Title",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/sound&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.0.53f1\Editor\Unity.exe" />
@@ -149,6 +165,9 @@
       <workItem from="1766428375691" duration="7394000" />
       <workItem from="1766676377894" duration="3295000" />
       <workItem from="1766681745935" duration="1073000" />
+      <workItem from="1766924239982" duration="653000" />
+      <workItem from="1766925013281" duration="4968000" />
+      <workItem from="1766930136179" duration="9941000" />
     </task>
     <servers />
   </component>

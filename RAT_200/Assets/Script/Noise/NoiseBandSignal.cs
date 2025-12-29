@@ -2,12 +2,13 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// NoiseSystem.current01 °ªÀ» 0~100%·Î ÇØ¼®ÇØ¼­
-/// 0~40 / 41~60 / 61~90 / 91~99 / 100 ±¸°£º°·Î UnityEvent¸¦ ½÷ÁÖ´Â Çãºê.
-/// ¿¬Ãâ(»ç¿îµå, UI, Á¶¸í µî)Àº ¿©±â ÀÌº¥Æ®¿¡¸¸ ºÙ¿©¼­ Ã³¸®ÇÏ¸é µÊ.
+/// NoiseSystem.current01 ï¿½ï¿½ï¿½ï¿½ 0~100%ï¿½ï¿½ ï¿½Ø¼ï¿½ï¿½Ø¼ï¿½
+/// 0~40 / 41~60 / 61~90 / 91~99 / 100 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ UnityEventï¿½ï¿½ ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½.
+/// ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½, UI, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¿ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½.
 /// </summary>
 public class NoiseBandSignal : MonoBehaviour
 {
+    
     public enum NoiseBand
     {
         None = -1,
@@ -18,34 +19,34 @@ public class NoiseBandSignal : MonoBehaviour
         Full100 = 4   // 100%
     }
 
-    [Header("µ¿ÀÛ ¿É¼Ç")]
-    [Tooltip("±¸°£ÀÌ ¹Ù²ð ¶§¸¶´Ù ÀÌº¥Æ®¸¦ ½õ´Ï´Ù. ²¨µÎ¸é ¼öµ¿À¸·Î È£ÃâÇØ¾ß ÇÔ.")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ ï¿½É¼ï¿½")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù²ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½Ï´ï¿½. ï¿½ï¿½ï¿½Î¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½ï¿½.")]
     public bool autoSubscribeToNoiseSystem = true;
 
-    [Tooltip("¼ÒÀ½ ±¸°£ÀÌ ³·¾ÆÁö´Â ¹æÇâ(¿¹: 61~90 ¡æ 41~60)À¸·Î º¯ÇÒ ¶§´Â ÀÌº¥Æ®¸¦ ¹«½ÃÇÒÁö ¿©ºÎ.")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½: 61~90 ï¿½ï¿½ 41~60)ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.")]
     public bool onlyWhenIncreasing = false;
 
-    [Tooltip("ÃÊ±â ½ÃÀÛ ½Ã ÇöÀç ¼ÒÀ½ ±¸°£¿¡ ´ëÇÑ ÀÌº¥Æ®¸¦ ÇÑ ¹ø ½òÁö ¿©ºÎ.")]
+    [Tooltip("ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.")]
     public bool fireOnStart = true;
 
-    [Header("ÀÌº¥Æ® (¿¬Ãâ ÈÅ)")]
-    [Tooltip("0% ~ 40% ±¸°£¿¡ ÁøÀÔÇßÀ» ¶§ È£ÃâµÇ´Â ÀÌº¥Æ®.")]
+    [Header("ï¿½Ìºï¿½Æ® (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½)")]
+    [Tooltip("0% ~ 40% ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ È£ï¿½ï¿½Ç´ï¿½ ï¿½Ìºï¿½Æ®.")]
     public UnityEvent onBand_0_40;
 
-    [Tooltip("41% ~ 60% ±¸°£¿¡ ÁøÀÔÇßÀ» ¶§ È£ÃâµÇ´Â ÀÌº¥Æ®.")]
+    [Tooltip("41% ~ 60% ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ È£ï¿½ï¿½Ç´ï¿½ ï¿½Ìºï¿½Æ®.")]
     public UnityEvent onBand_41_60;
 
-    [Tooltip("61% ~ 90% ±¸°£¿¡ ÁøÀÔÇßÀ» ¶§ È£ÃâµÇ´Â ÀÌº¥Æ®.")]
+    [Tooltip("61% ~ 90% ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ È£ï¿½ï¿½Ç´ï¿½ ï¿½Ìºï¿½Æ®.")]
     public UnityEvent onBand_61_90;
 
-    [Tooltip("91% ~ 99% ±¸°£¿¡ ÁøÀÔÇßÀ» ¶§ È£ÃâµÇ´Â ÀÌº¥Æ®.")]
+    [Tooltip("91% ~ 99% ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ È£ï¿½ï¿½Ç´ï¿½ ï¿½Ìºï¿½Æ®.")]
     public UnityEvent onBand_91_99;
 
-    [Tooltip("100% (°¡µæ Âü)¿¡ ÁøÀÔÇßÀ» ¶§ È£ÃâµÇ´Â ÀÌº¥Æ®.")]
+    [Tooltip("100% (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ È£ï¿½ï¿½Ç´ï¿½ ï¿½Ìºï¿½Æ®.")]
     public UnityEvent onBand_100;
 
-    [Header("µð¹ö±×")]
-    [Range(0, 100)] public int currentPercent;    // ¿¡µðÅÍ¿¡¼­ º¸±â ÆíÇÏ°Ô
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½")]
+    [Range(0, 100)] public int currentPercent;    // ï¿½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï°ï¿½
     public NoiseBand currentBand = NoiseBand.None;
 
     bool _subscribed;
@@ -55,7 +56,7 @@ public class NoiseBandSignal : MonoBehaviour
         if (autoSubscribeToNoiseSystem)
             TrySubscribe();
 
-        // ½ÃÀÛ ½Ã ÇöÀç °ª ±âÁØÀ¸·Î ÃÊ±â ±¸°£ °è»ê ¹× ¿É¼Ç¿¡ µû¶ó ÀÌº¥Æ® ¹ß»ç
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½É¼Ç¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½ß»ï¿½
         var ns = NoiseSystem.Instance;
         if (ns != null)
         {
@@ -101,7 +102,7 @@ public class NoiseBandSignal : MonoBehaviour
 
         NoiseBand newBand = GetBandFromPercent(percent);
 
-        // ¾ÆÁ÷ ÃÊ±â »óÅÂ(None)¿´À¸¸é ±×³É ¼¼ÆÃ¸¸
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½ï¿½(None)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×³ï¿½ ï¿½ï¿½ï¿½Ã¸ï¿½
         if (currentBand == NoiseBand.None)
         {
             currentBand = newBand;
@@ -111,12 +112,12 @@ public class NoiseBandSignal : MonoBehaviour
         }
 
         if (newBand == currentBand)
-            return; // ±¸°£ÀÌ ¾È ¹Ù²î¾úÀ¸¸é ¾Æ¹« °Íµµ ¾È ÇÔ
+            return; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ù²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ¹ï¿½ ï¿½Íµï¿½ ï¿½ï¿½ ï¿½ï¿½
 
-        // onlyWhenIncreasing ¿É¼Ç: ´õ À§ÇèÇÑ ±¸°£À¸·Î ¿Ã¶ó°¥ ¶§¸¸ ÀÌº¥Æ®¸¦ º¸³¾Áö
+        // onlyWhenIncreasing ï¿½É¼ï¿½: ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã¶ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         if (onlyWhenIncreasing && (int)newBand < (int)currentBand)
         {
-            currentBand = newBand; // ³»ºÎ »óÅÂ´Â ¾÷µ¥ÀÌÆ®
+            currentBand = newBand; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
             return;
         }
 
@@ -130,7 +131,7 @@ public class NoiseBandSignal : MonoBehaviour
         if (percent <= 60) return NoiseBand.B41_60;
         if (percent <= 90) return NoiseBand.B61_90;
         if (percent <= 99) return NoiseBand.B91_99;
-        return NoiseBand.Full100; // ³ª¸ÓÁö´Â 100%
+        return NoiseBand.Full100; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 100%
     }
 
     void InvokeBandEvent(NoiseBand band)
