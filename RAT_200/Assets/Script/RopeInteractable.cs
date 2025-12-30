@@ -17,10 +17,7 @@ public class RopeInteractable : BaseInteractable
     public CinemachineCamera ropeCamera;
 
     [Header("방향 설정 (Scale X)")]
-    [Tooltip("캐릭터가 오른쪽을 볼 때의 Scale X 값 (보통 1)")]
-    public float lookRightScale = 1f;
-    [Tooltip("캐릭터가 왼쪽을 볼 때의 Scale X 값 (보통 -1)")]
-    public float lookLeftScale = -1f;
+    public float targetScaleX = -1;
 
     void Awake()
     {
@@ -53,11 +50,6 @@ public class RopeInteractable : BaseInteractable
         Vector3 landPoint = targetLandPoint.position;
 
         Vector3[] path = new Vector3[] { alignPoint, climbPoint, landPoint };
-
-        // ★ [수정] 방향 결정 로직
-        // 플레이어가 밧줄보다 오른쪽(x가 큼)에 있다면 -> 왼쪽을 봐야 함
-        // 플레이어가 밧줄보다 왼쪽(x가 작음)에 있다면 -> 오른쪽을 봐야 함
-        float targetScaleX = (playerPos.x > axisPos.x) ? lookLeftScale : lookRightScale;
 
         // 3. 이동 명령
         int camPriority = (ropeCamera != null) ? 100 : 0;

@@ -24,6 +24,9 @@ public class LadderClimbInteractable : BaseInteractable
 
     public override bool CanInteract(PlayerInteractor i)
     {
+        // ★ [수정] 마이크로 줌 상태라면 사다리 타기 상호작용 불가!
+        if (CloseupCamManager.InMicro) return false;
+
         // 설치가 안 되어 있으면(목적지가 없으면) 상호작용 불가
         if (climbDestination == null) return false;
 
@@ -35,6 +38,9 @@ public class LadderClimbInteractable : BaseInteractable
     {
         var mover = i.GetComponent<PlayerScriptedMover>();
         if (!mover || !climbDestination) return;
+
+        // ★ [수정] 혹시 모르니 실행 시점에도 한 번 더 차단
+        if (CloseupCamManager.InMicro) return;
 
         bool isAtTop = i.transform.position.y >= yThreshold;
 

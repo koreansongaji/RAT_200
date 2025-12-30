@@ -34,6 +34,9 @@ public class LabToFridgeManager : MonoBehaviour
 
     private bool _isCollapsing = false;
 
+    [Header("Fuse Single")]
+    public GameObject fuse;
+
     void Start()
     {
         if (bridgeBlocker) bridgeBlocker.enabled = true;
@@ -192,6 +195,9 @@ public class LabToFridgeManager : MonoBehaviour
                 col.enabled = true;
                 col.isTrigger = false;
             }
+
+            fuse.gameObject.GetComponent<DrawerItemDispenser>().Dispense();
+            fuse.gameObject.GetComponent<InteractionBlocker>().Unlock();
         }
     }
     void RecoverPlayer()
@@ -199,6 +205,8 @@ public class LabToFridgeManager : MonoBehaviour
         var player = GameObject.FindGameObjectWithTag("Player");
         if (player)
         {
+            
+
             Debug.Log("[Bridge] 플레이어 복구 시작...");
 
             // 1. 물리 끄기 (이제 NavMesh가 다시 조종해야 함)

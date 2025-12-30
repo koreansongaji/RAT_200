@@ -15,14 +15,34 @@ public class LadderPlaceSpot : MonoBehaviour
     [Tooltip("스냅 감지 반경")]
     public float snapRadius = 0.6f;
 
-    // 현재 이 자리에 사다리가 있는지 여부
+    [Header("잠금 설정 (퓨즈 퍼즐 연동)")]
+    [Tooltip("true면 사다리를 놓을 수 없음 (퓨즈 퍼즐 등으로 풀어야 함)")]
+    public bool isLocked = false;
+
+    [Header("Visuals")]
+    [Tooltip("드래그 중, 설치 조건이 맞으면 켜질 오브젝트 (Spotlight 등)")]
+    public GameObject validIndicator;
+
     [HideInInspector] public bool occupied;
+
+    void Start()
+    {
+        if (validIndicator) validIndicator.SetActive(false);
+    }
+
+    // 외부(퍼즐)에서 호출해서 잠금 해제
+    public void UnlockSpot()
+    {
+        isLocked = false;
+        Debug.Log($"[LadderSpot] {name} is now UNLOCKED!");
+    }
 
     void OnDrawGizmos()
     {
+        // 잠겨있으면 빨간색, 아니면 노란색
+        Gizmos.color = isLocked ? Color.red : Color.yellow;
         if (ladderAnchor)
         {
-            Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(ladderAnchor.position, snapRadius);
             Gizmos.DrawLine(transform.position, ladderAnchor.position);
         }
