@@ -5,19 +5,19 @@ using Unity.Cinemachine;
 public class RopeInteractable : BaseInteractable
 {
     [Header("��ǥ ����")]
-    [Tooltip("������ ���� �߽���(X, Z ��ǥ ����). ����θ� �� ������Ʈ ���.")]
     public Transform ropeAxis;
-
-    public Transform topPoint;    // ����� ���� ����
-    public Transform bottomPoint; // �ٴ� ���� ����
+    public Transform topPoint;
+    public Transform bottomPoint;
 
     [Header("����")]
-    public float duration = 2.0f; // �̵� �ð�
+    public float duration = 2.0f;
     public Ease ease = Ease.InOutQuad;
 
     [Header("ī�޶� (����)")]
     public CinemachineCamera ropeCamera;
 
+    [Header("���� ���� (Scale X)")]
+    public float targetScaleX = -1;
     [SerializeField] private RopeSoundController _ropeSoundController;
 
     void Awake()
@@ -45,36 +45,30 @@ public class RopeInteractable : BaseInteractable
         // 1. ������ ���� (�� �� ������)
         float distToTop = Vector3.Distance(i.transform.position, topPoint.position);
         float distToBottom = Vector3.Distance(i.transform.position, bottomPoint.position);
-
         bool goingUp = distToTop > distToBottom;
         Transform targetLandPoint = goingUp ? topPoint : bottomPoint;
 
-        // 2. ��� ��������Ʈ(Waypoints) ��� [�߿�!]
-        // Path: [���� ����] -> [���� �̵� ����] -> [���� ����]
-
+        // 2. ��� ���
         Vector3 playerPos = i.transform.position;
-        Vector3 axisPos = ropeAxis.position; // ������ X, Z
+        Vector3 axisPos = ropeAxis.position;
 
-        // W1: ���� ���̿��� ���� X, Z�� ����
         Vector3 alignPoint = new Vector3(axisPos.x, playerPos.y, axisPos.z);
-
-        // W2: ���� X, Z�� ������ ä�� ��ǥ ���̱��� ���
         Vector3 climbPoint = new Vector3(axisPos.x, targetLandPoint.position.y, axisPos.z);
-
-        // W3: ���� ���� (Landing)
         Vector3 landPoint = targetLandPoint.position;
 
         Vector3[] path = new Vector3[] { alignPoint, climbPoint, landPoint };
 
-        // 3. �̵� ���
-        int camPriority = (ropeCamera != null) ? 100 : 0; // Ȥ�� CloseupCamManager.CloseOn
+        // 3. �̵� ����
+        int camPriority = (ropeCamera != null) ? 100 : 0;
 
         mover.MovePathWithCam(
             path,
             duration,
             ease,
             ropeCamera,
-            camPriority
+            camPriority,
+            useRopeAnim: true,
+            overrideScaleX: targetScaleX  // �� ���� ��ǥ�� ����
         );
     }
 }

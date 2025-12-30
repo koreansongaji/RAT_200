@@ -4,90 +4,116 @@ using UnityEngine;
 [RequireComponent(typeof(Ladder))]
 public class LadderPlacementController : MonoBehaviour
 {
-    public float maxSnapDistance = 1.2f; // 후보 검색 최대 반경(옵션)
+    public float maxSnapDistance = 1.2f;
 
-    Draggable3D drag;
-    Ladder ladder;
+    // ★ [추가] 이 높이보다 플레이어가 높이 있으면 드래그 금지
+    [Tooltip("플레이어 Y좌표가 이 값보다 크면 사다리 드래그 불가 (가구 위라고 판단)")]
+    public float disableDragHeight = 0.5f;
+
+    private Draggable3D _drag;
+    private Ladder _ladder;
+    private Transform _playerTransform; // 플레이어 위치 확인용
 
     // 복귀용 저장값
-    Vector3 _prevPos;
-    Quaternion _prevRot;
-    LadderPlaceSpot _prevSpot;
+    private Vector3 _prevPos;
+    private Quaternion _prevRot;
+    private LadderPlaceSpot _prevSpot;
 
     void Awake()
     {
-        drag = GetComponent<Draggable3D>();
-        ladder = GetComponent<Ladder>();
+        _drag = GetComponent<Draggable3D>();
+        _ladder = GetComponent<Ladder>();
 
-        drag.OnDragStarted += HandleDragStarted;
-        drag.OnDragEnded += TrySnapOrRevert;
+        _drag.OnDragStarted += HandleDragStarted;
+        _drag.OnDragEnded += TrySnapOrRevert;
+    }
+
+    void Start()
+    {
+        // 씬에서 플레이어 찾기 (PlayerScriptedMover 또는 PlayerInteractor)
+        var player = FindObjectOfType<PlayerScriptedMover>();
+        if (player)
+        {
+            _playerTransform = player.transform;
+            Debug.Log("Player detect!");
+        }
+    }
+
+    // ★ [추가] 매 프레임 플레이어 높이 체크
+    void Update()
+    {
+        if (!_playerTransform || !_drag) return;
+
+        // 플레이어가 일정 높이(가구 위)에 있다면 드래그 컴포넌트를 꺼버림
+        // (드래그만 안 되고, 클릭 상호작용은 다른 컴포넌트라 정상 작동함)
+        bool isPlayerHigh = _playerTransform.position.y > disableDragHeight;
+
+        // 상태가 다를 때만 변경 (최적화)
+        if (_drag.enabled == isPlayerHigh)
+        {
+            _drag.enabled = !isPlayerHigh;
+        }
     }
 
     void OnDestroy()
     {
-        if (drag != null)
+        if (_drag)
         {
-            drag.OnDragStarted -= HandleDragStarted;
-            drag.OnDragEnded -= TrySnapOrRevert;
+            _drag.OnDragStarted -= HandleDragStarted;
+            _drag.OnDragEnded -= TrySnapOrRevert;
         }
     }
 
     void HandleDragStarted()
     {
-        // 현재 상태 저장
+        // 상태 저장
         _prevPos = transform.position;
         _prevRot = transform.rotation;
-        _prevSpot = ladder.currentSpot;
+        _prevSpot = _ladder.currentSpot;
 
-        // 드래그로 이동 시작하니 현재 슬롯 점유 해제
-        // (스냅 실패 시엔 다시 되돌릴 것)
-        if (ladder.currentSpot != null)
-            ladder.Detach();
+        // 떼어내기
+        _ladder.Detach();
     }
 
     void TrySnapOrRevert()
     {
-        // 가장 가까운 유효 슬롯 찾기
-        var all = FindObjectsOfType<LadderPlaceSpot>();
-        LadderPlaceSpot best = null;
-        float bestSqr = float.PositiveInfinity;
+        var allSpots = FindObjectsOfType<LadderPlaceSpot>();
+        LadderPlaceSpot bestSpot = null;
+        float minDistSqr = float.PositiveInfinity;
+        Vector3 currentPos = transform.position;
 
-        Vector3 pos = transform.position;
-
-        foreach (var s in all)
+        foreach (var spot in allSpots)
         {
-            if (!s || !s.ladderAnchor) continue;
-            if (s.occupied) continue;
-            if (ladder.lengthLevel < s.requiredLengthLevel) continue;
+            if (!spot || !spot.ladderAnchor) continue;
+            if (spot.occupied) continue;
+            if (_ladder.lengthLevel < spot.requiredLengthLevel) continue;
 
-            float d = Vector3.Distance(pos, s.ladderAnchor.position);
-            if (maxSnapDistance > 0 && d > maxSnapDistance) continue;
+            float dist = Vector3.Distance(currentPos, spot.ladderAnchor.position);
+            if (maxSnapDistance > 0 && dist > maxSnapDistance) continue;
 
-            if (d <= s.snapRadius)
+            float distSqr = (currentPos - spot.ladderAnchor.position).sqrMagnitude;
+            if (distSqr < minDistSqr)
             {
-                float d2 = (pos - s.ladderAnchor.position).sqrMagnitude;
-                if (d2 < bestSqr) { bestSqr = d2; best = s; }
+                minDistSqr = distSqr;
+                bestSpot = spot;
             }
         }
 
-        if (best != null)
+        if (bestSpot != null)
         {
-            // 스냅 성공 → 새 슬롯에 부착
-            ladder.AttachTo(best, true);
+            _ladder.AttachTo(bestSpot, true);
         }
         else
         {
-            // 스냅 실패 → 이전 상태로 복귀
+            // 복귀
             if (_prevSpot != null)
             {
-                // 예전 슬롯으로 되돌림(타겟/점유까지 복원)
-                ladder.AttachTo(_prevSpot, true);
+                _ladder.AttachTo(_prevSpot, true);
             }
             else
             {
-                // 월드 자유 배치였다면 위치/회전만 되돌림
                 transform.SetPositionAndRotation(_prevPos, _prevRot);
-                ladder.currentSpot = null; // 확실히 슬롯 없음 표시
+                _ladder.currentSpot = null;
             }
         }
     }

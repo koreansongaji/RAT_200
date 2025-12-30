@@ -8,7 +8,7 @@ using System.Collections;
 
 public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHidePlayerPreference
 {
-    // ... (기존 변수들 생략) ...
+    // ... (기존 변수들) ...
     [Header("필요 아이템 ID")]
     [SerializeField] string sodiumId = "Sodium";
     [SerializeField] string gelId = "Gel";
@@ -38,7 +38,7 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
     [SerializeField] PressableButton3D btnGel3D;
     [SerializeField] PressableButton3D btnMix3D;
 
-    [Header("Visuals (시험관 & 이펙트)")]
+    [Header("Visuals")]
     public GameObject tubeNaObj;
     public GameObject tubeWaterObj;
     public GameObject tubeGelObj;
@@ -50,9 +50,7 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
     public float steamShowDuration = 1.5f;
     public float bridgeCamDuration = 3.0f;
 
-    // ★ [추가] 보상 카드 (스페이드 7)
     [Header("Reward")]
-    [Tooltip("퍼즐 성공 시 등장할 카드 (스페이드 7)")]
     public GameObject rewardCardObj;
 
     [Header("Sound & Event")]
@@ -64,6 +62,7 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
     bool _isSuccessSequence = false;
     bool _isSolved = false;
     MicroZoomSession _micro;
+    Collider _mainCollider;
 
     public bool HidePlayerDuringMicro => true;
 
@@ -71,34 +70,39 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
     {
         if (panel) panel.enabled = true;
         _micro = GetComponent<MicroZoomSession>();
+        _mainCollider = GetComponent<Collider>();
+
+        // ★ [핵심] 하위 버튼들에게 Micro 세션 주입 & 재부팅
+        RefreshMicroBind(btnNa3D);
+        RefreshMicroBind(btnWater3D);
+        RefreshMicroBind(btnGel3D);
+        RefreshMicroBind(btnMix3D);
 
         if (tubeNaObj) tubeNaObj.SetActive(false);
         if (tubeWaterObj) tubeWaterObj.SetActive(false);
         if (tubeGelObj) tubeGelObj.SetActive(false);
         if (steamParticle) steamParticle.Stop();
-
-        // ★ 시작 시 보상 카드는 숨김
         if (rewardCardObj) rewardCardObj.SetActive(false);
 
         WireButtons();
         RefreshTexts();
-        if (txtRecipe) txtRecipe.text = $"Recipe: Na({needNa}) Water({needWater}) Gel({needGel})";
+        if (txtRecipe) txtRecipe.text = "MIX";
     }
 
-    // ... (중간 함수들은 기존과 동일, 생략) ...
-    // CanInteract, Interact, StartSession, CheckAndPlaceItem, SetButtonsState, CancelSession, Tap, Tap3D, RefreshTexts, Submit 등
-
-    void WireButtons()
+    // ★ [추가] 금고 퍼즐에서 가져온 바인딩 헬퍼 함수
+    void RefreshMicroBind(PressableButton3D btn)
     {
-        if (btnSodium) btnSodium.onClick.AddListener(() => Tap(ref _cNa, needNa));
-        if (btnWater) btnWater.onClick.AddListener(() => Tap(ref _cWater, needWater));
-        if (btnGel) btnGel.onClick.AddListener(() => Tap(ref _cGel, needGel));
-        if (btnMix) btnMix.onClick.AddListener(Submit);
+        if (!btn) return;
 
-        if (btnNa3D) btnNa3D.OnPressed.AddListener(() => Tap3D(ref _cNa, needNa));
-        if (btnWater3D) btnWater3D.OnPressed.AddListener(() => Tap3D(ref _cWater, needWater));
-        if (btnGel3D) btnGel3D.OnPressed.AddListener(() => Tap3D(ref _cGel, needGel));
-        if (btnMix3D) btnMix3D.OnPressed.AddListener(Submit);
+        // Micro 세션 주입
+        if (!btn.micro && _micro)
+        {
+            btn.micro = _micro;
+        }
+
+        // 껐다 켜서 OnEnable 다시 실행 (이벤트 구독 갱신 등)
+        btn.enabled = false;
+        btn.enabled = true;
     }
 
     // --- 1. 진입 ---
@@ -113,10 +117,20 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
 
     public bool CanBeginMicro(PlayerInteractor player) => !_session && !_isSuccessSequence && !_isSolved;
 
-    public void OnMicroEnter(PlayerInteractor player) => StartSession(player);
-    public void OnMicroExit(PlayerInteractor player) => CancelSession();
+    // 줌인/아웃 시 메인 콜라이더 제어 (이것도 같이 챙겨드립니다)
+    public void OnMicroEnter(PlayerInteractor player)
+    {
+        if (_mainCollider) _mainCollider.enabled = false;
+        StartSession(player);
+    }
 
-    // --- 2. 세션 시작 ---
+    public void OnMicroExit(PlayerInteractor player)
+    {
+        if (_mainCollider) _mainCollider.enabled = true;
+        CancelSession();
+    }
+
+    // ... (이하 StartSession, WireButtons, 로직 등은 기존 유지) ...
     void StartSession(PlayerInteractor player)
     {
         _session = true;
@@ -133,7 +147,7 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         bool allReady = _hasPlacedNa && _hasPlacedWater && _hasPlacedGel;
         SetButtonsState(allReady);
         RefreshTexts();
-        if (txtRecipe) txtRecipe.text = $"Recipe: Na({needNa}) Water({needWater}) Gel({needGel})";
+        if (txtRecipe) txtRecipe.text = "MIX";
     }
 
     void CheckAndPlaceItem(PlayerInteractor player, string itemId, ref bool isPlaced, GameObject visualObj)
@@ -173,23 +187,25 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         _session = false;
     }
 
-    void Tap(ref int counter, int need)
+    void WireButtons()
     {
-        if (!_session) return;
-        counter++;
-        RefreshTexts();
+        if (btnSodium) btnSodium.onClick.AddListener(() => Tap(ref _cNa, needNa));
+        if (btnWater) btnWater.onClick.AddListener(() => Tap(ref _cWater, needWater));
+        if (btnGel) btnGel.onClick.AddListener(() => Tap(ref _cGel, needGel));
+        if (btnMix) btnMix.onClick.AddListener(Submit);
+
+        if (btnNa3D) btnNa3D.OnPressed.AddListener(() => Tap3D(ref _cNa, needNa));
+        if (btnWater3D) btnWater3D.OnPressed.AddListener(() => Tap3D(ref _cWater, needWater));
+        if (btnGel3D) btnGel3D.OnPressed.AddListener(() => Tap3D(ref _cGel, needGel));
+        if (btnMix3D) btnMix3D.OnPressed.AddListener(Submit);
     }
 
-    void Tap3D(ref int counter, int need)
-    {
-        if (!_session) return;
-        counter++;
-        RefreshTexts();
-    }
+    void Tap(ref int counter, int need) { if (!_session) return; counter++; RefreshTexts(); }
+    void Tap3D(ref int counter, int need) { if (!_session) return; counter++; RefreshTexts(); }
 
     void RefreshTexts()
     {
-        string Mark(int c, int n) => c > n ? $"<color=#ff6060>{c}</color>" : c.ToString();
+        string Mark(int c, int n) => c > n ? $"{c}" : c.ToString();
         if (txtNa) txtNa.text = $"Na: {Mark(_cNa, needNa)}";
         if (txtWater) txtWater.text = $"Water: {Mark(_cWater, needWater)}";
         if (txtGel) txtGel.text = $"Gel: {Mark(_cGel, needGel)}";
@@ -198,7 +214,6 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
     void Submit()
     {
         if (!_session || _isSuccessSequence) return;
-
         bool success = (_cNa == needNa) && (_cWater == needWater) && (_cGel == needGel);
 
         if (!success)
@@ -214,7 +229,6 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         Debug.Log("[ChemStation] 혼합 성공!");
         CommonSoundController.Instance?.PlayPuzzleSuccess();
         _isSolved = true;
-
         StartCoroutine(Routine_SuccessSequence());
     }
 
@@ -223,29 +237,15 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         _isSuccessSequence = true;
         SetButtonsState(false);
         if (panel) panel.enabled = false;
-
         if (steamParticle) steamParticle.Play();
-
-        // (선택) 증기가 나올 때 카드를 미리 켜두려면 여기서 SetActive(true) 해도 됩니다.
-
         yield return new WaitForSeconds(steamShowDuration);
-
         if (bridgeSideCam) bridgeSideCam.Priority = 100;
         yield return new WaitForSeconds(0.5f);
-
         if (bridgeManager) bridgeManager.PlaySequence();
         yield return new WaitForSeconds(bridgeCamDuration);
-
         if (bridgeSideCam) bridgeSideCam.Priority = 0;
-
         if (_micro && _micro.InMicro) _micro.Exit();
-
-        // ★ [핵심] 모든 연출 종료 후 보상 카드 등장 (스페이드 7)
-        if (rewardCardObj)
-        {
-            rewardCardObj.SetActive(true);
-        }
-
+        if (rewardCardObj) rewardCardObj.SetActive(true);
         _isSuccessSequence = false;
     }
 

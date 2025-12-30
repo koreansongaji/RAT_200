@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4ca6504402e3423499beac5325676243
+guid: 8bb9a58d4bba1e74f9c7a7e87294da4b
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -69,10 +69,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 4096
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Inventory_Item_HintPaper_Large_Filled_0
+      name: diamond_0
       rect:
         serializedVersion: 2
-        x: 15
-        y: 19
-        width: 737
-        height: 811
+        x: 0
+        y: 0
+        width: 96
+        height: 96
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,8 +125,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5b43ec2aba3de9048b8e6950c301f007
-      internalID: 1870012894
+      spriteID: 099b93407039ff74f88fcad723f18d42
+      internalID: -1821438170
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: f0295452a75011c4d99ceb9e86790fd9
+    spriteID: 7668008a89b96314d9d9c6d14c6f0dd1
     internalID: 0
     vertices: []
     indices: 
@@ -145,7 +145,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Inventory_Item_HintPaper_Large_Filled_0: 1870012894
+      diamond_0: -1821438170
+      diamond_1: 1177703316
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

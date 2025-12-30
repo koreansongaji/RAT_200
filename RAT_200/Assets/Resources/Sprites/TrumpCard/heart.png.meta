@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4ca6504402e3423499beac5325676243
+guid: 3c9d0715e97e07b4eaded8fe6379a4ed
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -69,10 +69,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 4096
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Inventory_Item_HintPaper_Large_Filled_0
+      name: heart_0
       rect:
         serializedVersion: 2
-        x: 15
-        y: 19
-        width: 737
-        height: 811
+        x: 0
+        y: 0
+        width: 96
+        height: 96
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,8 +125,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5b43ec2aba3de9048b8e6950c301f007
-      internalID: 1870012894
+      spriteID: fd9212c83f882c5478fd09b077ff91df
+      internalID: -608550132
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: f0295452a75011c4d99ceb9e86790fd9
+    spriteID: 4f378ef44fa36f845ab22119044ef834
     internalID: 0
     vertices: []
     indices: 
@@ -145,7 +145,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Inventory_Item_HintPaper_Large_Filled_0: 1870012894
+      heart_0: -608550132
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

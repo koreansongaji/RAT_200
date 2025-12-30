@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4ca6504402e3423499beac5325676243
+guid: 1bf3c06623864aa46be1dedab8587597
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -69,7 +69,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 4096
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Inventory_Item_HintPaper_Large_Filled_0
+      name: Inventory_Item_Fuse_0
       rect:
         serializedVersion: 2
-        x: 15
-        y: 19
-        width: 737
-        height: 811
+        x: 21
+        y: 18
+        width: 146
+        height: 230
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,8 +125,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5b43ec2aba3de9048b8e6950c301f007
-      internalID: 1870012894
+      spriteID: 27461340e325dec45af594404346e1ed
+      internalID: -465100167
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: f0295452a75011c4d99ceb9e86790fd9
+    spriteID: 8bcf3871e3ffcd141b0792b07498e292
     internalID: 0
     vertices: []
     indices: 
@@ -145,7 +145,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Inventory_Item_HintPaper_Large_Filled_0: 1870012894
+      Inventory_Item_Fuse_0: -465100167
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

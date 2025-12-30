@@ -40,63 +40,67 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
     [Range(0, 2)] public int w3Init = 2;
     [Range(0, 2)] public int w4Init = 0;
 
-    [Header("Cage Rat Event (성공 연출)")]
+    [Header("Cage Rat Event")]
     public GameObject ratObj;
-
-    // ★ [수정] 단일 ParticleSystem -> 배열([])로 변경
-    [Tooltip("감전 시 재생할 파티클들 (여러 개 연결 가능)")]
     public ParticleSystem[] shockEffects;
-
     public GameObject crossbarObj;
 
-    [Header("Reward Card (다이아 10)")]
+    [Header("Reward")]
     public GameObject rewardCardObj;
-    public Transform cardSpawnPos;
-    public Transform cardLandPos;
 
     [Header("Events")]
     public UnityEvent OnSolved;
     public UnityEvent OnFailed;
 
-    // 내부 상태
     bool _session;
     int[] _h = new int[4];
     int _pressCount;
     PlayerInteractor _lastPlayer;
     MicroZoomSession _micro;
+    Collider _mainCollider;
+
     bool _isSolved = false;
     bool _isAnimating = false;
-
     Vector3[] _baseLocalPos = new Vector3[4];
 
     static readonly bool[,] INFL = new bool[4, 4] {
-        { true,  false, true,  false }, // B1
-        { false, true,  false, true  }, // B2
-        { true,  true,  true,  false }, // B3
-        { false, true,  true,  true  }  // B4
+        { true,  false, true,  false },
+        { false, true,  false, true  },
+        { true,  true,  true,  false },
+        { false, true,  true,  true  }
     };
 
     void Awake()
     {
         _micro = GetComponent<MicroZoomSession>();
+        _mainCollider = GetComponent<Collider>();
+
+        // ★ [핵심] 하위 버튼 세션 바인딩 & 재부팅
+        RefreshMicroBind(b1);
+        RefreshMicroBind(b2);
+        RefreshMicroBind(b3);
+        RefreshMicroBind(b4);
+
         WireButtons();
         if (worldCanvas) worldCanvas.enabled = false;
-
         CacheBaseLocalPositions();
-
-        // 초기 상태 설정
         if (rewardCardObj) rewardCardObj.SetActive(false);
         if (crossbarObj) crossbarObj.SetActive(false);
         if (ratObj) ratObj.SetActive(true);
 
-        // ★ [수정] 여러 이펙트 모두 정지
         if (shockEffects != null)
         {
-            foreach (var fx in shockEffects)
-            {
-                if (fx) fx.Stop();
-            }
+            foreach (var fx in shockEffects) if (fx) fx.Stop();
         }
+    }
+
+    // ★ 바인딩 헬퍼 함수
+    void RefreshMicroBind(PressableButton3D btn)
+    {
+        if (!btn) return;
+        if (!btn.micro && _micro) btn.micro = _micro;
+        btn.enabled = false;
+        btn.enabled = true;
     }
 
     void CacheBaseLocalPositions()
@@ -129,12 +133,14 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
 
     public void OnMicroEnter(PlayerInteractor player)
     {
+        if (_mainCollider) _mainCollider.enabled = false;
         _lastPlayer = player;
         StartSession();
     }
 
     public void OnMicroExit(PlayerInteractor player)
     {
+        if (_mainCollider) _mainCollider.enabled = true;
         CancelSession();
     }
 
@@ -143,12 +149,9 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         _session = true;
         _pressCount = 0;
         _h[0] = w1Init; _h[1] = w2Init; _h[2] = w3Init; _h[3] = w4Init;
-
         CacheBaseLocalPositions();
-
         if (worldCanvas) worldCanvas.enabled = true;
         SetButtonsInteractable(true);
-
         SnapAll();
         RefreshTexts();
     }
@@ -160,6 +163,7 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         SetButtonsInteractable(false);
     }
 
+    // ... (이하 SetButtonsInteractable, OnPress, Routine_SuccessSequence 등 기존 로직 유지) ...
     void SetButtonsInteractable(bool on)
     {
         if (b1) b1.SetInteractable(on);
@@ -171,41 +175,28 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
     void OnPress(int bIndex)
     {
         if (!_session || _isAnimating || _isSolved) return;
-
-        // 회전 로직
-        for (int w = 0; w < 4; w++)
-            if (INFL[bIndex, w])
-                _h[w] = (_h[w] + 1) % 3;
-
+        for (int w = 0; w < 4; w++) if (INFL[bIndex, w]) _h[w] = (_h[w] + 1) % 3;
         _pressCount++;
-
         SnapAll();
         RefreshTexts();
 
-        // 1. 성공 체크: 모두 0일 때만 (높이 1, 2는 무반응)
         if (_h[0] == 0 && _h[1] == 0 && _h[2] == 0 && _h[3] == 0)
         {
+            Debug.Log("[WirePuzzle] 성공!");
             _isSolved = true;
-            Debug.Log("[WirePuzzle] 성공! (All Zero)");
             StartCoroutine(Routine_SuccessSequence());
             return;
         }
 
-        // 2. 실패 체크: 횟수 초과
         if (_pressCount >= failAtPresses)
         {
-            Debug.Log("[WirePuzzle] 실패! (횟수 초과)");
-            _isAnimating = true;
+            Debug.Log("[WirePuzzle] 실패!");
             SetButtonsInteractable(false);
-
             if (NoiseSystem.Instance) NoiseSystem.Instance.FireImpulse(1f);
             OnFailed?.Invoke();
             CommonSoundController.Instance?.PlaySpark();
-
             if (_micro) _micro.Exit();
             else CancelSession();
-
-            _isAnimating = false;
         }
     }
 
@@ -214,62 +205,22 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         _isAnimating = true;
         SetButtonsInteractable(false);
         if (worldCanvas) worldCanvas.enabled = false;
-
-        // 1. 쥐 감전 연출 (소리 & 이펙트들)
         CommonSoundController.Instance?.PlaySpark();
-
-        // ★ [수정] 연결된 모든 이펙트 재생
-        if (shockEffects != null)
-        {
-            foreach (var fx in shockEffects)
-            {
-                if (fx) fx.Play();
-            }
-        }
-
+        if (shockEffects != null) foreach (var fx in shockEffects) if (fx) fx.Play();
         yield return new WaitForSeconds(1.5f);
-
-        // 2. 쥐 사라짐 & 가로대 등장
         if (ratObj) ratObj.SetActive(false);
         if (crossbarObj) crossbarObj.SetActive(true);
-
-        // 3. 보상 카드 등장 
-        if (rewardCardObj)
-        {
-            rewardCardObj.SetActive(true);
-
-            if (cardSpawnPos && cardLandPos)
-            {
-                rewardCardObj.transform.position = cardSpawnPos.position;
-                rewardCardObj.transform.rotation = cardSpawnPos.rotation;
-
-                Sequence seq = DOTween.Sequence();
-                seq.Append(rewardCardObj.transform.DOJump(cardLandPos.position, 0.5f, 1, 0.8f));
-                seq.Join(rewardCardObj.transform.DORotate(cardLandPos.eulerAngles, 0.8f));
-            }
-            else
-            {
-                rewardCardObj.transform.localScale = Vector3.zero;
-                rewardCardObj.transform.DOScale(1f, 0.5f).SetEase(Ease.OutBack);
-            }
-        }
-
+        if (rewardCardObj) rewardCardObj.SetActive(true);
         OnSolved?.Invoke();
-
         yield return new WaitForSeconds(0.5f);
-
         if (_micro) _micro.Exit();
         else CancelSession();
-
         _isAnimating = false;
     }
 
     void SnapAll()
     {
-        Snap(w1, 0, _h[0]);
-        Snap(w2, 1, _h[1]);
-        Snap(w3, 2, _h[2]);
-        Snap(w4, 3, _h[3]);
+        Snap(w1, 0, _h[0]); Snap(w2, 1, _h[1]); Snap(w3, 2, _h[2]); Snap(w4, 3, _h[3]);
     }
 
     void Snap(Transform t, int index, int h)
@@ -277,9 +228,8 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         if (!t) return;
         float y = h switch { 0 => level0Local.y, 1 => level1Local.y, _ => level2Local.y };
         var basePos = _baseLocalPos[index];
-        var target = new Vector3(basePos.x, y, basePos.z);
         t.DOKill();
-        t.DOLocalMove(target, snapDuration).SetEase(snapEase);
+        t.DOLocalMove(new Vector3(basePos.x, y, basePos.z), snapDuration).SetEase(snapEase);
     }
 
     void RefreshTexts()
