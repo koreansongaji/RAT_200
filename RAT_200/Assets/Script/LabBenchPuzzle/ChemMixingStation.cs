@@ -66,6 +66,11 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
 
     public bool HidePlayerDuringMicro => true;
 
+    [Header("Audio Clips")]
+    [SerializeField] private AudioClip _chemMixingSuccessSound;
+    [SerializeField] private AudioClip _chemMixingFailSound;
+    [SerializeField] private AudioClip _chemMixingSound;
+    
     void Awake()
     {
         if (panel) panel.enabled = true;
@@ -87,6 +92,11 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         WireButtons();
         RefreshTexts();
         if (txtRecipe) txtRecipe.text = "MIX";
+
+        // Load audio clips if not assigned
+        if(_chemMixingSuccessSound == null) _chemMixingSuccessSound = Resources.Load<AudioClip>("Sounds/Effect/Experiment/reaction_mix");
+        if (_chemMixingFailSound == null) _chemMixingFailSound = Resources.Load<AudioClip>("Sounds/Effect/Experiment/reaction_fail");
+        if (_chemMixingSound == null) _chemMixingSound = Resources.Load<AudioClip>("Sounds/Effect/Experiment/reaction_mix");
     }
 
     // ★ [추가] 금고 퍼즐에서 가져온 바인딩 헬퍼 함수
@@ -218,6 +228,9 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
 
         if (!success)
         {
+            // 실패 소리
+            AudioManager.Instance.Play(_chemMixingFailSound);
+
             Debug.Log("[ChemStation] 혼합 실패!");
             if (NoiseSystem.Instance) NoiseSystem.Instance.FireImpulse(0.5f);
             OnMakeBigNoise?.Invoke();
@@ -227,7 +240,8 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         }
 
         Debug.Log("[ChemStation] 혼합 성공!");
-        CommonSoundController.Instance?.PlayPuzzleSuccess();
+        // 성공 소리
+        AudioManager.Instance.Play(_chemMixingSuccessSound);
         _isSolved = true;
         StartCoroutine(Routine_SuccessSequence());
     }

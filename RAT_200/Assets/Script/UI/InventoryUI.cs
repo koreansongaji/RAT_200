@@ -40,6 +40,10 @@ public class InventoryUI : MonoBehaviour
         new("Recipe",        "레시피 종이"),
     };
 
+    [Header("오디오 클립")]
+    [SerializeField] AudioClip _inventoryopenSound;
+    [SerializeField] AudioClip _inventorycloseSound;
+
     bool _visible;
     
     // 각각의 원래 위치 저장용
@@ -63,6 +67,10 @@ public class InventoryUI : MonoBehaviour
 
     void Awake()
     {
+        // 소리 로드
+        if (_inventoryopenSound == null) _inventoryopenSound = Resources.Load<AudioClip>("Sounds/Effect/Rat/inventory_open");
+        if (_inventorycloseSound == null) _inventorycloseSound = Resources.Load<AudioClip>("Sounds/Effect/Rat/inventory_close");
+    
         // 초기 위치 저장
         if (backgroundRect != null) _bgDefaultPos = backgroundRect.anchoredPosition;
         if (slotPanelRect != null) _panelDefaultPos = slotPanelRect.anchoredPosition;
@@ -114,6 +122,8 @@ public class InventoryUI : MonoBehaviour
         if (_visible)
         {
             // [OPEN]
+            AudioManager.Instance.Play(_inventoryopenSound);
+            
             RefreshUI();
 
             if (canvasGroup != null) 
@@ -150,6 +160,8 @@ public class InventoryUI : MonoBehaviour
         else
         {
             // [CLOSE]
+            AudioManager.Instance.Play(_inventorycloseSound);
+            
             if (canvasGroup != null)
             {
                 canvasGroup.blocksRaycasts = false;

@@ -31,7 +31,6 @@ public class DoorInteractable : BaseInteractable
     [SerializeField] private Ease ease = Ease.OutCubic;
 
     [Header("Audio (Optional)")]
-    public AudioSource sfxSource;
     public AudioClip openSound;
     public AudioClip closeSound;
 
@@ -43,6 +42,12 @@ public class DoorInteractable : BaseInteractable
 
     void Awake()
     {
+        // 사운드 클립 로드
+        if(openSound == null)
+            openSound = Resources.Load<AudioClip>("Sounds/Effect/Universal/creak_a");
+        if(closeSound == null)
+            closeSound = Resources.Load<AudioClip>("Sounds/Effect/Universal/creak_b");
+        
         if (!door) door = transform;
 
         _closedEuler = door.localEulerAngles;
@@ -96,15 +101,8 @@ public class DoorInteractable : BaseInteractable
         Vector3 targetEuler = _isOpen ? _openedEuler : _closedEuler;
 
         // �Ҹ� ���
-        if (sfxSource)
-        {
-            var clip = _isOpen ? openSound : closeSound;
-            if (clip) sfxSource.PlayOneShot(clip);
-        }
-
-        // 공용 사운드 재생
-        if (_isOpen) CommonSoundController.Instance?.PlayDoorOpen();
-        else CommonSoundController.Instance?.PlayDoorClose();
+        var clip = _isOpen ? openSound : closeSound;
+        if (clip) AudioManager.Instance.Play(clip);
 
         // Tween ����
         var t = door.DOLocalRotate(targetEuler, duration)

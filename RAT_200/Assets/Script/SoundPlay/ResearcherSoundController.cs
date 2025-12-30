@@ -8,15 +8,17 @@ public class ResearcherSoundController : MonoBehaviour
     [SerializeField] private AudioClip _ratDeathSound;
     [SerializeField] private AudioClip _approachSound;
     [SerializeField] private AudioClip _researcherRunSound;
+    [SerializeField] private AudioClip _breathSound;
     
     private void Awake()
     {
-        if(_doorOpenSound != null) _doorOpenSound = Resources.Load<AudioClip>("Sounds/Effect/Scientist/scientist_door_open");
-        if(_doorCloseSound != null) _doorCloseSound = Resources.Load<AudioClip>("Sounds/Effect/Scientist/scientist_door_close");
-        if(_lightToggleSound != null) _lightToggleSound = Resources.Load<AudioClip>("Sounds/Effect/Universal/button_a");
-        if(_ratDeathSound != null) _ratDeathSound = Resources.Load<AudioClip>("Sounds/Effect/Rat/rat_death");
-        if(_approachSound != null) _approachSound = Resources.Load<AudioClip>("Sounds/Effect/Scientist/scientist_approach");
-        if(_researcherRunSound != null) _researcherRunSound = Resources.Load<AudioClip>("Sounds/Effect/Scientist/scientist_run_a");
+        if(_doorOpenSound == null) _doorOpenSound = Resources.Load<AudioClip>("Sounds/Effect/Scientist/scientist_door_open");
+        if(_doorCloseSound == null) _doorCloseSound = Resources.Load<AudioClip>("Sounds/Effect/Scientist/scientist_door_close");
+        if(_lightToggleSound == null) _lightToggleSound = Resources.Load<AudioClip>("Sounds/Effect/Universal/button_a");
+        if(_ratDeathSound == null) _ratDeathSound = Resources.Load<AudioClip>("Sounds/Effect/Rat/rat_death");
+        if(_approachSound == null) _approachSound = Resources.Load<AudioClip>("Sounds/Effect/Scientist/scientist_approach");
+        if(_researcherRunSound == null) _researcherRunSound = Resources.Load<AudioClip>("Sounds/Effect/Scientist/scientist_run_a");
+        if(_breathSound == null) _breathSound = Resources.Load<AudioClip>("Sounds/Effect/Scientist/scientist_breath");
     }
     
     public void PlayDoorOpenSound()
@@ -62,6 +64,14 @@ public class ResearcherSoundController : MonoBehaviour
         if(_researcherRunSound != null)
         {
             AudioManager.Instance.Play(_researcherRunSound, AudioManager.Sound.Effect, Random.Range(0.9f, 1.1f));
+        }
+    }
+    
+    public void PlayBreathSound()
+    {
+        if(_breathSound != null)
+        {
+            AudioManager.Instance.Play(_breathSound, AudioManager.Sound.Effect);
         }
     }
 }

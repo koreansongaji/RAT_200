@@ -70,8 +70,16 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         { false, true,  true,  true  }
     };
 
+
+    private WirePuzzleSoundController _wirePuzzleSoundController;
+
     void Awake()
     {
+        if (TryGetComponent(out _wirePuzzleSoundController))
+        {
+            _wirePuzzleSoundController = gameObject.AddComponent<WirePuzzleSoundController>();
+        }
+
         _micro = GetComponent<MicroZoomSession>();
         _mainCollider = GetComponent<Collider>();
 
@@ -194,7 +202,10 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
             SetButtonsInteractable(false);
             if (NoiseSystem.Instance) NoiseSystem.Instance.FireImpulse(1f);
             OnFailed?.Invoke();
-            CommonSoundController.Instance?.PlaySpark();
+
+            // 공용 사운드 재생: 와이어 퍼즐 실패 (퓨즈 스파크 소리)
+            CommonSoundController.Instance?.PlayPuzzleFail();
+
             if (_micro) _micro.Exit();
             else CancelSession();
         }

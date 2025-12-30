@@ -14,6 +14,8 @@ public class CommonSoundController : Singleton<CommonSoundController>
     [SerializeField] private AudioClip _sparkClip;
     [SerializeField] private AudioClip _puzzleSuccessClip;
     [SerializeField] private AudioClip _puzzleFailClip;
+    [SerializeField] private AudioClip _fridgeOpenClip;
+    [SerializeField] private AudioClip _fridgeUnlockClip;
 
     new private void Awake()
     {
@@ -26,6 +28,8 @@ public class CommonSoundController : Singleton<CommonSoundController>
         if (_sparkClip == null) _sparkClip = Resources.Load<AudioClip>("Sounds/Effect/Electrical Puzzle - Fuse/spark");
         if (_puzzleSuccessClip == null) _puzzleSuccessClip = Resources.Load<AudioClip>("Sounds/Effect/Universal/puzzle_success");
         if (_puzzleFailClip == null) _puzzleFailClip = Resources.Load<AudioClip>("Sounds/Effect/Universal/puzzle_fail");
+        if (_fridgeOpenClip == null) _fridgeOpenClip = Resources.Load<AudioClip>("Sounds/Effect/Fridge - Light Puzzle/fridge_open");
+        if (_fridgeUnlockClip == null) _fridgeUnlockClip = Resources.Load<AudioClip>("Sounds/Effect/Fridge - Light Puzzle/fridge_unlock");
     }
 
     /// <summary>
@@ -65,6 +69,16 @@ public class CommonSoundController : Singleton<CommonSoundController>
     /// </summary>
     public void PlayPuzzleSuccess() => PlayCommonSound(_puzzleSuccessClip);
 
+    /// <summary>
+    /// 냉장고 문이 열리는 소리를 재생합니다.
+    /// </summary>
+    public void PlayFridgeOpen() => PlayCommonSound(_fridgeOpenClip);
+    
+    /// <summary>
+    /// 냉장고 잠금이 해제되는 소리를 재생합니다.
+    /// </summary>
+    public void PlayFridgeUnlock() => PlayCommonSound(_fridgeUnlockClip);
+    
     /// <summary>
     /// 퍼즐에 실패했을 때의 효과음을 재생합니다. (실패 후 약 5초간 재생되도록 처리)
     /// </summary>
