@@ -3,28 +3,30 @@ using DG.Tweening;
 
 public class LadderClimbInteractable : BaseInteractable
 {
-    [Header("Target ����")]
-    public ClimbTarget target;            // ���� ���� ����
-
-    [Header("State / Threshold")]
-    public float yThreshold = 1.0f;       // ��/�Ʒ� �Ǻ� ����
-    Vector3 _preClimbPos;                 // ������ ��ġ ����
-    bool _hasPreClimbPos;
-
-    [Header("Tween")]
+    [Header("Settings")]
+    public float yThreshold = 1.0f;       // 높이 기준 (위/아래 판정)
     public float duration = 0.6f;
     public Ease ease = Ease.InOutSine;
 
-    // Ladder sound controller (optional)
+    // Ladder.cs에서 AttachTo 할 때 여기다 목적지를 넣어줌
+    [HideInInspector] public Transform climbDestination;
+
+    [Header("Sound")]
     [SerializeField] private LadderSoundController _ladderSoundController;
+
+    private Vector3 _bottomPos; // 올라가기 전 바닥 위치 기억
+    private bool _hasBottomPos = false;
 
     void Awake()
     {
-        if (_ladderSoundController == null) _ladderSoundController = GetComponent<LadderSoundController>();
+        if (!_ladderSoundController) _ladderSoundController = GetComponent<LadderSoundController>();
     }
 
     public override bool CanInteract(PlayerInteractor i)
     {
+        // 설치가 안 되어 있으면(목적지가 없으면) 상호작용 불가
+        if (climbDestination == null) return false;
+
         var mover = i.GetComponent<PlayerScriptedMover>();
         return mover && !mover.IsBusy();
     }
@@ -32,50 +34,26 @@ public class LadderClimbInteractable : BaseInteractable
     public override void Interact(PlayerInteractor i)
     {
         var mover = i.GetComponent<PlayerScriptedMover>();
-        if (!mover || target == null || target.climbPoint == null) return;
+        if (!mover || !climbDestination) return;
 
-        bool isAbove = i.transform.position.y >= yThreshold;
+        bool isAtTop = i.transform.position.y >= yThreshold;
 
-        if (!isAbove)
+        if (!isAtTop)
         {
-      
-            
+            // [올라가기]
+            _bottomPos = i.transform.position;
+            _hasBottomPos = true;
 
-            // [�ö󰡱�]
-            _preClimbPos = i.transform.position;
-            _hasPreClimbPos = true;
-
-            // 사운드: 오르기 시작 시 재생
             _ladderSoundController?.PlayClimbLadder();
-            
-            // �� ī�޶� ����(vcam)�� null�� �ֽ��ϴ�. (Ʈ���Ű� �˾Ƽ� �� ����)
-            mover.MoveToWorldWithCam(
-                target.climbPoint.position,
-                duration,
-                ease,
-                null, // ī�޶� ����!
-                0     // �켱���� 0!
-            );
+            mover.MoveToWorldWithCam(climbDestination.position, duration, ease, null, 0);
         }
         else
         {
-            // �������� (��ϵ� ���� �ڸ���)
-            Vector3 downPos = _hasPreClimbPos ? _preClimbPos : i.transform.position;
+            // [내려오기]
+            Vector3 targetPos = _hasBottomPos ? _bottomPos : (i.transform.position - Vector3.up * 2f);
 
-            // 사운드: 내릴 때 재생
             _ladderSoundController?.PlayClimbLadder();
-
-            mover.MoveToWorldWithCam(
-                downPos,
-                duration,
-                ease,
-                null,
-                0
-            );
-
-            // ���� �ִ� �ڷ�ƾ(ī�޶� ����) ������
+            mover.MoveToWorldWithCam(targetPos, duration, ease, null, 0);
         }
     }
-
-    // OnDisable(ī�޶� ����) ������
 }

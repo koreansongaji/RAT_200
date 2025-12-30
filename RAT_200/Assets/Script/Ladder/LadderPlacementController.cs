@@ -4,90 +4,84 @@ using UnityEngine;
 [RequireComponent(typeof(Ladder))]
 public class LadderPlacementController : MonoBehaviour
 {
-    public float maxSnapDistance = 1.2f; // 후보 검색 최대 반경(옵션)
+    public float maxSnapDistance = 1.2f;
 
-    Draggable3D drag;
-    Ladder ladder;
+    private Draggable3D _drag;
+    private Ladder _ladder;
 
     // 복귀용 저장값
-    Vector3 _prevPos;
-    Quaternion _prevRot;
-    LadderPlaceSpot _prevSpot;
+    private Vector3 _prevPos;
+    private Quaternion _prevRot;
+    private LadderPlaceSpot _prevSpot;
 
     void Awake()
     {
-        drag = GetComponent<Draggable3D>();
-        ladder = GetComponent<Ladder>();
+        _drag = GetComponent<Draggable3D>();
+        _ladder = GetComponent<Ladder>();
 
-        drag.OnDragStarted += HandleDragStarted;
-        drag.OnDragEnded += TrySnapOrRevert;
+        _drag.OnDragStarted += HandleDragStarted;
+        _drag.OnDragEnded += TrySnapOrRevert;
     }
 
     void OnDestroy()
     {
-        if (drag != null)
+        if (_drag)
         {
-            drag.OnDragStarted -= HandleDragStarted;
-            drag.OnDragEnded -= TrySnapOrRevert;
+            _drag.OnDragStarted -= HandleDragStarted;
+            _drag.OnDragEnded -= TrySnapOrRevert;
         }
     }
 
     void HandleDragStarted()
     {
-        // 현재 상태 저장
+        // 상태 저장
         _prevPos = transform.position;
         _prevRot = transform.rotation;
-        _prevSpot = ladder.currentSpot;
+        _prevSpot = _ladder.currentSpot;
 
-        // 드래그로 이동 시작하니 현재 슬롯 점유 해제
-        // (스냅 실패 시엔 다시 되돌릴 것)
-        if (ladder.currentSpot != null)
-            ladder.Detach();
+        // 떼어내기
+        _ladder.Detach();
     }
 
     void TrySnapOrRevert()
     {
-        // 가장 가까운 유효 슬롯 찾기
-        var all = FindObjectsOfType<LadderPlaceSpot>();
-        LadderPlaceSpot best = null;
-        float bestSqr = float.PositiveInfinity;
+        var allSpots = FindObjectsOfType<LadderPlaceSpot>();
+        LadderPlaceSpot bestSpot = null;
+        float minDistSqr = float.PositiveInfinity;
+        Vector3 currentPos = transform.position;
 
-        Vector3 pos = transform.position;
-
-        foreach (var s in all)
+        foreach (var spot in allSpots)
         {
-            if (!s || !s.ladderAnchor) continue;
-            if (s.occupied) continue;
-            if (ladder.lengthLevel < s.requiredLengthLevel) continue;
+            if (!spot || !spot.ladderAnchor) continue;
+            if (spot.occupied) continue;
+            if (_ladder.lengthLevel < spot.requiredLengthLevel) continue;
 
-            float d = Vector3.Distance(pos, s.ladderAnchor.position);
-            if (maxSnapDistance > 0 && d > maxSnapDistance) continue;
+            float dist = Vector3.Distance(currentPos, spot.ladderAnchor.position);
+            if (maxSnapDistance > 0 && dist > maxSnapDistance) continue;
 
-            if (d <= s.snapRadius)
+            float distSqr = (currentPos - spot.ladderAnchor.position).sqrMagnitude;
+            if (distSqr < minDistSqr)
             {
-                float d2 = (pos - s.ladderAnchor.position).sqrMagnitude;
-                if (d2 < bestSqr) { bestSqr = d2; best = s; }
+                minDistSqr = distSqr;
+                bestSpot = spot;
             }
         }
 
-        if (best != null)
+        if (bestSpot != null)
         {
-            // 스냅 성공 → 새 슬롯에 부착
-            ladder.AttachTo(best, true);
+            _ladder.AttachTo(bestSpot, true);
         }
         else
         {
-            // 스냅 실패 → 이전 상태로 복귀
+            // 복귀
             if (_prevSpot != null)
             {
-                // 예전 슬롯으로 되돌림(타겟/점유까지 복원)
-                ladder.AttachTo(_prevSpot, true);
+                _ladder.AttachTo(_prevSpot, true);
             }
             else
             {
-                // 월드 자유 배치였다면 위치/회전만 되돌림
                 transform.SetPositionAndRotation(_prevPos, _prevRot);
-                ladder.currentSpot = null; // 확실히 슬롯 없음 표시
+                _ladder.currentSpot = null;
             }
         }
     }
