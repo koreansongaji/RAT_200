@@ -5,31 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9a50adee-ec7a-4782-bb48-036fabc44743" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Script/SoundPlay/RopeSoundController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Script/SoundPlay/RopeSoundController.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.RAT_200/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RAT_200/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Animation/Player/PlayerMove.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animation/Player/PlayerMove.controller" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ImportAssets/2D Cards Game Art Pack/Sprites/Standard 52 Cards/Rect Cards/Diamonds/7diamond.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ImportAssets/2D Cards Game Art Pack/Sprites/Standard 52 Cards/Rect Cards/Diamonds/7diamond.png.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Manager/AudioManager.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Manager/AudioManager.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Object3D/Player/Idle.anim" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Object3D/Player/Idle.anim" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Object3D/Player/Walkcycle_Body.anim" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Object3D/Player/Walkcycle_Body.anim" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Object/Dial.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Object/Dial.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Sounds/Main.mixer" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Sounds/Main.mixer" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Develop/ApplySound.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Develop/ApplySound.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/DoorAnimInteractable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/DoorAnimInteractable.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/DoorInteractable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/DoorInteractable.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/KeypadController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/KeypadController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/LabBenchPuzzle/ChemMixingStation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/LabBenchPuzzle/ChemMixingStation.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Develop/ApplySound.unity.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Develop/ApplySound.unity.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Develop/Shader/Water.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Develop/Shader/Water.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/LabBenchPuzzle/PickupInteractable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/LabBenchPuzzle/PickupInteractable.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Script/Ladder/Ladder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Ladder/Ladder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/Ladder/LadderClimbInteractable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Ladder/LadderClimbInteractable.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/Ladder/RungPickUp.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Ladder/RungPickUp.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Script/Manager/AudioManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Manager/AudioManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/Manager/OptionManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Manager/OptionManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/Noise/ResearcherController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Noise/ResearcherController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/PressableButton3D.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/PressableButton3D.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/RefrigeratorPuzzle/Keypad System 3D.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/RefrigeratorPuzzle/Keypad System 3D.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/RefrigeratorPuzzle/Keypad System2D.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/RefrigeratorPuzzle/Keypad System2D.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/SafePuzzle/SafePuzzleController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/SafePuzzle/SafePuzzleController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/SlidingDoorInteract.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/SlidingDoorInteract.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/SoundPlay/LadderSoundController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/SoundPlay/LadderSoundController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/SoundPlay/RatSoundController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/SoundPlay/RatSoundController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/UI/OptionPage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/UI/OptionPage.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/UI/TitlePage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/UI/TitlePage.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/WirePuzzle/WirePuzzleController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/WirePuzzle/WirePuzzleController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/RopeInteractable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/RopeInteractable.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/SafePuzzle/SafeDialInteractable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/SafePuzzle/SafeDialInteractable.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/com.unity.render-pipelines.universal@63585d5be1b1/Runtime/Materials/Lit.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/com.unity.render-pipelines.universal@63585d5be1b1/Runtime/Materials/Lit.mat" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,11 +60,14 @@
     <setting file="file://$PROJECT_DIR$/Assets/Script/SoundPlay/LabBenchSoundController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/SoundPlay/NoiseTrapSoundController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/SoundPlay/RatSoundController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Script/SoundPlay/ResearcherSoundController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Script/SoundPlay/RopeSoundController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/SoundPlay/SafeSoundController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/SoundPlay/WirePuzzleSoundController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/UI/OptionPage.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/UI/UIButtonSound.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@a73638a9fb22/Editor/TMP/TMP_BaseEditorPanel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@a73638a9fb22/Runtime/UGUI/UI/Core/Slider.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
@@ -85,25 +80,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "feature/sound",
-    "junie.onboarding.icon.badge.shown": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/sound&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.0.53f1\Editor\Unity.exe" />
@@ -186,6 +181,8 @@
       <workItem from="1766940710401" duration="4389000" />
       <workItem from="1766997134974" duration="9206000" />
       <workItem from="1767008368883" duration="5995000" />
+      <workItem from="1767017259661" duration="7850000" />
+      <workItem from="1767026489235" duration="4240000" />
     </task>
     <servers />
   </component>

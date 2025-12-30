@@ -8,28 +8,32 @@ public enum CardSuit { Spade, Heart, Diamond, Club }
 public class SafeDialInteractable : BaseInteractable
 {
     [Header("Dial")]
-    public Transform dialRoot;                 // È¸ÀüÇÒ ºÎ¸ð(¿øÅë)
+    public Transform dialRoot;                 // È¸ï¿½ï¿½ï¿½ï¿½ ï¿½Î¸ï¿½(ï¿½ï¿½ï¿½ï¿½)
     [Range(0.01f, 1f)] public float tweenSec = 0.08f;
     public Ease ease = Ease.OutQuad;
     public CardSuit suit;
 
     [Header("Display (optional)")]
-    public TMP_Text ledText;                   // LED ´ë½Å TMP ÅØ½ºÆ® »ç¿ë ½Ã
-
+    public TMP_Text ledText;                   // LED ï¿½ï¿½ï¿½ TMP ï¿½Ø½ï¿½Æ® ï¿½ï¿½ï¿½ ï¿½ï¿½
+    
     [Header("Micro Gate")]
     public bool requireMicroZoom = true;
-    public MicroZoomSession micro;             // ºñ¾îÀÖÀ¸¸é ºÎ¸ð¿¡¼­ Ã£À½
+    public MicroZoomSession micro;             // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î¸ð¿¡¼ï¿½ Ã£ï¿½ï¿½
 
     public int CurrentValue { get; private set; } = 0;
     Tween _t;
     Quaternion _baseLocalRotation;
 
+    [SerializeField] private AudioClip _safeDial;
+    
     void Awake()
     {
         if (!dialRoot) dialRoot = transform;
         if (!micro) micro = GetComponentInParent<MicroZoomSession>();
         _baseLocalRotation = dialRoot.localRotation;
         UpdateLed();
+        
+        if(_safeDial != null) _safeDial = Resources.Load<AudioClip>("Sounds/Effect/Safe/safe_dial");
     }
 
     bool PassesMicroGate()
@@ -44,6 +48,7 @@ public class SafeDialInteractable : BaseInteractable
     public override void Interact(PlayerInteractor i)
     {
         if (!PassesMicroGate()) return;
+        AudioManager.Instance.Play(_safeDial, AudioManager.Sound.Effect, Random.Range(0.9f, 1.1f));
         Step(+1);
     }
 
@@ -58,7 +63,7 @@ public class SafeDialInteractable : BaseInteractable
     public void Step(int delta)
     {
         SetValue(CurrentValue + delta, instant: false);
-        // ÆÛÁñ ÄÁÆ®·Ñ·¯°¡ ÀÖÀ¸¸é ½ÅÈ£
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½Ñ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£
         //var ctrl = GetComponentInParent<SafePuzzleController>();
         //if (ctrl) ctrl.OnDialChanged(this);
     }
@@ -69,10 +74,10 @@ public class SafeDialInteractable : BaseInteractable
 
         _t?.Kill();
 
-        // ±âÁØ ·ÎÄÃ È¸Àü
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½
         Quaternion baseRot = _baseLocalRotation;
 
-        // ·ÎÄÃ XÃàÀ» ±âÁØÀ¸·Î È¸Àü (¡Ú transformÀÇ localAxis »ç¿ë)
+        // ï¿½ï¿½ï¿½ï¿½ Xï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ (ï¿½ï¿½ transformï¿½ï¿½ localAxis ï¿½ï¿½ï¿½)
         Quaternion xRot = Quaternion.AngleAxis(targetX, Vector3.down);
 
         Quaternion finalRot = baseRot * xRot;

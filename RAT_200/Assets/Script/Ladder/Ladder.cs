@@ -51,6 +51,7 @@ public class Ladder : MonoBehaviour
     {
         if (lengthLevel < 4)
         {
+            _ladderSoundController.PlayFixLadder();
             lengthLevel++;
             UpdateVisuals();
             Debug.Log($"[Ladder] Level Up! Current: {lengthLevel}");

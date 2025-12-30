@@ -1,23 +1,29 @@
+using System;
 using UnityEngine;
 
 public class RungPickup : BaseInteractable
 {
     [Header("Target")]
-    [Tooltip("¾À¿¡ ÀÖ´Â ÇÃ·¹ÀÌ¾îÀÇ »ç´Ù¸® ¿ÀºêÁ§Æ® ¿¬°á")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½")]
     public Ladder playerLadder;
+    
+    [SerializeField] private AudioClip _rungPickupSound;
+
+    private void Awake()
+    {
+        if(_rungPickupSound == null) _rungPickupSound = Resources.Load<AudioClip>("Sounds/Effect/Rat/ladder_piece");
+    }
 
     public override void Interact(PlayerInteractor i)
     {
-        Debug.Log("°¡·Î´ë¿Í »óÈ£ÀÛ¿ë");
+        Debug.Log("ï¿½ï¿½ï¿½Î´ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½");
         if (playerLadder)
         {
-            // 1. »ç´Ù¸® ·¹º§¾÷ & ºñÁÖ¾ó °»½Å
+            AudioManager.Instance.Play(_rungPickupSound);
+            // 1. ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½ï¿½ï¿½Ö¾ï¿½ ï¿½ï¿½ï¿½ï¿½
             playerLadder.AddRung();
 
-            // 2. È¹µæ È¿°úÀ½ µî (ÇÊ¿äÇÏ¸é Ãß°¡)
-            // if (SoundManager) SoundManager.Play("ItemGet");
-
-            // 3. ÀÌ °¡·Î´ë ¿ÀºêÁ§Æ®´Â Á¦°Å
+            // 3. ï¿½ï¿½ ï¿½ï¿½ï¿½Î´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             gameObject.SetActive(false);
         }
     }

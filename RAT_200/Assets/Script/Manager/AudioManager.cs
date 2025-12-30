@@ -22,6 +22,10 @@ public class AudioManager : Singleton<AudioManager>
     public float BGMVolume => OptionManager.Instance.OptionData.BGMsoundVolume;
     public float EffectVolume => OptionManager.Instance.OptionData.EffectsoundVolume;
 
+    private AudioMixerGroup _bgmGroup;
+    private AudioMixerGroup _sfxGroup;
+
+
     new private void Awake()
     {
         base.Awake();
@@ -30,7 +34,7 @@ public class AudioManager : Singleton<AudioManager>
 
     private void Start()
     {
-    
+
     }
 
     public void PlayBgmWithFade(AudioClip clip, float fadeDuration = 1.0f)
@@ -64,9 +68,22 @@ public class AudioManager : Singleton<AudioManager>
 
     private AudioSource GetUnusedBgmSource()
     {
+        // 먼저 리스트에서 유휴 소스 검색
         foreach (var source in _bgmSources)
         {
             if (source != null && !source.isPlaying) return source;
+        }
+
+        // 인스펙터에 할당된 BGM 소스가 있다면 사용
+        var assigned = _audioSources[(int)Sound.BGM];
+        if (assigned != null)
+        {
+            if (!_bgmSources.Contains(assigned))
+                _bgmSources.Add(assigned);
+
+            if (!assigned.isPlaying) return assigned;
+            // 모든 소스가 사용 중이라면 첫 번째를 반환
+            return assigned;
         }
 
         // 모든 소스가 사용 중이라면 가장 먼저 재생을 시작했던 소스를 재사용하거나 첫 번째 소스를 반환합니다.
@@ -81,95 +98,88 @@ public class AudioManager : Singleton<AudioManager>
     {
         base.OnApplicationQuit();
     }
-    public void Init()
+    private void EnsureSource(Sound type, bool loop)
     {
-        string[] soundNames = System.Enum.GetNames(typeof(Sound));
-        for (int i = 0; i < (int)Sound.MaxCount; i++)
+        string name = type.ToString(); // "BGM" / "Effect"
+
+        // 인스펙터에서 이미 할당된 AudioSource가 있으면 그것을 사용하되 설정을 보정
+        AudioSource assigned = _audioSources[(int)type];
+        if (assigned != null)
         {
-            // 이미 인스펙터에서 할당되어 있는지 확인
-            if (_audioSources[i] != null)
-            {
-                // 할당되어 있다면 Mixer Group 재설정 확인
-                if (_audioMixer != null && _audioSources[i].outputAudioMixerGroup == null)
-                {
-                    var groups = _audioMixer.FindMatchingGroups(soundNames[i]);
-                    if (groups.Length > 0) _audioSources[i].outputAudioMixerGroup = groups[0];
-                }
-                
-                // BGM 타입이면 리스트에 추가
-                if ((Sound)i == Sound.BGM && !_bgmSources.Contains(_audioSources[i]))
-                {
-                    _bgmSources.Add(_audioSources[i]);
-                }
-                continue;
-            }
+            assigned.loop = loop;
+            assigned.dopplerLevel = 0f;
 
-            // 인스펙터에 없다면 AudioManager 오브젝트에서 찾아봅니다.
-            _audioSources[i] = GetComponent<AudioSource>(); // 기본적으로 하나만 있다면 첫 번째 것을 가져옴
-            
-            // 만약 이름으로 구분해서 찾아야 한다면 (여러 개가 붙어있을 경우)
-            AudioSource[] sources = GetComponents<AudioSource>();
-            foreach (var s in sources)
-            {
-                if (s.gameObject.name == soundNames[i] || s.outputAudioMixerGroup?.name == soundNames[i])
-                {
-                    _audioSources[i] = s;
-                    break;
-                }
-            }
-
-            if (_audioSources[i] == null)
-            {
-                // 없으면 생성
-                GameObject go = new GameObject { name = soundNames[i] };
-                go.transform.parent = transform;
-                _audioSources[i] = go.AddComponent<AudioSource>();
-            }
-
+            // ★ 그룹 강제
             if (_audioMixer != null)
             {
-                var groups = _audioMixer.FindMatchingGroups(soundNames[i]);
-                if (groups.Length > 0) _audioSources[i].outputAudioMixerGroup = groups[0];
+                string groupName = (type == Sound.BGM) ? "BGM" : "SFX";
+                var groups = _audioMixer.FindMatchingGroups(groupName);
+                if (groups.Length > 0) assigned.outputAudioMixerGroup = groups[0];
+                else Debug.LogWarning($"[AudioManager] MixerGroup not found: {groupName}");
             }
 
-            _audioSources[i].dopplerLevel = 0.0f;
-            if ((Sound)i == Sound.BGM)
-            {
-                _audioSources[i].loop = true;
-                if (!_bgmSources.Contains(_audioSources[i])) _bgmSources.Add(_audioSources[i]);
-            }
+            if (type == Sound.BGM && !_bgmSources.Contains(assigned))
+                _bgmSources.Add(assigned);
+
+            return;
         }
 
-        // BGM 소스가 하나도 없다면 기본적으로 하나 생성
-        if (_bgmSources.Count == 0 && _audioSources[(int)Sound.BGM] != null)
+        // 자식에서 이름으로 찾기
+        Transform child = transform.Find(name);
+        AudioSource src = null;
+
+        if (child != null) src = child.GetComponent<AudioSource>();
+
+        // 없으면 새로 만든다
+        if (src == null)
         {
-            _bgmSources.Add(_audioSources[(int)Sound.BGM]);
+            var go = new GameObject(name);
+            go.transform.SetParent(transform);
+            src = go.AddComponent<AudioSource>();
         }
 
-        if (_audioClips.Count == 0)
+        src.loop = loop;
+        src.dopplerLevel = 0f;
+
+        // ★ 그룹 강제
+        if (_audioMixer != null)
         {
-            AudioClip[] clips = Resources.LoadAll<AudioClip>("Sounds");
-            foreach (AudioClip clip in clips)
-            {
-                // Resources.LoadAll은 상대 경로를 반환하지 않으므로 이름을 키로 사용하거나 
-                // 일관성을 위해 GetOrAddAudioClip과 동일한 규칙 적용
-                string key = $"Sounds/{clip.name}";
-                if (!_audioClips.ContainsKey(key))
-                {
-                    _audioClips.Add(key, clip);
-                }
-            }
-            
-            // 하위 폴더도 포함하여 로드 (필요시)
-            AudioClip[] effectClips = Resources.LoadAll<AudioClip>("Sounds/Effect");
-            foreach (AudioClip clip in effectClips)
-            {
-                string key = $"Sounds/Effect/{clip.name}";
-                if (!_audioClips.ContainsKey(key)) _audioClips.Add(key, clip);
-            }
-            
-            Debug.Log($"총 {_audioClips.Count}개의 사운드 리소스를 로드했습니다.");
+            // 네 믹서 그룹 이름에 맞춰서 바꿔라: "BGM", "SFX"(또는 "Effect")
+            string groupName = (type == Sound.BGM) ? "BGM" : "SFX";
+            var groups = _audioMixer.FindMatchingGroups(groupName);
+            if (groups.Length > 0) src.outputAudioMixerGroup = groups[0];
+            else Debug.LogWarning($"[AudioManager] MixerGroup not found: {groupName}");
         }
+
+        _audioSources[(int)type] = src;
+
+        if (type == Sound.BGM && !_bgmSources.Contains(src))
+            _bgmSources.Add(src);
+    }
+    private void CacheGroups()
+    {
+        if (_audioMixer == null) return;
+
+        _bgmGroup = GetGroupOrNull("BGM");
+
+        // SFX 그룹 이름으로 고정
+        _sfxGroup = GetGroupOrNull("SFX");
+    }
+
+    private AudioMixerGroup GetGroupOrNull(string name)
+    {
+        var g = _audioMixer.FindMatchingGroups(name);
+        if (g != null && g.Length > 0) return g[0];
+        Debug.LogWarning($"[AudioManager] MixerGroup not found: {name}");
+        return null;
+    }
+    public void Init()
+    {
+        CacheGroups();
+        EnsureSource(Sound.BGM, loop: true);
+        EnsureSource(Sound.Effect, loop: false);
+
+        // (기존 클립 로딩 로직은 그대로)
     }
 
     public void Clear()
@@ -219,6 +229,7 @@ public class AudioManager : Singleton<AudioManager>
             bgmSource.clip = audioClip;
             bgmSource.volume = volumeScale;
             bgmSource.Play();
+            SetBGMVolume(BGMVolume);
         }
         else
         {
@@ -230,7 +241,10 @@ public class AudioManager : Singleton<AudioManager>
             }
             audioSource.pitch = pitch;
             audioSource.PlayOneShot(audioClip, volumeScale);
+            SetEffectVolume(EffectVolume);
         }
+
+        SetMasterVolume(MasterVolume);
     }
 
     /// <summary>
@@ -239,7 +253,7 @@ public class AudioManager : Singleton<AudioManager>
     public void PlayLoop(AudioClip clip, string loopKey, Sound type = Sound.Effect)
     {
         if (clip == null) return;
-        
+
         // 이미 해당 키로 재생 중인 소스가 있다면 클립만 교체하거나 유지
         if (_loopSources.TryGetValue(loopKey, out AudioSource source))
         {
@@ -263,10 +277,10 @@ public class AudioManager : Singleton<AudioManager>
         source.loop = true;
         source.dopplerLevel = 0.0f;
 
-        // Mixer Group 할당
+        // Mixer Group 할당 - Effect는 항상 SFX 그룹 사용
         if (_audioMixer != null)
         {
-            string groupName = System.Enum.GetName(typeof(Sound), type);
+            string groupName = (type == Sound.BGM) ? "BGM" : "SFX";
             var groups = _audioMixer.FindMatchingGroups(groupName);
             if (groups.Length > 0) source.outputAudioMixerGroup = groups[0];
         }
@@ -315,7 +329,7 @@ public class AudioManager : Singleton<AudioManager>
             return audioClip;
 
         audioClip = Resources.Load<AudioClip>(path);
-        
+
         if (audioClip != null)
         {
             _audioClips.Add(path, audioClip);

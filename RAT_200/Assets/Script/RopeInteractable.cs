@@ -4,24 +4,27 @@ using Unity.Cinemachine;
 
 public class RopeInteractable : BaseInteractable
 {
-    [Header("ÁÂÇ¥ ¼³Á¤")]
+    [Header("ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½")]
     public Transform ropeAxis;
     public Transform topPoint;
     public Transform bottomPoint;
 
-    [Header("¼³Á¤")]
+    [Header("ï¿½ï¿½ï¿½ï¿½")]
     public float duration = 2.0f;
     public Ease ease = Ease.InOutQuad;
 
-    [Header("Ä«¸Þ¶ó (¼±ÅÃ)")]
+    [Header("Ä«ï¿½Þ¶ï¿½ (ï¿½ï¿½ï¿½ï¿½)")]
     public CinemachineCamera ropeCamera;
 
-    [Header("¹æÇâ ¼³Á¤ (Scale X)")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (Scale X)")]
     public float targetScaleX = -1;
+    [SerializeField] private RopeSoundController _ropeSoundController;
 
     void Awake()
     {
         if (!ropeAxis) ropeAxis = transform;
+        if(_ropeSoundController == null) _ropeSoundController = GetComponent<RopeSoundController>();
+        if(_ropeSoundController == null) _ropeSoundController = gameObject.AddComponent<RopeSoundController>();
     }
 
     public override bool CanInteract(PlayerInteractor i)
@@ -32,16 +35,20 @@ public class RopeInteractable : BaseInteractable
 
     public override void Interact(PlayerInteractor i)
     {
+        Debug.Log("Rope Interaction Start!");
+
         var mover = i.GetComponent<PlayerScriptedMover>();
         if (!mover || !topPoint || !bottomPoint) return;
 
-        // 1. ¸ñÀûÁö °áÁ¤
+        _ropeSoundController.PlayRopeSound();
+
+        // 1. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
         float distToTop = Vector3.Distance(i.transform.position, topPoint.position);
         float distToBottom = Vector3.Distance(i.transform.position, bottomPoint.position);
         bool goingUp = distToTop > distToBottom;
         Transform targetLandPoint = goingUp ? topPoint : bottomPoint;
 
-        // 2. °æ·Î °è»ê
+        // 2. ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         Vector3 playerPos = i.transform.position;
         Vector3 axisPos = ropeAxis.position;
 
@@ -51,7 +58,7 @@ public class RopeInteractable : BaseInteractable
 
         Vector3[] path = new Vector3[] { alignPoint, climbPoint, landPoint };
 
-        // 3. ÀÌµ¿ ¸í·É
+        // 3. ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½
         int camPriority = (ropeCamera != null) ? 100 : 0;
 
         mover.MovePathWithCam(
@@ -61,7 +68,7 @@ public class RopeInteractable : BaseInteractable
             ropeCamera,
             camPriority,
             useRopeAnim: true,
-            overrideScaleX: targetScaleX  // ¡Ú °è»êµÈ ¸ñÇ¥°ª Àü´Þ
+            overrideScaleX: targetScaleX  // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         );
     }
 }
