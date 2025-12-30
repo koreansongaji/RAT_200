@@ -17,7 +17,8 @@ public class RopeInteractable : BaseInteractable
 
     [Header("ī�޶� (����)")]
     public CinemachineCamera ropeCamera;
-
+    
+    [Header("Sound Controller")]
     [SerializeField] private RopeSoundController _ropeSoundController;
 
     void Awake()

@@ -61,12 +61,22 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
     public bool hidePlayerDuringMicro = true;
     public bool HidePlayerDuringMicro => hidePlayerDuringMicro;
 
+    [Header("Audio Clips")]
+    [SerializeField] private AudioClip _chemMixingSuccessSound;
+    [SerializeField] private AudioClip _chemMixingFailSound;
+    [SerializeField] private AudioClip _chemMixingSound;
+    
     void Awake()
     {
         if (panel) panel.enabled = false;
         _micro = GetComponent<MicroZoomSession>();
         WireButtons();
         RefreshTexts();
+        
+        // Load audio clips if not assigned
+        if(_chemMixingSuccessSound == null) _chemMixingSuccessSound = Resources.Load<AudioClip>("Sounds/Effect/Experiment/reaction_mix");
+        if (_chemMixingFailSound == null) _chemMixingFailSound = Resources.Load<AudioClip>("Sounds/Effect/Experiment/reaction_fail");
+        if (_chemMixingSound == null) _chemMixingSound = Resources.Load<AudioClip>("Sounds/Effect/Experiment/reaction_mix");
     }
 
     void WireButtons()
@@ -186,6 +196,9 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
 
         if (!success)
         {
+            // 실패 소리
+            AudioManager.Instance.Play(_chemMixingFailSound);
+            
             // ���� ��: ��� Micro Ż���ϰ� ���� �߻�
             if (_micro && _micro.InMicro) _micro.Exit();
 
@@ -199,10 +212,11 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
             EndSession(true);
             return;
         }
-
+        // 성공 소리
+        AudioManager.Instance.Play(_chemMixingSuccessSound);
         // === ���� �� ===
         Debug.Log("[ChemMixingStation] ȥ�� ����!");
-
+        
         // 1. ����/�ð� ���� ���� (å ������, ���� ������)
         if (bridgeManager)
         {
