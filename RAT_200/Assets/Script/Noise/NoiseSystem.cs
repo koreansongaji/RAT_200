@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System;
 using System.Collections.Generic;
 
@@ -15,9 +15,9 @@ public class NoiseSystem : MonoBehaviour
     [Header("Runtime (read-only)")]
     [Range(0f, 1f)] public float current01 = 0f;
 
-    // ¡å¡å¡å [Ãß°¡] ¿¡µðÅÍ Á¦¾î¿ë ÇÃ·¡±× ¡å¡å¡å
+    // ï¿½ï¿½ï¿½ï¿½ [ï¿½ß°ï¿½] ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     [Header("Debug")]
-    [Tooltip("Ã¼Å©ÇÏ¸é ¼ÒÀ½ÀÌ ´õ ÀÌ»ó Áõ°¡ÇÏÁö ¾Ê½À´Ï´Ù.")]
+    [Tooltip("Ã¼Å©ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ì»ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½.")]
     public bool isDebugPaused = false;
 
     public event Action<float> OnValueChanged;
@@ -110,7 +110,7 @@ public class NoiseSystem : MonoBehaviour
 
     public void FireImpulse(float add01)
     {
-        // ¡å¡å¡å [¼öÁ¤] ÀÏ½ÃÁ¤Áö »óÅÂ¸é ¼ÒÀ½ Áõ°¡ Â÷´Ü ¡å¡å¡å
+        // ï¿½ï¿½ï¿½ï¿½ [ï¿½ï¿½ï¿½ï¿½] ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (isDebugPaused)
         {
 #if UNITY_EDITOR
@@ -138,7 +138,7 @@ public class NoiseSystem : MonoBehaviour
 
         bool hasContinuousNoise = sumRate > 0f;
 
-        // ¡å¡å¡å [¼öÁ¤] ÀÏ½ÃÁ¤Áö »óÅÂ°¡ ¾Æ´Ò ¶§¸¸ ¼ÒÀ½ Áõ°¡ Ã³¸® ¡å¡å¡å
+        // ï¿½ï¿½ï¿½ï¿½ [ï¿½ï¿½ï¿½ï¿½] ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â°ï¿½ ï¿½Æ´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (hasContinuousNoise && !isDebugPaused)
         {
             _lastNoiseTime = Time.time;
@@ -154,7 +154,7 @@ public class NoiseSystem : MonoBehaviour
             return;
         }
 
-        // °¨¼Ò ·ÎÁ÷ (ÀÏ½ÃÁ¤Áö¿©µµ ¼ÒÀ½ÀÌ ÁÙ¾îµå´Â °Ç Çã¿ëÇÒÁö, ¾Æ¿¹ ¸ØÃâÁö °áÁ¤. ¿©±â¼­´Â ÁÙ¾îµé°Ô µÒ)
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¾ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½Æ¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½â¼­ï¿½ï¿½ ï¿½Ù¾ï¿½ï¿½ï¿½ ï¿½ï¿½)
         if (current01 > 0f && Time.time - _lastNoiseTime >= waitBeforeDecay)
         {
             float afterDecay = Mathf.Max(0f, current01 - decayPerSecond * dt);
@@ -187,7 +187,7 @@ public class NoiseSystem : MonoBehaviour
 
     public void SetLevel01(float value01)
     {
-        // °­Á¦ ¼³Á¤ÀÇ °æ¿ì µð¹ö±×¿©µµ Çã¿ëÇÒÁö Â÷´ÜÇÒÁö ¼±ÅÃ. ÀÏ´Ü Â÷´ÜÇÏÁö ¾ÊÀ½ (¼öµ¿ Á¶ÀÛÀº °¡´ÉÇÏµµ·Ï).
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½×¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½).
         float v = Mathf.Clamp01(value01);
         if (Mathf.Approximately(v, current01)) return;
 
