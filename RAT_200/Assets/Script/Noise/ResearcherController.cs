@@ -307,6 +307,7 @@ public class ResearcherController : MonoBehaviour
 
     void EndSearchAndResetNoise()
     {
+        OnSearchEnded?.Invoke();
         _state = State.Idle;
         _scanTween?.Kill();
         if (spotLight) spotLight.enabled = false;

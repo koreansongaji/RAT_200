@@ -14,6 +14,7 @@ Shader "VolumetricFog"
         
         [HDR]_LightContribution("Light contribution", Color) = (1, 1, 1, 1)
         _LightScattering("Light scattering", Range(0, 1)) = 0.2
+        _Intensity("Intensity", Range(0, 10)) = 0.1
     }
 
     SubShader
@@ -42,6 +43,7 @@ Shader "VolumetricFog"
             float _NoiseTiling;
             float4 _LightContribution;
             float _LightScattering;
+            float _Intensity;
 
             float henyey_greenstein(float angle, float scattering)
             {
@@ -86,10 +88,11 @@ Shader "VolumetricFog"
                                     _LightContribution.rgb *
                                         henyey_greenstein(dot(rayDir, mainLight.direction), _LightScattering) * 
                                             density * mainLight.shadowAttenuation * 
-                                                _StepSize;
+                                                _StepSize * _Intensity;
 
                         // 추가 광원(Spot/Point 포함) 기여 누적
                         // uint additionalLightCount = GetAdditionalLightsCount();
+                        
                         [unroll(5)]
                         uint additionalLightCount = 5u;
                         for (uint li = 0u; li < additionalLightCount; li++)
@@ -104,7 +107,7 @@ Shader "VolumetricFog"
                             float3 L = addLight.direction; // 라이트→표면 방향(URP 표준)
                             float phase = henyey_greenstein(dot(rayDir, L), _LightScattering);
                             float atten = addLight.distanceAttenuation * addLight.shadowAttenuation;
-                            float3 contrib = addLight.color.rgb * _LightContribution.rgb * phase * atten * density * _StepSize;
+                            float3 contrib = addLight.color.rgb * _LightContribution.rgb * phase * atten * density * _StepSize * _Intensity;
                             fogCol.rgb += contrib;
                         }
 
