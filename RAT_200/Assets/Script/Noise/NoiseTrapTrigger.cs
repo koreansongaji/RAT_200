@@ -5,40 +5,43 @@ public class NoiseTrapTrigger : MonoBehaviour
 {
     public enum FireMode
     {
-        AddPercent,       // ÇöÀç °ª¿¡ ´õÇÏ±â (¿¹: +30%)
-        SetPercentExact   // ¸ñÇ¥ °ªÀ¸·Î ¸ÂÃß±â (¿¹: 100%·Î ¼³Á¤)
+        AddPercent,       // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï±ï¿½ (ï¿½ï¿½: +30%)
+        SetPercentExact   // ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß±ï¿½ (ï¿½ï¿½: 100%ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
     }
 
-    [Header("Trigger ´ë»ó")]
-    [Tooltip("ÀÌ ÅÂ±×¸¦ °¡Áø ¿ÀºêÁ§Æ®°¡ µé¾î¿Ã ¶§¸¸ ¹ßµ¿ (ºñ¿ì¸é ¸ðµç ¿ÀºêÁ§Æ®).")]
+    [Header("Trigger ï¿½ï¿½ï¿½")]
+    [Tooltip("ï¿½ï¿½ ï¿½Â±×¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ßµï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®).")]
     public string targetTag = "Player";
 
-    [Header("Noise ¼³Á¤")]
+    [Header("Noise ï¿½ï¿½ï¿½ï¿½")]
     public FireMode fireMode = FireMode.AddPercent;
 
-    [Tooltip("0~1 ½ºÄÉÀÏ. 0.3 = 30%, 0.9 = 90%, 1.0 = 100%.")]
+    [Tooltip("0~1 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½. 0.3 = 30%, 0.9 = 90%, 1.0 = 100%.")]
     [Range(0f, 1f)] public float amount01 = 0.3f;
 
-    [Tooltip("¿©·¯ ¹ø Áö³ª°¥ ¼ö ÀÖ´Â Æ®·¦ÀÏ °æ¿ì false, ÇÑ ¹ø¿ëÀÌ¸é true.")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ false, ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½ true.")]
     public bool oneShot = true;
 
-    [Tooltip("¿©·¯ ¹ø ¹ßµ¿ °¡´ÉÇÑ °æ¿ì, ¹ßµ¿ ÈÄ Äð´Ù¿î ½Ã°£(ÃÊ). 0ÀÌ¸é Äð´Ù¿î ¾øÀ½.")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ßµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½, ï¿½ßµï¿½ ï¿½ï¿½ ï¿½ï¿½Ù¿ï¿½ ï¿½Ã°ï¿½(ï¿½ï¿½). 0ï¿½Ì¸ï¿½ ï¿½ï¿½Ù¿ï¿½ ï¿½ï¿½ï¿½ï¿½.")]
     [Min(0f)] public float cooldown = 0f;
 
-    [Header("¹ßµ¿ ÈÄ Ã³¸®")]
-    [Tooltip("¹ßµ¿ ÈÄ ÄÝ¶óÀÌ´õ¸¦ ºñÈ°¼ºÈ­ÇÒÁö ¿©ºÎ.")]
+    [Header("ï¿½ßµï¿½ ï¿½ï¿½ Ã³ï¿½ï¿½")]
+    [Tooltip("ï¿½ßµï¿½ ï¿½ï¿½ ï¿½Ý¶ï¿½ï¿½Ì´ï¿½ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.")]
     public bool disableColliderOnTrigger = false;
 
-    [Tooltip("¹ßµ¿ ÈÄ ÀÌ ¿ÀºêÁ§Æ®¸¦ ÆÄ±«ÇÒÁö ¿©ºÎ.")]
+    [Tooltip("ï¿½ßµï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.")]
     public bool destroyOnTrigger = false;
 
     float _lastFireTime = -999f;
     bool _used;
     Collider _col;
+    
+    [Header("Sounds Clip")]
+    [SerializeField] AudioClip _trapClip;
 
     void Reset()
     {
-        // Reset¿¡¼­ ÀÚµ¿À¸·Î Trigger ¼³Á¤
+        // Resetï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½ Trigger ï¿½ï¿½ï¿½ï¿½
         _col = GetComponent<Collider>();
         if (_col)
         {
@@ -51,9 +54,11 @@ public class NoiseTrapTrigger : MonoBehaviour
         _col = GetComponent<Collider>();
         if (_col && !_col.isTrigger)
         {
-            // ¾ÈÀü ÀåÄ¡: °­Á¦·Î Trigger·Î ¸¸µé¾îÁØ´Ù.
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Triggerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø´ï¿½.
             _col.isTrigger = true;
         }
+        
+        if(_trapClip == null) _trapClip = Resources.Load<AudioClip>("Sounds/Effect/Trap/weak_floor");
     }
 
     void OnTriggerEnter(Collider other)
@@ -63,35 +68,38 @@ public class NoiseTrapTrigger : MonoBehaviour
 
     void TryFire(Collider other)
     {
-        // ÇÑ ¹ø¸¸ »ç¿ëÇÏµµ·Ï ¼³Á¤µÇ¾ú°í ÀÌ¹Ì ½è´Ù¸é ¹«½Ã
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (oneShot && _used) return;
 
-        // Äð´Ù¿î ½Ã°£ È®ÀÎ
+        // ï¿½ï¿½Ù¿ï¿½ ï¿½Ã°ï¿½ È®ï¿½ï¿½
         if (Time.time < _lastFireTime + cooldown) return;
 
-        // ÅÂ±× ÇÊÅÍ
+        // ï¿½Â±ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (!string.IsNullOrEmpty(targetTag) && !other.CompareTag(targetTag))
             return;
 
         var ns = NoiseSystem.Instance;
         if (!ns) return;
 
+        // ì†Œë¦¬ ì¶œë ¥
+        AudioManager.Instance.Play(_trapClip);
+        
         switch (fireMode)
         {
             case FireMode.AddPercent:
-                // ´Ü¼øÈ÷ amount01 ¸¸Å­ ´õÇÔ (¿¹: +0.3 ¡æ +30%p)
+                // ï¿½Ü¼ï¿½ï¿½ï¿½ amount01 ï¿½ï¿½Å­ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½: +0.3 ï¿½ï¿½ +30%p)
                 ns.FireImpulse(amount01);
                 break;
 
             case FireMode.SetPercentExact:
-                // ÇöÀç °ª¿¡¼­ ¸ñÇ¥ °ª±îÁöÀÇ Â÷ÀÌ¸¦ ÇÑ ¹ø¿¡ Impulse·Î º¸³¿
-                // ¿¹: current=0.4, amount01=1.0 ¡æ +0.6À» ´õÇØ¼­ 100%·Î ¸ÂÃã
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Impulseï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+                // ï¿½ï¿½: current=0.4, amount01=1.0 ï¿½ï¿½ +0.6ï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ 100%ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 float diff = amount01 - ns.current01;
                 if (diff > 0f)
                 {
                     ns.FireImpulse(diff);
                 }
-                // ÀÌ¹Ì ´õ ³ô´Ù¸é ±»ÀÌ ³»¸± ÇÊ¿ä´Â ¾ø´Ù°í °¡Á¤(±âÈ¹»ó "ÃÖ¼Ò X%")
+                // ï¿½Ì¹ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ ï¿½ï¿½ï¿½Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½È¹ï¿½ï¿½ "ï¿½Ö¼ï¿½ X%")
                 break;
         }
 

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class SinkInteractable : BaseInteractable
@@ -6,21 +7,31 @@ public class SinkInteractable : BaseInteractable
     [SerializeField] string flaskId = "Flask";
     [SerializeField] string waterInFlaskId = "WaterInFlask";
 
+    [Header("Sound Clips")]
+    [SerializeField] private AudioClip _fillWaterClip;
+
+    private void Awake()
+    {
+        if (_fillWaterClip == null)  _fillWaterClip = Resources.Load<AudioClip>("Sounds/Effect/Experiment/water");
+    }
     public override bool CanInteract(PlayerInteractor i)
     {
-        return i && i.HasItem(flaskId);   // ÇÃ¶ó½ºÅ© ÀÖ¾î¾ß¸¸ ¹°À» ¹ÞÀ» ¼ö ÀÖÀ½
+        return i && i.HasItem(flaskId);   // ï¿½Ã¶ï¿½Å© ï¿½Ö¾ï¿½ß¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
 
     public override void Interact(PlayerInteractor i)
     {
         if (!CanInteract(i)) return;
 
-        // ÀüÀÌ: Flask -> WaterInFlask
+        // ï¿½ï¿½ï¿½ï¿½: Flask -> WaterInFlask
         i.RemoveItem(flaskId);
         i.AddItem(waterInFlaskId);
+        
+        // ì†Œë¦¬ ì¶œë ¥
+        AudioManager.Instance.Play(_fillWaterClip);
+        
+        Debug.Log("[SinkInteractable] ï¿½Ã¶ï¿½Å©ï¿½ï¿½ WaterInFlaskï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½");
 
-        Debug.Log("[SinkInteractable] ÇÃ¶ó½ºÅ©°¡ WaterInFlask·Î ÀüÀÌµÊ");
-
-        // (¼±ÅÃ) SFX/ÀÌÆåÆ®/Åä½ºÆ® "ÇÃ¶ó½ºÅ©¿¡ ¹°À» Ã¤¿ü´Ù"
+        // (ï¿½ï¿½ï¿½ï¿½) SFX/ï¿½ï¿½ï¿½ï¿½Æ®/ï¿½ä½ºÆ® "ï¿½Ã¶ï¿½Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã¤ï¿½ï¿½ï¿½ï¿½"
     }
 }
