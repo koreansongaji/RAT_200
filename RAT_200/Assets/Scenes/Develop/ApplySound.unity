@@ -320,6 +320,19 @@ MonoBehaviour:
   needNa: 2
   needWater: 1
   needGel: 4
+  btnNa3D: {fileID: 1549480222}
+  btnWater3D: {fileID: 1360602827}
+  btnGel3D: {fileID: 1869550099}
+  btnMix3D: {fileID: 2117093704}
+  tubeNaObj: {fileID: 0}
+  tubeWaterObj: {fileID: 0}
+  tubeGelObj: {fileID: 0}
+  steamParticle: {fileID: 0}
+  bridgeManager: {fileID: 1465548610}
+  bridgeSideCam: {fileID: 541855561}
+  steamShowDuration: 1.5
+  bridgeCamDuration: 2.5
+  rewardCardObj: {fileID: 0}
   OnMakeBigNoise:
     m_PersistentCalls:
       m_Calls:
@@ -335,14 +348,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  bridgeManager: {fileID: 1465548610}
-  bridgeSideCam: {fileID: 541855561}
-  bridgeCamDuration: 2.5
-  btnNa3D: {fileID: 1549480222}
-  btnWater3D: {fileID: 1360602827}
-  btnGel3D: {fileID: 1869550099}
-  btnMix3D: {fileID: 2117093704}
-  hidePlayerDuringMicro: 1
+  _chemMixingSuccessSound: {fileID: 0}
+  _chemMixingFailSound: {fileID: 0}
+  _chemMixingSound: {fileID: 0}
 --- !u!65 &27148362
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -666,10 +674,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43320b9f0c481e458c4ef54da68f5ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ladderSoundController: {fileID: 0}
+  startPoint: {fileID: 0}
   lengthLevel: 1
   currentSpot: {fileID: 0}
   extraRungs: []
+  _ladderSoundController: {fileID: 0}
 --- !u!114 &41922695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -683,6 +692,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSnapDistance: 1.2
+  disableDragHeight: 0.5
 --- !u!114 &41922696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -719,10 +729,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Interact
   requiredDistance: 1.2
-  target: {fileID: 0}
   yThreshold: 0.9
   duration: 0.6
   ease: 4
+  climbDestination: {fileID: 0}
   _ladderSoundController: {fileID: 0}
 --- !u!65 &41922698
 BoxCollider:
@@ -3044,6 +3054,7 @@ MonoBehaviour:
   cooldown: 0
   disableColliderOnTrigger: 0
   destroyOnTrigger: 0
+  _trapClip: {fileID: 0}
 --- !u!54 &217951953
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4824,9 +4835,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ladderAnchor: {fileID: 0}
-  climbTarget: {fileID: 372941844}
+  climbPoint: {fileID: 0}
   requiredLengthLevel: 1
   snapRadius: 0.6
+  isLocked: 0
+  validIndicator: {fileID: 0}
   occupied: 0
 --- !u!114 &372941844
 MonoBehaviour:
@@ -5818,10 +5831,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Interact
   requiredDistance: 1.2
-  target: {fileID: 1446440362}
   yThreshold: 0.9
   duration: 0.6
   ease: 4
+  climbDestination: {fileID: 0}
   _ladderSoundController: {fileID: 0}
 --- !u!114 &433142007
 MonoBehaviour:
@@ -5835,10 +5848,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43320b9f0c481e458c4ef54da68f5ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ladderSoundController: {fileID: 0}
+  startPoint: {fileID: 0}
   lengthLevel: 1
   currentSpot: {fileID: 1446440365}
   extraRungs: []
+  _ladderSoundController: {fileID: 0}
 --- !u!114 &433142008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5852,6 +5866,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSnapDistance: 1.2
+  disableDragHeight: 0.5
 --- !u!114 &433142009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5956,9 +5971,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ladderAnchor: {fileID: 1473191374}
-  climbTarget: {fileID: 446388008}
+  climbPoint: {fileID: 0}
   requiredLengthLevel: 1
   snapRadius: 0.6
+  isLocked: 0
+  validIndicator: {fileID: 0}
   occupied: 0
 --- !u!114 &446388008
 MonoBehaviour:
@@ -8276,10 +8293,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Interact
   requiredDistance: 1.2
-  target: {fileID: 0}
   yThreshold: 1
   duration: 0.6
   ease: 4
+  climbDestination: {fileID: 0}
   _ladderSoundController: {fileID: 0}
 --- !u!4 &684164878 stripped
 Transform:
@@ -8449,17 +8466,6 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
---- !u!114 &696781285 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1705726258676023640, guid: 30dafe654ca649b45a8f79cfe71ac57a, type: 3}
-  m_PrefabInstance: {fileID: 4603985640346922476}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a8fc8dc7d58f804fbf95147d9959677, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &712505586
 GameObject:
   m_ObjectHideFlags: 0
@@ -10067,9 +10073,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ladderAnchor: {fileID: 667678972}
-  climbTarget: {fileID: 821887852}
+  climbPoint: {fileID: 0}
   requiredLengthLevel: 1
   snapRadius: 0.6
+  isLocked: 0
+  validIndicator: {fileID: 0}
   occupied: 0
 --- !u!114 &821887852
 MonoBehaviour:
@@ -10246,10 +10254,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Interact
   requiredDistance: 1.2
-  target: {fileID: 0}
   yThreshold: 0.9
   duration: 0.6
   ease: 4
+  climbDestination: {fileID: 0}
   _ladderSoundController: {fileID: 0}
 --- !u!65 &838807572
 BoxCollider:
@@ -10876,6 +10884,7 @@ MonoBehaviour:
   duration: 1.5
   ease: 4
   ropeCamera: {fileID: 0}
+  targetScaleX: -1
   _ropeSoundController: {fileID: 915677374}
 --- !u!136 &915677373
 CapsuleCollider:
@@ -13827,6 +13836,7 @@ MonoBehaviour:
   requiredDistance: 1.2
   flaskId: Flask
   waterInFlaskId: WaterInFlask
+  _fillWaterClip: {fileID: 0}
 --- !u!65 &1130376561
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -18783,6 +18793,7 @@ MonoBehaviour:
   duration: 2
   ease: 7
   ropeCamera: {fileID: 766510157}
+  targetScaleX: -1
   _ropeSoundController: {fileID: 0}
 --- !u!136 &1445116551
 CapsuleCollider:
@@ -18908,9 +18919,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ladderAnchor: {fileID: 1132736269}
-  climbTarget: {fileID: 1446440362}
+  climbPoint: {fileID: 0}
   requiredLengthLevel: 1
   snapRadius: 0.6
+  isLocked: 0
+  validIndicator: {fileID: 0}
   occupied: 0
 --- !u!114 &1446440366
 MonoBehaviour:
@@ -18948,6 +18961,10 @@ MonoBehaviour:
   w2Init: 1
   w3Init: 2
   w4Init: 0
+  ratObj: {fileID: 0}
+  shockEffects: []
+  crossbarObj: {fileID: 0}
+  rewardCardObj: {fileID: 0}
   OnSolved:
     m_PersistentCalls:
       m_Calls: []
@@ -19343,6 +19360,7 @@ MonoBehaviour:
   noiseAmount: 0.3
   collapseNoiseAmount: 1
   playerFallDrag: 5
+  fuse: {fileID: 0}
 --- !u!1 &1473191373
 GameObject:
   m_ObjectHideFlags: 0
@@ -19392,10 +19410,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Interact
   requiredDistance: 1.2
-  target: {fileID: 0}
   yThreshold: 1
   duration: 0.6
   ease: 4
+  climbDestination: {fileID: 0}
   _ladderSoundController: {fileID: 0}
 --- !u!65 &1473191376
 BoxCollider:
@@ -19505,10 +19523,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Interact
   requiredDistance: 1.2
-  target: {fileID: 1446440362}
   yThreshold: 0.9
   duration: 0.6
   ease: 4
+  climbDestination: {fileID: 0}
   _ladderSoundController: {fileID: 0}
 --- !u!65 &1493495038
 BoxCollider:
@@ -22099,9 +22117,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ladderAnchor: {fileID: 0}
-  climbTarget: {fileID: 1775774482}
+  climbPoint: {fileID: 0}
   requiredLengthLevel: 1
   snapRadius: 0.6
+  isLocked: 0
+  validIndicator: {fileID: 0}
   occupied: 0
 --- !u!114 &1775774482
 MonoBehaviour:
@@ -23464,6 +23484,7 @@ MonoBehaviour:
   requiredDistance: 1.2
   flaskId: Flask
   waterInFlaskId: WaterInFlask
+  _fillWaterClip: {fileID: 0}
 --- !u!1 &1877220223
 GameObject:
   m_ObjectHideFlags: 0
@@ -24793,6 +24814,7 @@ GameObject:
   - component: {fileID: 2019276630}
   - component: {fileID: 2019276629}
   - component: {fileID: 2019276634}
+  - component: {fileID: 2019276635}
   m_Layer: 11
   m_Name: Safe
   m_TagString: Untagged
@@ -24843,6 +24865,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38e9fe6ea190c5f449ad4a52a16246db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  displayName: Interact
+  requiredDistance: 1.2
   spade: {fileID: 1054187139}
   heart: {fileID: 820963344}
   diamond: {fileID: 1283222968}
@@ -24856,11 +24880,6 @@ MonoBehaviour:
   openEase: 3
   linkedPart: {fileID: 2021017594}
   linkedPartOpenEuler: {x: 0, y: 0, z: 0}
-  paperPrefab: {fileID: 0}
-  paperSpawnPoint: {fileID: 0}
-  paperFormat: "\u2660 {0}\n\u2665 {1}\n\u2666 {2}\n\u2663 {3}"
-  randomSeed: 0
-  hidePlayerDuringMicro: 1
   dispenser: {fileID: 1420138922}
 --- !u!23 &2019276632
 MeshRenderer:
@@ -24936,6 +24955,32 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.5000004, y: 1.8090018, z: 0.09577074}
   m_Center: {x: 0.75000066, y: 0.9045006, z: -0.0000009536743}
+--- !u!114 &2019276635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2019276627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f4c6b8a7b105f44296faffa3b8944f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  benchCloseupCam: {fileID: 0}
+  microCloseupCam: {fileID: 0}
+  mixingStation: {fileID: 0}
+  hintCanvas: {fileID: 0}
+  lockPlayerWhileMicro: 1
+  showCursorWhileMicro: 1
+  OnEnterMicro:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExitMicro:
+    m_PersistentCalls:
+      m_Calls: []
+  reenterBlockSec: 0.2
+  hostOverride: {fileID: 0}
 --- !u!1 &2021017593
 GameObject:
   m_ObjectHideFlags: 0
@@ -25985,6 +26030,19 @@ MonoBehaviour:
   needNa: 2
   needWater: 1
   needGel: 4
+  btnNa3D: {fileID: 1582981799}
+  btnWater3D: {fileID: 750932293}
+  btnGel3D: {fileID: 379685331}
+  btnMix3D: {fileID: 1973086828}
+  tubeNaObj: {fileID: 0}
+  tubeWaterObj: {fileID: 0}
+  tubeGelObj: {fileID: 0}
+  steamParticle: {fileID: 0}
+  bridgeManager: {fileID: 0}
+  bridgeSideCam: {fileID: 0}
+  steamShowDuration: 1.5
+  bridgeCamDuration: 2.5
+  rewardCardObj: {fileID: 0}
   OnMakeBigNoise:
     m_PersistentCalls:
       m_Calls:
@@ -26000,14 +26058,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  bridgeManager: {fileID: 0}
-  bridgeSideCam: {fileID: 0}
-  bridgeCamDuration: 2.5
-  btnNa3D: {fileID: 1582981799}
-  btnWater3D: {fileID: 750932293}
-  btnGel3D: {fileID: 379685331}
-  btnMix3D: {fileID: 1973086828}
-  hidePlayerDuringMicro: 1
+  _chemMixingSuccessSound: {fileID: 0}
+  _chemMixingFailSound: {fileID: 0}
+  _chemMixingSound: {fileID: 0}
 --- !u!65 &2093472136
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -26220,6 +26273,7 @@ MonoBehaviour:
   duration: 1.5
   ease: 4
   ropeCamera: {fileID: 0}
+  targetScaleX: -1
   _ropeSoundController: {fileID: 2102036659}
 --- !u!136 &2102036658
 CapsuleCollider:
@@ -27187,34 +27241,6 @@ PrefabInstance:
       propertyPath: roomMainLight
       value: 
       objectReference: {fileID: 1417587273}
-    - target: {fileID: 6747291418840281675, guid: 30dafe654ca649b45a8f79cfe71ac57a, type: 3}
-      propertyPath: OnPlayerCaught.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6747291418840281675, guid: 30dafe654ca649b45a8f79cfe71ac57a, type: 3}
-      propertyPath: OnPlayerCaught.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6747291418840281675, guid: 30dafe654ca649b45a8f79cfe71ac57a, type: 3}
-      propertyPath: OnPlayerCaught.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 696781285}
-    - target: {fileID: 6747291418840281675, guid: 30dafe654ca649b45a8f79cfe71ac57a, type: 3}
-      propertyPath: OnPlayerCaught.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6747291418840281675, guid: 30dafe654ca649b45a8f79cfe71ac57a, type: 3}
-      propertyPath: OnPlayerCaught.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: PlayBreathSound
-      objectReference: {fileID: 0}
-    - target: {fileID: 6747291418840281675, guid: 30dafe654ca649b45a8f79cfe71ac57a, type: 3}
-      propertyPath: OnPlayerCaught.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: ResearcherSoundController, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 6747291418840281675, guid: 30dafe654ca649b45a8f79cfe71ac57a, type: 3}
-      propertyPath: OnPlayerCaught.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
