@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
 using DG.Tweening;
@@ -42,6 +42,7 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
 
     [Header("Cage Rat Event")]
     public GameObject ratObj;
+    public GameObject deadRat;
     public ParticleSystem[] shockEffects;
     public GameObject crossbarObj;
 
@@ -95,7 +96,7 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         if (rewardCardObj) rewardCardObj.SetActive(false);
         if (crossbarObj) crossbarObj.SetActive(false);
         if (ratObj) ratObj.SetActive(true);
-
+        if (deadRat) deadRat.SetActive(false);
         if (shockEffects != null)
         {
             foreach (var fx in shockEffects) if (fx) fx.Stop();
@@ -220,6 +221,7 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         if (shockEffects != null) foreach (var fx in shockEffects) if (fx) fx.Play();
         yield return new WaitForSeconds(1.5f);
         if (ratObj) ratObj.SetActive(false);
+        if (deadRat) deadRat.SetActive(true);
         if (crossbarObj) crossbarObj.SetActive(true);
         if (rewardCardObj) rewardCardObj.SetActive(true);
         OnSolved?.Invoke();
