@@ -52,6 +52,7 @@ public class TitlePage : MonoBehaviour
 
         // ★ Start 시점에는 UI 레이아웃이 잡혔을 것이므로 정상적으로 들어옵니다.
         SlideInTitlePage();
+        _optionPage.SlideOutOptionPage();
 
         if (_titleBGM == null) _titleBGM = Resources.Load<AudioClip>("Sounds/BGM/bgm_title");
         AudioManager.Instance.Play(_titleBGM, AudioManager.Sound.BGM);

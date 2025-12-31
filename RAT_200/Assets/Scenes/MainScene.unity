@@ -4028,7 +4028,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &177758379
 Transform:
   m_ObjectHideFlags: 0
@@ -4072,7 +4072,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 177758378}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -4745,7 +4745,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &225284969
 Transform:
   m_ObjectHideFlags: 0
@@ -4789,7 +4789,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 225284968}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -6501,18 +6501,6 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1465548610}
-        m_TargetAssemblyTypeName: LabToFridgeManager, Assembly-CSharp
-        m_MethodName: EnableCollapseTrigger
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
         m_CallState: 2
   OnWrongPassword:
     m_PersistentCalls:
@@ -11576,7 +11564,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &684611247
 Transform:
   m_ObjectHideFlags: 0
@@ -11620,7 +11608,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 684611246}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -23446,11 +23434,11 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 1
-  m_Extents: {x: 0.3, y: 0.3, z: 0.26}
+  m_Extents: {x: 0.3, y: 0.48, z: 0.26}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
-  m_Center: {x: 0.4, y: 0, z: 0.12}
+  m_Center: {x: 0.4, y: 0.26, z: 0.12}
   m_TimeToStationary: 0
 --- !u!1001 &1360602826
 PrefabInstance:
@@ -27632,7 +27620,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1594535332
 Transform:
   m_ObjectHideFlags: 0
@@ -27676,7 +27664,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1594535331}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -27722,6 +27710,28 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1594535331}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1607960293 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3739500179249962315, guid: 7ca3db134f846e24eb11dda10a9ef6bb, type: 3}
+  m_PrefabInstance: {fileID: 8934402639437809665}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1607960298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1607960293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 246dc557c882a7d4c81dd4b80d6a03c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  displayName: Interact
+  requiredDistance: 1.2
+  playerLadder: {fileID: 915604597230132516}
+  bridgeCollapseTrigger: {fileID: 1686579396}
+  _rungPickupSound: {fileID: 0}
 --- !u!1 &1614993177
 GameObject:
   m_ObjectHideFlags: 0
@@ -28600,8 +28610,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.31517726, y: 16.489786, z: 1.1204199}
-  m_Center: {x: 0.37735453, y: -5.9088144, z: 0.09353386}
+  m_Size: {x: 0.35881904, y: 16.489786, z: 2.831076}
+  m_Center: {x: 0.39917547, y: -5.9088144, z: -0.15020111}
 --- !u!23 &1686579399
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -35627,6 +35637,10 @@ PrefabInstance:
       propertyPath: 'extraRungs.Array.data[3]'
       value: 
       objectReference: {fileID: 600997378}
+    - target: {fileID: 2881548707596999346, guid: bae0ba7b5d945934d8b2fa7ecc9a25c9, type: 3}
+      propertyPath: disableDragHeight
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 3276878815726317409, guid: bae0ba7b5d945934d8b2fa7ecc9a25c9, type: 3}
       propertyPath: target
       value: 
@@ -36815,6 +36829,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -6478536213147159724, guid: e919879fb72dd7040b120f1711d3fcff, type: 3}
     - target: {fileID: 3632169732712012364, guid: 7ca3db134f846e24eb11dda10a9ef6bb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3632169732712012364, guid: 7ca3db134f846e24eb11dda10a9ef6bb, type: 3}
       propertyPath: playerLadder
       value: 
       objectReference: {fileID: 915604597230132516}
@@ -36862,10 +36880,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3632169732712012364, guid: 7ca3db134f846e24eb11dda10a9ef6bb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3739500179249962315, guid: 7ca3db134f846e24eb11dda10a9ef6bb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1607960298}
   m_SourcePrefab: {fileID: 100100000, guid: 7ca3db134f846e24eb11dda10a9ef6bb, type: 3}
 --- !u!95 &9219916737280089694
 Animator:

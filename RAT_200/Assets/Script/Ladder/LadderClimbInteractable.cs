@@ -1,5 +1,7 @@
 using UnityEngine;
 using DG.Tweening;
+using System.Collections; // Coroutine 사용을 위해 추가
+using Unity.Cinemachine;  // Cinemachine 관련 네임스페이스 (필요시)
 
 public class LadderClimbInteractable : BaseInteractable
 {
@@ -14,20 +16,19 @@ public class LadderClimbInteractable : BaseInteractable
     [Header("Sound")]
     [SerializeField] private LadderSoundController _ladderSoundController;
 
-    private Vector3 _bottomPos; // 올라가기 전 바닥 위치 기억
+    private LadderPlacementController _placementController;
+    private Vector3 _bottomPos;
     private bool _hasBottomPos = false;
 
     void Awake()
     {
         if (!_ladderSoundController) _ladderSoundController = GetComponent<LadderSoundController>();
+        _placementController = GetComponent<LadderPlacementController>();
     }
 
     public override bool CanInteract(PlayerInteractor i)
     {
-        // ★ [수정] 마이크로 줌 상태라면 사다리 타기 상호작용 불가!
         if (CloseupCamManager.InMicro) return false;
-
-        // 설치가 안 되어 있으면(목적지가 없으면) 상호작용 불가
         if (climbDestination == null) return false;
 
         var mover = i.GetComponent<PlayerScriptedMover>();
@@ -38,12 +39,14 @@ public class LadderClimbInteractable : BaseInteractable
     {
         var mover = i.GetComponent<PlayerScriptedMover>();
         if (!mover || !climbDestination) return;
-
-        // ★ [수정] 혹시 모르니 실행 시점에도 한 번 더 차단
         if (CloseupCamManager.InMicro) return;
+
+        // 1. [잠금] 이동 시작 전 드래그 차단
+        if (_placementController) _placementController.SetLadderBusy(true);
 
         bool isAtTop = i.transform.position.y >= yThreshold;
 
+        // 2. [이동] Mover 호출 (4번째 인자는 원래대로 null 유지)
         if (!isAtTop)
         {
             // [올라가기]
@@ -51,6 +54,8 @@ public class LadderClimbInteractable : BaseInteractable
             _hasBottomPos = true;
 
             _ladderSoundController?.PlayClimbLadder();
+
+            // ★ 수정: 4번째 인자에 Action 대신 null (원래 시그니처 준수)
             mover.MoveToWorldWithCam(climbDestination.position, duration, ease, null, 0);
         }
         else
@@ -59,7 +64,21 @@ public class LadderClimbInteractable : BaseInteractable
             Vector3 targetPos = _hasBottomPos ? _bottomPos : (i.transform.position - Vector3.up * 2f);
 
             _ladderSoundController?.PlayClimbLadder();
+
+            // ★ 수정: 여기도 null
             mover.MoveToWorldWithCam(targetPos, duration, ease, null, 0);
         }
+
+        // 3. [해제 예약] 이동 시간만큼 기다렸다가 잠금 해제
+        StartCoroutine(Routine_ReleaseBusy(duration));
+    }
+
+    // 이동이 끝날 때쯤 Busy 상태를 풀어주는 코루틴
+    IEnumerator Routine_ReleaseBusy(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (_placementController)
+            _placementController.SetLadderBusy(false);
     }
 }
