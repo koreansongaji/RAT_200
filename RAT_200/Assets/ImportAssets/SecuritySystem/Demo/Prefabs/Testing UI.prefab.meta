@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: b95224bfe41c5bb4ba12cc9a02d7fc2e
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324245
+  packageName: Basic Security System
+  packageVersion: 1.0.0
+  assetPath: Assets/SecuritySystem/Demo/Prefabs/Testing UI.prefab
+  uploadId: 768091

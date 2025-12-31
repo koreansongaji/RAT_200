@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: cb286dd94508c7f4bb735aec2da79c1b
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324245
+  packageName: Basic Security System
+  packageVersion: 1.0.0
+  assetPath: Assets/SecuritySystem/Keypad/Prefabs/Keypad 3D.prefab
+  uploadId: 768091

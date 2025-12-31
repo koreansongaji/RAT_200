@@ -1,0 +1,75 @@
+{
+    "version": 1,
+    "name": "RatControls",
+    "maps": [
+        {
+            "name": "GamePlay",
+            "id": "5f6a9f97-1d77-4c7f-8e5e-821994b89a10",
+            "actions": [
+                {
+                    "name": "PointerDown",
+                    "type": "Button",
+                    "id": "0f860efb-e505-4379-a1f0-ddacd8f5080b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PointerUp",
+                    "type": "Button",
+                    "id": "b5ef0017-de0e-46c8-8f98-f06a04ed526f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PointerDrag",
+                    "type": "Value",
+                    "id": "809bd5fc-80dd-469c-b7c0-5bf2f0d735b6",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "7f2dc782-749d-4ab8-ba4b-da8f13cc04e0",
+                    "path": "<Pointer>/press",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PointerDown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8ea77a8a-3bf1-4a38-ac4c-d431cb13ea1d",
+                    "path": "<Pointer>/press",
+                    "interactions": "Press(behavior=1)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PointerUp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "25a740e2-722b-4887-af28-c6f1c2f7f520",
+                    "path": "<Pointer>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PointerDrag",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

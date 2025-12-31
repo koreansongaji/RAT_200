@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2e65c6dfd211ffd438b19984906ba9c8
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324245
+  packageName: Basic Security System
+  packageVersion: 1.0.0
+  assetPath: Assets/SecuritySystem/Keypad/Prefabs/Panel Transition.anim
+  uploadId: 768091

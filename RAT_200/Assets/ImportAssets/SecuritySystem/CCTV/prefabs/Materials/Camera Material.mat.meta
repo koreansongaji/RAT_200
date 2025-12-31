@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8bd32e04b11f15f48a605250e649f9ab
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324245
+  packageName: Basic Security System
+  packageVersion: 1.0.0
+  assetPath: Assets/SecuritySystem/CCTV/prefabs/Materials/Camera Material.mat
+  uploadId: 768091

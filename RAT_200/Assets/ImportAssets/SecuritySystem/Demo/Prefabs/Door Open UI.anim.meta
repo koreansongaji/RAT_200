@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4a1d1dbc9f0dd96418536714184faaa3
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324245
+  packageName: Basic Security System
+  packageVersion: 1.0.0
+  assetPath: Assets/SecuritySystem/Demo/Prefabs/Door Open UI.anim
+  uploadId: 768091

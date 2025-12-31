@@ -1,0 +1,111 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8578044914431397488
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 10
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Polygonal Water(120)
+  m_Shader: {fileID: -6465566751694194690, guid: bc570291b9e01334e883238f701b7955, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _ALPHAPREMULTIPLY_ON
+  - _SURFACE_TYPE_TRANSPARENT
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap:
+    RenderType: Transparent
+  disabledShaderPasses:
+  - MOTIONVECTORS
+  - DepthOnly
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - Depth: -0.35
+    - End_Fog: -0.9
+    - Fog_: 1
+    - Refraction: 1
+    - Refraction_Strength: 0.5
+    - Scene_Intensity: -0.33
+    - Smoothness: 0.296
+    - Start_Fog: 0.4
+    - Strength: 2
+    - Underwater: 1
+    - Underwater_Density: 1000
+    - Underwater_Depth: 0.65
+    - Underwater_Movement: 8
+    - Underwater_Speed: 0.1
+    - Vector1_6BE2A8EC: 2.17
+    - Vector1_7614B90E: -1.01
+    - Vector1_A82DB55F: 0.4
+    - Vector1_EF9412C7: -1.2
+    - _Alpha: 0.75
+    - _AlphaClip: 0
+    - _AlphaToMask: 0
+    - _Blend: 0
+    - _BlendModePreserveSpecular: 1
+    - _CastShadows: 1
+    - _Cull: 0
+    - _Depth: 0.61
+    - _Detail_Speed: 1
+    - _DstBlend: 10
+    - _Glow_Size: 1.2
+    - _Polygonal_Size: 300
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _ReceiveShadows: 1
+    - _SrcBlend: 1
+    - _Surface: 1
+    - _Waves: 0.02
+    - _WorkflowMode: 1
+    - _ZTest: 4
+    - _ZWrite: 0
+    - _ZWriteControl: 0
+    m_Colors:
+    - Color_2B460A24: {r: 0.0031195888, g: 0.0034662099, b: 0.0031195888, a: 1}
+    - Color_D256F330: {r: 0.7490196, g: 0.7490196, b: 0.7490196, a: 0}
+    - Color_E2DCBF27: {r: 1024, g: 891.5862, b: 0, a: 1}
+    - Depth_Color: {r: 22.006271, g: 31.234709, b: 33.89676, a: 1}
+    - Shadow_Color: {r: 0, g: 1.9766746, b: 1.904231, a: 1}
+    - Underwater_Color: {r: 1, g: 0.92941177, b: 0.45882353, a: 1}
+    - Vector3_D38A1CDF: {r: -3.81, g: -1.1, b: 0, a: 0}
+    - _Depth_Color: {r: 6.7186017, g: 9.886723, b: 10.432951, a: 0}
+    - _Glow_Color: {r: 0.16643162, g: 0.16643162, b: 0.16643162, a: 1}
+    - _Polygonal_Color: {r: 0, g: 0.6431373, b: 1.4980392, a: 1}
+    - _Polygonal_Speed: {r: 0.001, g: 0.001, b: 0, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

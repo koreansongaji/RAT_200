@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3bdb1e02bf626b04f9e3c06bf7392a5e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 133344
+  packageName: Polygonal Water
+  packageVersion: 1.2.0
+  assetPath: Assets/Polygonal Water/Models/Materials/Terrain_Gass.mat
+  uploadId: 766409

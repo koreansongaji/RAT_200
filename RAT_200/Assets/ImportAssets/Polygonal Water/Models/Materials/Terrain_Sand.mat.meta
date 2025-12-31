@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c6be62ae9fbe19d45b74fcb5e51656ea
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 133344
+  packageName: Polygonal Water
+  packageVersion: 1.2.0
+  assetPath: Assets/Polygonal Water/Models/Materials/Terrain_Sand.mat
+  uploadId: 766409
