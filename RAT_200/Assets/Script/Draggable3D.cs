@@ -4,21 +4,21 @@ using System;
 public class Draggable3D : MonoBehaviour
 {
     [Header("When is drag allowed?")]
-    public bool requireMicro = false;     // Micro¿¡¼­¸¸ Çã¿ëÇÒÁö
-    public bool requireModifier = false;  // (¼±ÅÃ) º¸Á¶Å°(Shift) ¿ä±¸
+    public bool requireMicro = false;     // Microï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    public bool requireModifier = false;  // (ï¿½ï¿½ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½Å°(Shift) ï¿½ä±¸
 
     public enum PlaneMode { CameraFacing, WorldUp, Custom, ScreenDepth }
 
     [Header("Plane & Axis")]
     public PlaneMode planeMode = PlaneMode.CameraFacing;
-    public Transform customPlane;         // planeMode=CustomÀÏ ¶§ ±âÁØ(Ãà: up »ç¿ë)
-    public bool lockX, lockY, lockZ;     // Ãà¶ô
-    public Vector3 snapStep = Vector3.zero; // (0ÀÌ¸é ½º³À ¾øÀ½)
-    float _grabDepthZ;           // ScreenDepth¿ë: Ä«¸Þ¶ó-±íÀÌ °íÁ¤
-    Vector3 _grabPointWorld;     // Ã³À½ ÁýÀº ÁöÁ¡(¿É¼Ç)
+    public Transform customPlane;         // planeMode=Customï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½: up ï¿½ï¿½ï¿½)
+    public bool lockX, lockY, lockZ;     // ï¿½ï¿½ï¿½
+    public Vector3 snapStep = Vector3.zero; // (0ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+    float _grabDepthZ;           // ScreenDepthï¿½ï¿½: Ä«ï¿½Þ¶ï¿½-ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    Vector3 _grabPointWorld;     // Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½É¼ï¿½)
 
     [Header("Bounds (optional)")]
-    public Collider bounds;               // °æ°è ÄÝ¶óÀÌ´õ(¹ÛÀÌ¸é °¡Àå °¡±î¿î Á¡À¸·Î Å¬·¥ÇÁ)
+    public Collider bounds;               // ï¿½ï¿½ï¿½ ï¿½Ý¶ï¿½ï¿½Ì´ï¿½(ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½)
 
     public event Action OnDragStarted;
     public event Action OnDragEnded;
@@ -28,7 +28,14 @@ public class Draggable3D : MonoBehaviour
     Vector3 _grabOffsetWorld;
     bool _dragging;
 
-    void Awake() { _cam = Camera.main; }
+    [Header("Audio (optional)")]
+    [SerializeField] AudioClip _slideSound;
+    
+    void Awake()
+    {
+        if (_slideSound == null) _slideSound = Resources.Load<AudioClip>("Sounds/Effect/Fridge - Light Puzzle/fridge_block_slide");
+        _cam = Camera.main;
+    }
 
     public bool CanBeginDrag(Func<bool> inMicroCheck, Func<bool> modifierCheck)
     {
@@ -43,7 +50,7 @@ public class Draggable3D : MonoBehaviour
 
         if (planeMode == PlaneMode.WorldUp)
         {
-            // Áö¸é(XZ) Æò¸é
+            // ï¿½ï¿½ï¿½ï¿½(XZ) ï¿½ï¿½ï¿½
             _dragPlane = new Plane(Vector3.up, transform.position);
         }
         else if (planeMode == PlaneMode.Custom && customPlane != null)
@@ -52,21 +59,21 @@ public class Draggable3D : MonoBehaviour
         }
         else if (planeMode == PlaneMode.ScreenDepth)
         {
-            // ÇöÀç ¿ÀºêÁ§Æ®ÀÇ ±íÀÌ¸¦ °íÁ¤
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½
             _grabPointWorld = transform.position;
             var sp = _cam.WorldToScreenPoint(_grabPointWorld);
             _grabDepthZ = sp.z;
 
-            // È­¸é¡æ¿ùµå º¯È¯ ÁöÁ¡¿¡¼­ÀÇ ¿ÀÇÁ¼Â °è»ê
+            // È­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
             var mouse = UnityEngine.Input.mousePosition;
             var worldAtDepth = _cam.ScreenToWorldPoint(new Vector3(mouse.x, mouse.y, _grabDepthZ));
             _grabOffsetWorld = transform.position - worldAtDepth;
             OnDragStarted?.Invoke();
-            return; // ScreenDepth´Â Æò¸é ·¹ÀÌÄ³½ºÆ®°¡ ÇÊ¿ä ¾øÀ½
+            return; // ScreenDepthï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä³ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ê¿ï¿½ ï¿½ï¿½ï¿½ï¿½
         }
         else
         {
-            // CameraFacing (±âº»)
+            // CameraFacing (ï¿½âº»)
             _dragPlane = new Plane(_cam.transform.forward * -1f, transform.position);
         }
 
@@ -87,7 +94,7 @@ public class Draggable3D : MonoBehaviour
 
         if (planeMode == PlaneMode.ScreenDepth)
         {
-            // ÇöÀç Æ÷ÀÎÅÍÀÇ È­¸é ÁÂÇ¥¸¦ °°Àº ±íÀÌ·Î ¿ùµå º¯È¯
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
             var mouse = UnityEngine.Input.mousePosition;
             var worldAtDepth = _cam.ScreenToWorldPoint(new Vector3(mouse.x, mouse.y, _grabDepthZ));
             target = worldAtDepth + _grabOffsetWorld;
@@ -98,13 +105,13 @@ public class Draggable3D : MonoBehaviour
             target = pointerRay.GetPoint(enter) + _grabOffsetWorld;
         }
 
-        // Ãà¶ô
+        // ï¿½ï¿½ï¿½
         var cur = transform.position;
         if (lockX) target.x = cur.x;
         if (lockY) target.y = cur.y;
         if (lockZ) target.z = cur.z;
 
-        // ½º³À
+        // ï¿½ï¿½ï¿½ï¿½
         if (snapStep != Vector3.zero)
         {
             if (snapStep.x != 0) target.x = Mathf.Round(target.x / snapStep.x) * snapStep.x;
@@ -112,7 +119,7 @@ public class Draggable3D : MonoBehaviour
             if (snapStep.z != 0) target.z = Mathf.Round(target.z / snapStep.z) * snapStep.z;
         }
 
-        // °æ°è
+        // ï¿½ï¿½ï¿½
         if (bounds != null) target = bounds.ClosestPoint(target);
 
         transform.position = target;

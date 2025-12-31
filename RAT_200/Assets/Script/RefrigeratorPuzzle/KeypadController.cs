@@ -14,10 +14,10 @@ public class KeypadController : MonoBehaviour
     [SerializeField] private TextMeshPro inputDisplay; // ȭ�鿡 ǥ�õ� �ؽ�Ʈ
 
     [Header("Audio (Optional)")]
-    [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip beepClip;
-    [SerializeField] private AudioClip errorClip;
-    [SerializeField] private AudioClip successClip;
+    [SerializeField] private AudioClip _beepClip;
+    [SerializeField] private AudioClip _errorClip;
+    [SerializeField] private AudioClip _successClip;
+    [SerializeField] private AudioClip _unlockClip;
 
     [Header("Events")]
     public UnityEvent OnCorrectPassword; // ���� ������ �� (�� ���� �� ����)
@@ -27,6 +27,14 @@ public class KeypadController : MonoBehaviour
     private string _currentInput = "";
     private bool _isLocked = false;      // ���� ���� �� ���
     private bool _isResetting = false;   // Ʋ���� �ʱ�ȭ ��
+
+    private void Awake()
+    {
+        if(_beepClip == null) _beepClip = Resources.Load<AudioClip>("Sounds/Effect/Universal/button_a");
+        if(_errorClip == null) _errorClip = Resources.Load<AudioClip>("Sounds/Effect/Universal/puzzle_fail");
+        if(_successClip == null) _successClip = Resources.Load<AudioClip>("Sounds/Effect/Universal/puzzle_success");
+        if(_unlockClip == null) _unlockClip = Resources.Load<AudioClip>("Sounds/Effect/Fridge - Light Puzzle/fridge_unlock");
+    }
 
     void Start()
     {
@@ -43,7 +51,7 @@ public class KeypadController : MonoBehaviour
 
         _currentInput += number.ToString();
         UpdateDisplay();
-        PlaySound(beepClip);
+        PlaySound(_beepClip, Random.Range(0.9f, 1.1f));
     }
 
     // ����� ��ư (C)�� ȣ��
@@ -53,12 +61,14 @@ public class KeypadController : MonoBehaviour
 
         _currentInput = "";
         UpdateDisplay();
-        PlaySound(beepClip);
+        PlaySound(_beepClip, Random.Range(0.9f, 1.1f));
     }
 
     // Ȯ�� ��ư (Enter)�� ȣ��
     public void InputEnter()
     {
+        PlaySound(_beepClip, Random.Range(0.9f, 1.1f));
+        
         if (_isLocked || _isResetting) return;
 
         if (_currentInput == password)
@@ -66,10 +76,7 @@ public class KeypadController : MonoBehaviour
             // ����
             _isLocked = true;
             if (inputDisplay) inputDisplay.text = "PASS";
-            PlaySound(successClip);
-
-            // 공용 퍼즐 성공 사운드
-            CommonSoundController.Instance?.PlayPuzzleSuccess();
+            PlaySound(_successClip);
 
             OnCorrectPassword?.Invoke(); // �� ���⿡ �� ���� ����
         }
@@ -77,10 +84,7 @@ public class KeypadController : MonoBehaviour
         {
             // ����
             if (inputDisplay) inputDisplay.text = "ERR";
-            PlaySound(errorClip);
-
-            // 공용 퍼즐 실패 사운드
-            CommonSoundController.Instance?.PlayPuzzleFail();
+            PlaySound(_errorClip);
 
             OnWrongPassword?.Invoke();
             StartCoroutine(ResetRoutine());
@@ -94,9 +98,9 @@ public class KeypadController : MonoBehaviour
         if (inputDisplay) inputDisplay.text = _currentInput;
     }
 
-    void PlaySound(AudioClip clip)
+    void PlaySound(AudioClip clip, float pitch = 1.0f)
     {
-        if (audioSource && clip) audioSource.PlayOneShot(clip);
+        AudioManager.Instance.Play(clip);
     }
 
     IEnumerator ResetRoutine()

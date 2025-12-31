@@ -704,6 +704,7 @@ MonoBehaviour:
   lockZ: 0
   snapStep: {x: 0, y: 0, z: 0}
   bounds: {fileID: 0}
+  _slideSound: {fileID: 0}
 --- !u!114 &41922697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4278,11 +4279,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3105756309763599163, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
   m_PrefabInstance: {fileID: 343631452}
   m_PrefabAsset: {fileID: 0}
---- !u!82 &343631454 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 1662078849278858014, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
-  m_PrefabInstance: {fileID: 343631452}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &343631455 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4355574687202733758, guid: cb286dd94508c7f4bb735aec2da79c1b, type: 3}
@@ -4314,10 +4310,10 @@ MonoBehaviour:
   password: 1234
   maxChars: 5
   inputDisplay: {fileID: 343631455}
-  audioSource: {fileID: 343631454}
-  beepClip: {fileID: 0}
-  errorClip: {fileID: 0}
-  successClip: {fileID: 0}
+  _beepClip: {fileID: 8300000, guid: f2558c08a19fe764396e9198298b787f, type: 3}
+  _errorClip: {fileID: 8300000, guid: 8105960be551a9f4db70b868b0cf631d, type: 3}
+  _successClip: {fileID: 8300000, guid: 37762dae11337a740a65e433d4ac4d6d, type: 3}
+  _unlockClip: {fileID: 8300000, guid: be3df2bba14c5bd4a9c00707eada7dc9, type: 3}
   OnCorrectPassword:
     m_PersistentCalls:
       m_Calls:
@@ -5877,6 +5873,7 @@ MonoBehaviour:
   lockZ: 0
   snapStep: {x: 0, y: 0, z: 0}
   bounds: {fileID: 0}
+  _slideSound: {fileID: 0}
 --- !u!65 &433142010
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8049,6 +8046,7 @@ MonoBehaviour:
   lockZ: 0
   snapStep: {x: 0, y: 0, z: 0}
   bounds: {fileID: 0}
+  _slideSound: {fileID: 0}
 --- !u!1001 &663023568
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8451,6 +8449,17 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &696781285 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1705726258676023640, guid: 30dafe654ca649b45a8f79cfe71ac57a, type: 3}
+  m_PrefabInstance: {fileID: 4603985640346922476}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a8fc8dc7d58f804fbf95147d9959677, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &712505586
 GameObject:
   m_ObjectHideFlags: 0
@@ -10480,6 +10489,7 @@ MonoBehaviour:
   lockZ: 0
   snapStep: {x: 0, y: 0, z: 0}
   bounds: {fileID: 0}
+  _slideSound: {fileID: 0}
 --- !u!1 &884386491
 GameObject:
   m_ObjectHideFlags: 0
@@ -10832,6 +10842,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2e142759fd40c5d42ad569f6ad2524ce, type: 3}
       insertIndex: -1
       addedObject: {fileID: 915677372}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2e142759fd40c5d42ad569f6ad2524ce, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 915677374}
   m_SourcePrefab: {fileID: 100100000, guid: 2e142759fd40c5d42ad569f6ad2524ce, type: 3}
 --- !u!4 &915677370 stripped
 Transform:
@@ -10863,7 +10876,7 @@ MonoBehaviour:
   duration: 1.5
   ease: 4
   ropeCamera: {fileID: 0}
-  _ropeSoundController: {fileID: 0}
+  _ropeSoundController: {fileID: 915677374}
 --- !u!136 &915677373
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -10887,6 +10900,19 @@ CapsuleCollider:
   m_Height: 5.103454
   m_Direction: 1
   m_Center: {x: 0, y: 2.4908876, z: 0}
+--- !u!114 &915677374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 915677371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f77f1c219cd649d0a708f4c00bff3778, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ropeSound: {fileID: 0}
 --- !u!1 &922892258
 GameObject:
   m_ObjectHideFlags: 0
@@ -11817,6 +11843,34 @@ PrefabInstance:
       propertyPath: micro
       value: 
       objectReference: {fileID: 1446440364}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1446440370}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlayWireMove
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: WirePuzzleSoundController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -13342,7 +13396,6 @@ MonoBehaviour:
       m_Calls: []
   duration: 0.4
   ease: 9
-  sfxSource: {fileID: 0}
   openSound: {fileID: 0}
   closeSound: {fileID: 0}
 --- !u!114 &1099418642
@@ -14785,6 +14838,34 @@ PrefabInstance:
       propertyPath: micro
       value: 
       objectReference: {fileID: 1446440364}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1446440370}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlayWireMove
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: WirePuzzleSoundController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -15848,6 +15929,7 @@ MonoBehaviour:
   lockZ: 0
   snapStep: {x: 0, y: 0, z: 0}
   bounds: {fileID: 0}
+  _slideSound: {fileID: 0}
 --- !u!1001 &1283222966
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17058,6 +17140,34 @@ PrefabInstance:
       propertyPath: micro
       value: 
       objectReference: {fileID: 1446440364}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1446440370}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlayWireMove
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: WirePuzzleSoundController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -17181,6 +17291,14 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 2058422725}
+    - target: {fileID: 668235733306939088, guid: 96a82d8ab2d6a474ca3f56629e2da434, type: 3}
+      propertyPath: toggleKey
+      value: 101
+      objectReference: {fileID: 0}
+    - target: {fileID: 668235733306939088, guid: 96a82d8ab2d6a474ca3f56629e2da434, type: 3}
+      propertyPath: startHidden
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1903142680705605985, guid: 96a82d8ab2d6a474ca3f56629e2da434, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -18705,6 +18823,7 @@ GameObject:
   - component: {fileID: 1446440364}
   - component: {fileID: 1446440366}
   - component: {fileID: 1446440365}
+  - component: {fileID: 1446440370}
   m_Layer: 15
   m_Name: Electric
   m_TagString: Untagged
@@ -18909,6 +19028,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1446440361}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1446440370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1446440361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b9c6c32ff0d9c1478b6b49dc0acc346, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _buttonClip: {fileID: 0}
+  _wireMoveClip: {fileID: 0}
+  _sparkSuccessClip: {fileID: 0}
+  _puzzleFailClip: {fileID: 0}
 --- !u!1 &1463878506
 GameObject:
   m_ObjectHideFlags: 0
@@ -21795,6 +21930,34 @@ PrefabInstance:
       propertyPath: micro
       value: 
       objectReference: {fileID: 1446440364}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1446440370}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlayWireMove
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: WirePuzzleSoundController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -22273,6 +22436,8 @@ MonoBehaviour:
   - id: Recipe
     label: "\uB808\uC2DC\uD53C \uC885\uC774"
     icon: {fileID: 0}
+  _inventoryopenSound: {fileID: 0}
+  _inventorycloseSound: {fileID: 0}
 --- !u!225 &1816261261
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -22719,8 +22884,7 @@ MonoBehaviour:
       m_Calls: []
   duration: 0.4
   ease: 9
-  sfxSource: {fileID: 0}
-  openSound: {fileID: 0}
+  openSound: {fileID: 8300000, guid: db204509c288d7b49aeeb06abbb7cb71, type: 3}
   closeSound: {fileID: 0}
 --- !u!208 &1831231469
 NavMeshObstacle:
@@ -26022,6 +26186,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2e142759fd40c5d42ad569f6ad2524ce, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2102036657}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2e142759fd40c5d42ad569f6ad2524ce, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2102036659}
   m_SourcePrefab: {fileID: 100100000, guid: 2e142759fd40c5d42ad569f6ad2524ce, type: 3}
 --- !u!4 &2102036655 stripped
 Transform:
@@ -26053,7 +26220,7 @@ MonoBehaviour:
   duration: 1.5
   ease: 4
   ropeCamera: {fileID: 0}
-  _ropeSoundController: {fileID: 0}
+  _ropeSoundController: {fileID: 2102036659}
 --- !u!136 &2102036658
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -26077,6 +26244,19 @@ CapsuleCollider:
   m_Height: 5.103454
   m_Direction: 1
   m_Center: {x: 0, y: 2.4908876, z: 0}
+--- !u!114 &2102036659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2102036656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f77f1c219cd649d0a708f4c00bff3778, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ropeSound: {fileID: 0}
 --- !u!1001 &2117093702
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26153,6 +26333,18 @@ PrefabInstance:
       propertyPath: zoomSource
       value: 
       objectReference: {fileID: 27148361}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 11500000, guid: cb7294b77fb83bf4e8f98171e8be166e, type: 3}
+    - target: {fileID: 8200493270404841820, guid: aee9ef94797a4ec4c82553a930e3cc89, type: 3}
+      propertyPath: OnPressed.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -26995,6 +27187,34 @@ PrefabInstance:
       propertyPath: roomMainLight
       value: 
       objectReference: {fileID: 1417587273}
+    - target: {fileID: 6747291418840281675, guid: 30dafe654ca649b45a8f79cfe71ac57a, type: 3}
+      propertyPath: OnPlayerCaught.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6747291418840281675, guid: 30dafe654ca649b45a8f79cfe71ac57a, type: 3}
+      propertyPath: OnPlayerCaught.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6747291418840281675, guid: 30dafe654ca649b45a8f79cfe71ac57a, type: 3}
+      propertyPath: OnPlayerCaught.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 696781285}
+    - target: {fileID: 6747291418840281675, guid: 30dafe654ca649b45a8f79cfe71ac57a, type: 3}
+      propertyPath: OnPlayerCaught.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6747291418840281675, guid: 30dafe654ca649b45a8f79cfe71ac57a, type: 3}
+      propertyPath: OnPlayerCaught.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlayBreathSound
+      objectReference: {fileID: 0}
+    - target: {fileID: 6747291418840281675, guid: 30dafe654ca649b45a8f79cfe71ac57a, type: 3}
+      propertyPath: OnPlayerCaught.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ResearcherSoundController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6747291418840281675, guid: 30dafe654ca649b45a8f79cfe71ac57a, type: 3}
+      propertyPath: OnPlayerCaught.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
