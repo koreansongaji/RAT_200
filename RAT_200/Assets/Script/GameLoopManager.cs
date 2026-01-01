@@ -16,6 +16,7 @@ public class GameLoopManager : MonoBehaviour
     [Header("Audio")]
     public AudioSource sfxSource;
     public AudioClip ratDeathClip;   // Áã Á×´Â ¼Ò¸®
+    public AudioManager audioManager;
 
     [Header("Settings")]
     public float deathDelay = 2.0f;  // Á×´Â ¼Ò¸® µè´Â ½Ã°£
@@ -89,6 +90,7 @@ public class GameLoopManager : MonoBehaviour
             yield return new WaitForSeconds(1.0f);
         }
 
+        audioManager.KillAllSounds();
         // 4. ¾À ¸®·Îµå (¿ÏÀü ÃÊ±âÈ­)
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
