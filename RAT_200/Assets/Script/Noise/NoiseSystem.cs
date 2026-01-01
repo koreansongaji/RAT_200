@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System;
 using System.Collections.Generic;
 
@@ -7,13 +7,21 @@ public class NoiseSystem : MonoBehaviour
     public static NoiseSystem Instance { get; private set; }
 
     [Header("Settings")]
-    [Min(0f)] public float decayPerSecond = 0.02f;        // ¡Ú ±âÈ¹: ÃÊ´ç 2% °¨¼Ò ¡æ 0.02
-    [Min(0f)] public float waitBeforeDecay = 2f;          // ¡Ú ¸¶Áö¸· ¼ÒÀ½ ÈÄ 5ÃÊ ´ë±â
+    [Min(0f)] public float decayPerSecond = 0.02f;
+    [Min(0f)] public float waitBeforeDecay = 2f;
     [Range(0f, 1f)] public float surveillanceThreshold = 0.8f;
     [Range(0f, 0.2f)] public float thresholdHysteresis = 0.05f;
 
     [Header("Runtime (read-only)")]
     [Range(0f, 1f)] public float current01 = 0f;
+
+    [Header("Impulse Smooth Settings")]
+    public float impulseRiseSpeed = 2f;
+
+    // ï¿½ï¿½ï¿½ï¿½ [ï¿½ß°ï¿½] ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    [Header("Debug")]
+    [Tooltip("Ã¼Å©ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ì»ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½.")]
+    public bool isDebugPaused = false;
 
     public event Action<float> OnValueChanged;
     public event Action OnThresholdEntered;
@@ -32,9 +40,9 @@ public class NoiseSystem : MonoBehaviour
     readonly Dictionary<int, Source> _sources = new();
     readonly Dictionary<UnityEngine.Object, List<int>> _ownerIndex = new();
     bool _aboveThreshold;
-
-    // ¡Ú ¸¶Áö¸·À¸·Î "¼ÒÀ½ÀÌ Ãß°¡µÈ" ½Ã°£ (Impulse or Continuous)
     float _lastNoiseTime = -999f;
+
+    private float _targetNoiseLevel = 0f;
 
     void Awake()
     {
@@ -48,9 +56,9 @@ public class NoiseSystem : MonoBehaviour
         _ownerIndex.Clear();
         _nextId = 1;
         _aboveThreshold = false;
+        _targetNoiseLevel = 0f;
     }
 
-    // ===== Continuous ¼ÒÀ½ ¼Ò½º °ü¸® =====
     public int BeginContinuous(UnityEngine.Object owner, string tag, float ratePerSecond)
     {
         if (owner == null) owner = this;
@@ -106,54 +114,83 @@ public class NoiseSystem : MonoBehaviour
         }
     }
 
-    // ===== Impulse ¼ÒÀ½ (Áï½Ã ÇÑ ¹ø¿¡ Æ¢¾î¿À¸£´Â ¼Ò¸®) =====
     public void FireImpulse(float add01)
     {
+        // ï¿½ï¿½ï¿½ï¿½ [ï¿½ï¿½ï¿½ï¿½] ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        if (isDebugPaused)
+        {
+#if UNITY_EDITOR
+            Debug.Log($"[NoiseSystem] FireImpulse blocked (Amount: {add01}) because System is Paused.");
+#endif
+            return;
+        }
+
         if (add01 <= 0f) return;
 
-        current01 = Mathf.Clamp01(current01 + add01);
-        _lastNoiseTime = Time.time;                 // ¡Ú ¸¶Áö¸· ¼ÒÀ½ ½Ã°¢ °»½Å
 
-        OnValueChanged?.Invoke(current01);
-        CheckThresholdTransition();
+        //current01 = Mathf.Clamp01(current01 + add01);
+        //_lastNoiseTime = Time.time;
+
+        //OnValueChanged?.Invoke(current01);
+        //CheckThresholdTransition();
+
+        float baseLevel = Mathf.Max(current01, _targetNoiseLevel);
+        _targetNoiseLevel = Mathf.Clamp01(baseLevel + add01);
+
+        _lastNoiseTime = Time.time;
     }
 
     void Update()
     {
         float dt = Time.deltaTime;
-
-        // 1) ÇöÀç È°¼ºÈ­µÈ Continuous ¼ÒÀ½ ¼Ò½ºµéÀÇ rate ÇÕ
         float sumRate = 0f;
-        foreach (var s in _sources.Values)
-            if (s.active) sumRate += s.ratePerSecond;
-
+        foreach (var s in _sources.Values) if (s.active) sumRate += s.ratePerSecond;
         bool hasContinuousNoise = sumRate > 0f;
 
-        if (hasContinuousNoise)
+        // 1. ì§€ì† ì†ŒìŒ ì²˜ë¦¬ (Continuous)
+        if (hasContinuousNoise && !isDebugPaused)
         {
-            // 2) Continuous ¼ÒÀ½ÀÌ ÀÖ´Â µ¿¾ÈÀº °è¼Ó °ÔÀÌÁö¸¦ ¿Ã¸®°í,
-            //    "¸¶Áö¸· ¼ÒÀ½ ¹ß»ı ½Ã°¢"À» ¸Å ÇÁ·¹ÀÓ °»½ÅÇÑ´Ù.
             _lastNoiseTime = Time.time;
+            float nextVal = current01 + sumRate * dt;
 
-            float afterAcc = Mathf.Clamp01(current01 + sumRate * dt);
-            if (!Mathf.Approximately(afterAcc, current01))
-            {
-                current01 = afterAcc;
+            // ì§€ì† ì†ŒìŒì€ ì¦‰ì‹œ ë°˜ì˜í•˜ë˜, Impulse ëª©í‘œì¹˜ë„ ê°™ì´ ë°€ì–´ì˜¬ë¦¼
+            current01 = Mathf.Clamp01(nextVal);
+            if (current01 > _targetNoiseLevel) _targetNoiseLevel = current01;
+
+            if (!Mathf.Approximately(current01, nextVal)) // ê°’ì´ ë³€í–ˆìœ¼ë©´ ì•Œë¦¼
                 OnValueChanged?.Invoke(current01);
-            }
 
             CheckThresholdTransition();
-            return; // ¡Ú ¼Ò¸®°¡ ³ª´Â µ¿¾È¿¡´Â Àı´ë °¨¼Ò X
+            return;
         }
 
-        // 3) Continuous ¼ÒÀ½ÀÌ ¾øÀ» ¶§¸¸,
-        //    "¸¶Áö¸· ¼ÒÀ½ ¹ß»ı ÈÄ waitBeforeDecay ÃÊ°¡ Áö³µ´Ù¸é" ¼­¼­È÷ °¨¼Ò
+        // 2. Impulseë¡œ ì¸í•œ ë¶€ë“œëŸ¬ìš´ ìƒìŠ¹ ì²˜ë¦¬ (Impulse Rise)
+        if (current01 < _targetNoiseLevel)
+        {
+            // ë¶€ë“œëŸ½ê²Œ ì¦ê°€ (MoveTowards)
+            current01 = Mathf.MoveTowards(current01, _targetNoiseLevel, impulseRiseSpeed * dt);
+
+            // ìƒìŠ¹ ì¤‘ì—ëŠ” ê°ì‡„ íƒ€ì´ë¨¸ ë¦¬ì…‹ (ê°ì†Œ ë°©ì§€)
+            _lastNoiseTime = Time.time;
+
+            OnValueChanged?.Invoke(current01);
+            CheckThresholdTransition();
+            return; // ìƒìŠ¹ ì¤‘ì—ëŠ” ê°ì‡„ ë¡œì§ ì‹¤í–‰ X
+        }
+        else
+        {
+            // ëª©í‘œì¹˜ì— ë„ë‹¬í–ˆê±°ë‚˜ ë” ë†’ë‹¤ë©´, ëª©í‘œì¹˜ë¥¼ í˜„ì¬ê°’ìœ¼ë¡œ ë§ì¶¤ (í•˜ê°• ì¤€ë¹„)
+            _targetNoiseLevel = current01;
+        }
+
+        // 3. ìì—° ê°ì‡„ ì²˜ë¦¬ (Decay)
         if (current01 > 0f && Time.time - _lastNoiseTime >= waitBeforeDecay)
         {
             float afterDecay = Mathf.Max(0f, current01 - decayPerSecond * dt);
             if (!Mathf.Approximately(afterDecay, current01))
             {
                 current01 = afterDecay;
+                _targetNoiseLevel = current01; // ê°ì‡„ ì‹œ ëª©í‘œì¹˜ë„ ê°™ì´ ë‚´ë¦¼
                 OnValueChanged?.Invoke(current01);
             }
         }
@@ -180,13 +217,16 @@ public class NoiseSystem : MonoBehaviour
 
     public void SetLevel01(float value01)
     {
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½×¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½).
         float v = Mathf.Clamp01(value01);
         if (Mathf.Approximately(v, current01)) return;
 
         current01 = v;
-        _lastNoiseTime = Time.time;      // ÀÌ ½ÃÁ¡À» '¸¶Áö¸· ¼ÒÀ½ ½Ã°¢'À¸·Î °£ÁÖ
+        _targetNoiseLevel = v;
+
+
+        _lastNoiseTime = Time.time;
         OnValueChanged?.Invoke(current01);
         CheckThresholdTransition();
     }
-
 }

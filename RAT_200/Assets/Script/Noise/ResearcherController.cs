@@ -1,105 +1,88 @@
 using UnityEngine;
 using UnityEngine.Events;
-using DG.Tweening; // DOTween ÇÊ¼ö
+using DG.Tweening;
 
 public class ResearcherController : MonoBehaviour
 {
     public enum State
     {
-        Idle,           // ´ë±â
-        SummonIntro,    // 100% µµ´Þ ÈÄ 5ÃÊ°£ ´ë±â (¹ß¼Ò¸® µî)
-        Searching,      // 30ÃÊ ÀÏ¹Ý ¼ö»ö (·£´ý/ÆÐÅÏ)
-        Focusing,       // Æ¯Á¤ ¼ÒÀ½ À§Ä¡ ÀÀ½Ã
-        Capture         // ÇÃ·¹ÀÌ¾î ¹ß°ß (°ÔÀÓ¿À¹ö)
+        Idle,
+        SummonIntro,
+        Searching,
+        Focusing,
+        Capture,
+        BusyWithEvent // ì´ë²¤íŠ¸ ì§„í–‰ ì¤‘ (ìˆ˜ìƒ‰ ì¤‘ë‹¨)
     }
 
     [Header("Refs")]
-    [Tooltip("¹æ ÀüÃ¼¸¦ ºñÃß´Â Á¶¸í (¿¬±¸¿ø µîÀå ½Ã ²¨Áü).")]
     public Light roomMainLight;
-    [Tooltip("½ÇÁ¦ Spot Light ÄÄÆ÷³ÍÆ®.")]
     public Light spotLight;
-    [Tooltip("ºûÀÌ È¸ÀüÇÒ Áß½ÉÃà (¹® À§ÂÊ). Eye Pivot.")]
     public Transform eyePivot;
-    [Tooltip("¹® ÈùÁö (¿­°í ´Ý±â¿ë).")]
     public Transform doorHinge;
-    [Tooltip("ÇÃ·¹ÀÌ¾î Transform (°¨Áö¿ë).")]
     public Transform player;
 
-    [Header("Settings - Door")]
+    [Header("Optional Target")]
+    [Tooltip("í”Œë ˆì´ì–´ ì™¸ì— ìˆ˜ìƒ‰í•  NPCê°€ ìžˆë‹¤ë©´ ì„¤ì •.")]
+    public Transform npcTarget;
+
+    [Header("Events")]
+    public UnityEvent OnSummonStarted;
+    public UnityEvent OnIntroFinished;
+    public UnityEvent OnSearchEnded;
+    public UnityEvent OnPlayerCaught; // í”Œë ˆì´ì–´ ë°œê²¬ ì‹œ
+    public UnityEvent OnNpcCaught;    // NPC ë°œê²¬ ì‹œ -> Directorê°€ ë°›ì•„ì„œ ì²˜ë¦¬
+
+    [Header("Settings")]
     public Vector3 doorOpenEuler = new Vector3(0, 90, 0);
     public Vector3 doorClosedEuler = Vector3.zero;
-
-    [Header("Settings - Timing")]
-    public float introDelay = 5f;        // 5ÃÊ ´ë±â
-    public float searchDuration = 30f;   // 30ÃÊ ¼ö»ö
-    public float focusDuration = 5f;     // 5ÃÊ ÀÀ½Ã
-    [Range(0f, 1f)] public float noiseResetLevel = 0.2f; // º¹±Í ½Ã 20%
-
-    [Header("Settings - Detection")]
-    public LayerMask obstacleMask;       // ¼ûÀ» ¼ö ÀÖ´Â Àå¾Ö¹° ·¹ÀÌ¾î
-    public float catchDistance = 1.0f;   // (¿É¼Ç) ³Ê¹« °¡±î¿ì¸é Áï½Ã ÀâÈû
-
-    [Header("Settings - Scanning (Floor Target)")]
-    [Tooltip("¹æ ¹Ù´Ú Áß¾Ó.")]
+    public float introDelay = 5f;
+    public float searchDuration = 30f;
+    public float focusDuration = 5f;
+    public LayerMask obstacleMask;
     public Transform roomCenter;
-    [Tooltip("¼ö»ö ¹üÀ§ (°¡·Î/¼¼·Î).")]
     public Vector2 scanAreaSize = new Vector2(8f, 8f);
-    [Tooltip("ºûÀÌ ÀÌµ¿ÇÏ´Â ¼Óµµ.")]
     public float scanMoveSpeed = 3f;
 
     [Header("Game Over")]
-    public Transform handModel; // ÀâÀ¸·¯ ¿À´Â ¼Õ
-    public UnityEvent OnGameOver; // °ÔÀÓ ¿À¹ö ÀÌº¥Æ®
+    public UnityEvent OnGameOver;
 
-    [Header("Events")]
-    public UnityEvent OnSummonStarted;    // 100% µµ´Þ (ÀÎÆ®·Î ½ÃÀÛ)
-    public UnityEvent OnIntroFinished;    // 5ÃÊ µÚ (¹® ¿­¸², ¼ö»ö ½ÃÀÛ)
-    public UnityEvent OnSearchEnded;      // ¼ö»ö Á¾·á (¹® ´ÝÈû)
-    public UnityEvent OnPlayerCaught;     // ÇÃ·¹ÀÌ¾î ¹ß°ß
+    [Header("Sfx Clips")]
+    [SerializeField] private AudioClip _summonAlertClip;
 
-    // Internal State
     State _state = State.Idle;
+
+    public State CurrentState => _state;
+        
     float _stateTimer;
-    Vector3 _scanTargetPos; // ºûÀÌ ¹Ù¶óº¸´Â ¹Ù´ÚÀÇ °¡»ó ÁöÁ¡
+    Vector3 _scanTargetPos;
     Tween _scanTween;
     bool _subscribed;
-
-    // µîÀå Á÷ÈÄ Á¶»çÇÒ À§Ä¡¸¦ ±â¾ïÇÏ´Â º¯¼ö
+    Transform _currentFocusTarget;
     Vector3? _pendingFocusPos = null;
 
     void Start()
     {
         SubscribeNoiseSystem();
         if (spotLight) spotLight.enabled = false;
-        if (handModel) handModel.gameObject.SetActive(false);
-
-        // ÃÊ±â Å¸°ÙÀº ¹æ Áß¾ÓÀ¸·Î
         if (roomCenter) _scanTargetPos = roomCenter.position;
+        if (_summonAlertClip == null) _summonAlertClip = Resources.Load<AudioClip>("Sounds/Effect/Researcher/alert");
     }
 
     void OnEnable() => SubscribeNoiseSystem();
     void OnDisable()
     {
         var ns = NoiseSystem.Instance;
-        if (ns != null && _subscribed)
-        {
-            ns.OnValueChanged -= HandleNoiseChanged;
-            _subscribed = false;
-        }
+        if (ns != null && _subscribed) { ns.OnValueChanged -= HandleNoiseChanged; _subscribed = false; }
         _scanTween?.Kill();
     }
 
     void SubscribeNoiseSystem()
     {
         var ns = NoiseSystem.Instance;
-        if (ns != null && !_subscribed)
-        {
-            ns.OnValueChanged += HandleNoiseChanged;
-            _subscribed = true;
-        }
+        if (ns != null && !_subscribed) { ns.OnValueChanged += HandleNoiseChanged; _subscribed = true; }
     }
 
-    // ===== NoiseSystem ÄÝ¹é =====
+    // â˜… ì†ŒìŒì´ 100(1.0)ì— ë„ë‹¬í•˜ë©´ ì†Œí™˜!
     void HandleNoiseChanged(float value01)
     {
         if (_state != State.Idle) return;
@@ -112,18 +95,31 @@ public class ResearcherController : MonoBehaviour
         _state = State.SummonIntro;
         _stateTimer = 0f;
         _pendingFocusPos = null;
-        OnSummonStarted?.Invoke(); // ¿©±â¼­ ¹ßÀÚ±¹ ¼Ò¸® Àç»ý
-        Debug.Log("[Researcher] Summon Started (Wait 5s)");
+
+        if (_summonAlertClip != null) AudioManager.Instance.Play(_summonAlertClip, AudioManager.Sound.Effect, 1.0f, 0.8f);
+
+        OnSummonStarted?.Invoke();
+        Debug.Log("[Researcher] ì†ŒìŒ ê°ì§€! ì—°êµ¬ì› ì†Œí™˜ ì‹œìž‘.");
     }
 
     void Update()
     {
-        // ºûÀÌ Ç×»ó Å¸°ÙÀ» ¹Ù¶óº¸µµ·Ï È¸Àü (ÀÚ¿¬½º·¯¿î 3Ãà È¸Àü)
-        if (eyePivot && (_state == State.Searching || _state == State.Focusing))
+        // â˜… ì—°êµ¬ì›ì´ ì§‘ì— ìžˆëŠ” ë™ì•ˆì€ ê¸´ìž¥ê° ìœ ì§€ë¥¼ ìœ„í•´ Noise 100 ê³ ì •
+        if (_state != State.Idle)
         {
-            Vector3 dir = _scanTargetPos - eyePivot.position;
-            Quaternion targetRot = Quaternion.LookRotation(dir);
-            eyePivot.rotation = Quaternion.Slerp(eyePivot.rotation, targetRot, Time.deltaTime * 5f);
+            if (NoiseSystem.Instance != null) NoiseSystem.Instance.SetLevel01(1.0f);
+        }
+
+        // ì‹œì„  ì²˜ë¦¬
+        Vector3 lookPos = _currentFocusTarget ? _currentFocusTarget.position : _scanTargetPos;
+        if (eyePivot)
+        {
+            Vector3 dir = lookPos - eyePivot.position;
+            if (dir != Vector3.zero)
+            {
+                Quaternion targetRot = Quaternion.LookRotation(dir);
+                eyePivot.rotation = Quaternion.Slerp(eyePivot.rotation, targetRot, Time.deltaTime * 10f);
+            }
         }
 
         switch (_state)
@@ -131,241 +127,157 @@ public class ResearcherController : MonoBehaviour
             case State.SummonIntro: UpdateSummonIntro(); break;
             case State.Searching: UpdateSearching(); break;
             case State.Focusing: UpdateFocusing(); break;
-            case State.Capture: /* °ÔÀÓ¿À¹ö ¿¬Ãâ Áß */ break;
+            case State.BusyWithEvent: /* ì´ë²¤íŠ¸ ì¤‘ì—” ì•„ë¬´ê²ƒë„ ì•ˆ í•¨ (Directorê°€ ì—°ì¶œ) */ break;
         }
     }
 
-    // [¼öÁ¤] 5ÃÊ ´ë±â ÈÄ ¹® ¿­¸± ¶§
     void UpdateSummonIntro()
     {
         _stateTimer += Time.deltaTime;
         if (_stateTimer >= introDelay)
         {
-            // ¹® ¿­±â
             if (doorHinge) doorHinge.DOLocalRotate(doorOpenEuler, 0.5f).SetEase(Ease.OutBack);
             if (spotLight) spotLight.enabled = true;
-            if (roomMainLight) roomMainLight.enabled = false; // ¹æ ºÒ ²ô±â
+            if (roomMainLight) roomMainLight.enabled = false;
 
             OnIntroFinished?.Invoke();
 
-            // ¡å¡å¡å [ÇÙ½É ¼öÁ¤] ±â¾ïÇØµÐ ¼ÒÀ½ À§Ä¡°¡ ÀÖ´Â°¡? ¡å¡å¡å
             if (_pendingFocusPos.HasValue)
             {
-                // ÀÖ´Ù -> ¹Ù·Î 'Á¶»ç(Focusing)' »óÅÂ·Î ÁøÀÔ
-                Debug.Log("[Researcher] Door Open -> Immediately Focusing on Target!");
                 _state = State.Focusing;
                 _stateTimer = 0f;
-
-                // ½Ã¼± Å¸°ÙÀ» ±â¾ïÇØµÐ À§Ä¡·Î ¼³Á¤
                 _scanTargetPos = _pendingFocusPos.Value;
-                _pendingFocusPos = null; // »ç¿ëÇßÀ¸´Ï ÃÊ±âÈ­
+                _pendingFocusPos = null;
             }
             else
             {
-                // ¾ø´Ù -> ±×³É 'ÀÏ¹Ý ¼ö»ö(Searching)' ½ÃÀÛ
-                Debug.Log("[Researcher] Door Open -> Random Search Start");
                 _state = State.Searching;
                 _stateTimer = 0f;
                 PickNextRandomScanPoint();
             }
-            // ¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã
         }
     }
 
     void UpdateSearching()
     {
         _stateTimer += Time.deltaTime;
-
-        // °¨Áö ·ÎÁ÷
-        DetectPlayer();
-
-        // ½Ã°£ Á¾·á Ã¼Å©
-        if (_stateTimer >= searchDuration)
-        {
-            EndSearchAndResetNoise();
-        }
+        DetectTargets(); // íƒ€ê²Ÿ ê°ì§€
+        if (_stateTimer >= searchDuration) EndSearchAndResetNoise();
     }
 
     void UpdateFocusing()
     {
         _stateTimer += Time.deltaTime;
-
-        // °¨Áö ·ÎÁ÷ (Á¶»ç Áß¿¡µµ µéÅ³ ¼ö ÀÖÀ½)
-        DetectPlayer();
-
+        DetectTargets();
         if (_stateTimer >= focusDuration)
         {
-            // Á¶»ç ³¡ -> ´Ù½Ã ·£´ý ¼ö»öÀ¸·Î º¹±Í
             _state = State.Searching;
-            _stateTimer = 0f; // ¼ö»ö Å¸ÀÌ¸Ó ¸®¼Â ¿©ºÎ´Â ±âÈ¹¿¡ µû¶ó °áÁ¤ (¿©±â¼± ÀüÃ¼ ½Ã°£ °øÀ¯ ¾È ÇÔ)
+            _stateTimer = 0f;
             PickNextRandomScanPoint();
         }
     }
 
-    // ===== °¨Áö ·ÎÁ÷ (Raycast & Spotlight Angle) =====
-    void DetectPlayer()
+    void DetectTargets()
     {
-        if (!player || !spotLight) return;
+        if (!spotLight) return;
 
-        Vector3 toPlayer = player.position - eyePivot.position;
-        float dist = toPlayer.magnitude;
-
-        // 1. ºûÀÇ °¢µµ ¾È¿¡ µé¾î¿Ô´Â°¡?
-        float angle = Vector3.Angle(eyePivot.forward, toPlayer);
-        if (angle > spotLight.spotAngle * 0.5f) return; // ºû ¹ÛÀÓ
-
-        // 2. Àå¾Ö¹° °Ë»ç (Shadow Casting)
-        // ºûÀÇ ¿øÁ¡ºÎÅÍ ÇÃ·¹ÀÌ¾î±îÁö ·¹ÀÌ¸¦ ½úÀ» ¶§ Àå¾Ö¹°¿¡ ¸·È÷´ÂÁö
-        if (!Physics.Raycast(eyePivot.position, toPlayer.normalized, dist, obstacleMask))
+        // 1. í”Œë ˆì´ì–´ ë¨¼ì € ê°ì§€ (ìš°ì„ ìˆœìœ„ ë†’ìŒ) -> ê²Œìž„ ì˜¤ë²„
+        if (CheckVisibility(player))
         {
-            // Àå¾Ö¹°ÀÌ ¾ø´Ù¸é -> ÇÃ·¹ÀÌ¾î ³ëÃâµÊ -> °Ë°Å
-            StartCapture();
+            StartCapturePlayer();
+            return;
+        }
+
+        // 2. ë™ë£Œ NPC ê°ì§€ -> ì´ë²¤íŠ¸(ì‚¬ë§ ì—°ì¶œ)
+        if (npcTarget && CheckVisibility(npcTarget))
+        {
+            StartCaptureNPC();
+            return;
         }
     }
 
-    void StartCapture()
+    bool CheckVisibility(Transform target)
     {
-        if (_state == State.Capture) return;
+        if (!target) return false;
+        Vector3 toTarget = target.position - eyePivot.position;
+        float dist = toTarget.magnitude;
+
+        float angle = Vector3.Angle(eyePivot.forward, toTarget);
+        if (angle > spotLight.spotAngle * 0.5f) return false;
+
+        if (Physics.Raycast(eyePivot.position, toTarget.normalized, dist, obstacleMask))
+            return false;
+
+        return true;
+    }
+
+    void StartCapturePlayer()
+    {
+        if (_state == State.Capture || _state == State.BusyWithEvent) return;
         _state = State.Capture;
-
         _scanTween?.Kill();
-        // ½Ã¼±À» ÇÃ·¹ÀÌ¾î¿¡°Ô °íÁ¤
-        _scanTargetPos = player.position;
+        _currentFocusTarget = player;
+        OnPlayerCaught?.Invoke();
 
-        Debug.Log("[Researcher] CAUGHT YOU!");
-        OnPlayerCaught?.Invoke(); // ½ÉÀå¹Úµ¿ ¼Ò¸® µî
-
-        // ¼Õ ¸ðµ¨ ¿¬Ãâ
-        if (handModel)
-        {
-            handModel.gameObject.SetActive(true);
-            handModel.DOMove(player.position, 0.4f).SetEase(Ease.InExpo)
-                     .OnComplete(() => OnGameOver?.Invoke());
-        }
-        else
-        {
-            OnGameOver?.Invoke();
-        }
+        if (GameLoopManager.Instance) GameLoopManager.Instance.TriggerGameOver();
+        else OnGameOver?.Invoke();
     }
 
-    // ===== Scanning Logic (¹Ù´Ú Å¸°Ù ÀÌµ¿) =====
+    void StartCaptureNPC()
+    {
+        if (_state == State.Capture || _state == State.BusyWithEvent) return;
+
+        // â˜… ìƒíƒœë¥¼ ì´ë²¤íŠ¸ ì¤‘ìœ¼ë¡œ ë³€ê²½í•˜ì—¬ ìˆ˜ìƒ‰ ë£¨í”„ë¥¼ ë©ˆì¶¤
+        _state = State.BusyWithEvent;
+        _scanTween?.Kill();
+
+        _currentFocusTarget = npcTarget; // ì‹œì„ ì„ NPCì— ê³ ì •
+        OnNpcCaught?.Invoke(); // -> Directorì—ê²Œ ì‹ í˜¸ ë³´ëƒ„
+    }
+
+    public void ForceLeave()
+    {
+        _state = State.Idle;
+        _currentFocusTarget = null;
+        if (spotLight) spotLight.enabled = false;
+        if (doorHinge) doorHinge.DOLocalRotate(doorClosedEuler, 0.5f);
+        if (roomMainLight) StartCoroutine(Routine_FlickerLightOn());
+
+        // â˜… í‡´ê·¼ ì‹œ ì†ŒìŒ ì´ˆê¸°í™”
+        if (NoiseSystem.Instance) NoiseSystem.Instance.SetLevel01(0f);
+    }
+
     void PickNextRandomScanPoint()
     {
         if (_state != State.Searching) return;
         if (!roomCenter) return;
-
-        // ·£´ý À§Ä¡ ¼±Á¤
         float rx = Random.Range(-scanAreaSize.x * 0.5f, scanAreaSize.x * 0.5f);
         float rz = Random.Range(-scanAreaSize.y * 0.5f, scanAreaSize.y * 0.5f);
         Vector3 nextPos = roomCenter.position + new Vector3(rx, 0, rz);
-
-        // ÇöÀç À§Ä¡¿¡¼­ ´ÙÀ½ À§Ä¡±îÁö °Å¸® ºñ·Ê ½Ã°£ °è»ê (ÀÏÁ¤ ¼Óµµ À¯Áö)
         float dist = Vector3.Distance(_scanTargetPos, nextPos);
-        float moveTime = dist / scanMoveSpeed;
 
-        _scanTween = DOTween.To(() => _scanTargetPos, x => _scanTargetPos = x, nextPos, moveTime)
-                            .SetEase(Ease.InOutSine)
-                            .OnComplete(PickNextRandomScanPoint); // µµÂøÇÏ¸é ´ÙÀ½ Á¡À¸·Î
+        _scanTween = DOTween.To(() => _scanTargetPos, x => _scanTargetPos = x, nextPos, dist / scanMoveSpeed)
+                            .SetEase(Ease.InOutSine).OnComplete(PickNextRandomScanPoint);
     }
 
-    // ===== ¿ÜºÎ ¾Ë¸²¿ë (NoiseTrapReportToResearcher¿¡¼­ È£Ãâ) =====
-    // [¼öÁ¤] ¿ÜºÎ ¾Ë¸²¿ë
-    public void NotifyNoiseEvent(Vector3 worldPos)
-    {
-        if (_state == State.Capture) return;
-
-        // °æ¿ì 1: ÀÌ¹Ì ³ª¿Í¼­ È°µ¿ ÁßÀÏ ¶§ -> Áï½Ã ÃÄ´Ùº½
-        if (_state == State.Searching || _state == State.Focusing)
-        {
-            Debug.Log($"[Researcher] Investigating Noise at {worldPos}");
-            _state = State.Focusing;
-            _stateTimer = 0f;
-            _scanTween?.Kill();
-
-            DOTween.To(() => _scanTargetPos, x => _scanTargetPos = x, worldPos, 0.5f)
-                   .SetEase(Ease.OutCubic);
-        }
-        // °æ¿ì 2: ´ë±â ÁßÀÌ°Å³ª, µîÀå ¿¬Ãâ(5ÃÊ) ÁßÀÏ ¶§ -> À§Ä¡¸¸ ±â¾ïÇØµÒ
-        else if (_state == State.Idle || _state == State.SummonIntro)
-        {
-            _pendingFocusPos = worldPos;
-            Debug.Log($"[Researcher] Noise detected at {worldPos}. Will investigate after door opens.");
-        }
-    }
-
-    // ===== ¼ö»ö Á¾·á ¹× º¹±Í =====
     void EndSearchAndResetNoise()
     {
+        OnSearchEnded?.Invoke();
         _state = State.Idle;
         _scanTween?.Kill();
-
         if (spotLight) spotLight.enabled = false;
         if (doorHinge) doorHinge.DOLocalRotate(doorClosedEuler, 0.5f);
-
-        OnSearchEnded?.Invoke();
-
-        // ¼ÒÀ½ °ÔÀÌÁö ¸®¼Â
-        if (NoiseSystem.Instance)
-        {
-            NoiseSystem.Instance.SetLevel01(noiseResetLevel);
-        }
-
         if (roomMainLight) StartCoroutine(Routine_FlickerLightOn());
-
-        Debug.Log("[Researcher] Returned to Idle.");
+        if (NoiseSystem.Instance) NoiseSystem.Instance.SetLevel01(0.0f);
     }
 
     System.Collections.IEnumerator Routine_FlickerLightOn()
     {
-        // ¹® ´ÝÈ÷´Â ½Ã°£(0.5ÃÊ) Á¤µµ ±â´Ù·È´Ù°¡ ÄÑ±â ½ÃÀÛ
         yield return new WaitForSeconds(0.5f);
-
-        // Ä¡..Á÷.. (ÄÑÁ³´Ù ²¨Á³´Ù ¹Ýº¹)
         roomMainLight.enabled = true;
         yield return new WaitForSeconds(0.05f);
         roomMainLight.enabled = false;
         yield return new WaitForSeconds(0.1f);
-
         roomMainLight.enabled = true;
-        yield return new WaitForSeconds(0.1f);
-        roomMainLight.enabled = false;
-        yield return new WaitForSeconds(0.2f); // Àá±ñ ÅÒ
-
-        // Å¹! (¿ÏÀüÈ÷ ÄÑÁü)
-        roomMainLight.enabled = true;
-    }
-
-    // ¿¡µðÅÍ ±âÁî¸ð (¼ö»ö ¹üÀ§ È®ÀÎ¿ë)
-    void OnDrawGizmosSelected()
-    {
-        if (roomCenter)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireCube(roomCenter.position, new Vector3(scanAreaSize.x, 0.1f, scanAreaSize.y));
-        }
-        if (spotLight)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(spotLight.transform.position, catchDistance);
-        }
-    }
-
-    // ¡å¡å¡å [»õ·Î Ãß°¡] °ÔÀÓ ½ÇÇà Áß¿¡ »¡°£ °ø(Å¸°Ù)°ú ½Ã¼±(¼±)À» ±×¸² ¡å¡å¡å
-    void OnDrawGizmos()
-    {
-        // °ÔÀÓ ÇÃ·¹ÀÌ ÁßÀÌ ¾Æ´Ï°Å³ª, ¼ö»ö/Á¶»ç »óÅÂ°¡ ¾Æ´Ï¸é ±×¸®Áö ¾ÊÀ½
-        if (!Application.isPlaying) return;
-        if (_state != State.Searching && _state != State.Focusing) return;
-
-        Gizmos.color = Color.red;
-
-        // 1. ¹Ù´ÚÀ» ±â¾î´Ù´Ï´Â Å¸°Ù (»¡°£ °ø)
-        Gizmos.DrawSphere(_scanTargetPos, 0.3f);
-
-        // 2. ´«¿¡¼­ Å¸°ÙÀ¸·Î ½î´Â ·¹ÀÌÀú (»¡°£ ¼±)
-        if (eyePivot)
-        {
-            Gizmos.DrawLine(eyePivot.position, _scanTargetPos);
-        }
     }
 }

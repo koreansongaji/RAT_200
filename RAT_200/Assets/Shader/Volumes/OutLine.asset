@@ -13,12 +13,18 @@ MonoBehaviour:
   m_Name: OutlineVol
   m_EditorClassIdentifier: 
   active: 1
+  m_NormalOutlineSensitive:
+    m_OverrideState: 1
+    m_Value: 2.02
+  m_ColorOutlineSensitive:
+    m_OverrideState: 1
+    m_Value: 1
   m_Sensitive:
     m_OverrideState: 1
-    m_Value: 0.24
+    m_Value: 0.21
   m_Thickness:
     m_OverrideState: 1
-    m_Value: 0.3
+    m_Value: 0.168
   m_Color:
     m_OverrideState: 1
     m_Value:

@@ -132,6 +132,9 @@ namespace KeyPad2DScript
                InputField.text = "wrong";
                ClickSound.Play();
 
+               // 공용 퍼즐 실패 사운드
+               CommonSoundController.Instance?.PlayPuzzleFail();
+
                StartCoroutine(Reset());
             }
          }
@@ -151,6 +154,9 @@ namespace KeyPad2DScript
          gameObject.tag = "Untagged";
          Task.enabled = true;
          allowed = false;
+
+         // 공용 퍼즐 성공 사운드
+         CommonSoundController.Instance?.PlayPuzzleSuccess();
       }
       IEnumerator Reset()
       {

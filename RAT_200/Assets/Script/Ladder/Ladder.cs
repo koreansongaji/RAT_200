@@ -1,36 +1,114 @@
 using UnityEngine;
 
 [RequireComponent(typeof(LadderPlacementController))]
+[RequireComponent(typeof(LadderClimbInteractable))]
 public class Ladder : MonoBehaviour
 {
-    [Range(1, 4)] public int lengthLevel = 1; // ¾÷±×·¹ÀÌµå·Î Áõ°¡
-    public LadderPlaceSpot currentSpot;       // ÇöÀç ºÙ¾îÀÖ´Â ½½·Ô (¾øÀ¸¸é µé°í ´Ù´Ï´Â »óÅÂ)
+    [Header("ì´ˆê¸°í™”")]
+    [Tooltip("ê²Œì„ ì‹œì‘ ì‹œ ì‚¬ë‹¤ë¦¬ê°€ ê°•ì œë¡œ ì´ë™í•  ìœ„ì¹˜ (ë¹ˆ ì˜¤ë¸Œì íŠ¸ ë˜ëŠ” LadderPlaceSpot)")]
+    public Transform startPoint;
 
+    [Header("Data")]
+    [Range(0, 4)] public int lengthLevel = 0;
+    public LadderPlaceSpot currentSpot;
+
+    [Header("Visuals")]
+    [Tooltip("ë ˆë²¨ë³„ ì¶”ê°€ ë°œíŒ ì˜¤ë¸Œì íŠ¸ë“¤")]
+    public GameObject[] extraRungs;
+
+    [Header("Sound")]
+    [SerializeField] private LadderSoundController _ladderSoundController;
+
+    private LadderClimbInteractable _climbInteractable;
+
+    void Awake()
+    {
+        _climbInteractable = GetComponent<LadderClimbInteractable>();
+        if (!_ladderSoundController) _ladderSoundController = GetComponent<LadderSoundController>();
+    }
+
+    void Start()
+    {
+        // 1. ì‹œì‘ ìœ„ì¹˜ë¡œ ì´ë™ ë¡œì§ (ì—¬ê¸°ì„œ ì²˜ë¦¬!)
+        if (startPoint != null)
+        {
+            transform.position = startPoint.position;
+            transform.rotation = startPoint.rotation;
+
+            // ë§Œì•½ ì‹œì‘ ìœ„ì¹˜ê°€ 'ì„¤ì¹˜ ê°€ëŠ¥í•œ ìŠ¬ë¡¯'ì´ë¼ë©´ ì„¤ì¹˜ ìƒíƒœë¡œ ë§Œë“¤ê¸°
+            var spot = startPoint.GetComponent<LadderPlaceSpot>();
+            if (spot)
+            {
+                AttachTo(spot, true);
+            }
+        }
+
+        UpdateVisuals();
+    }
+
+    // ì•„ì´í…œ(ë°œíŒ) íšë“
+    public void AddRung()
+    {
+        if (lengthLevel < 4)
+        {
+            _ladderSoundController.PlayFixLadder();
+            lengthLevel++;
+            UpdateVisuals();
+            Debug.Log($"[Ladder] Level Up! Current: {lengthLevel}");
+        }
+    }
+
+    void UpdateVisuals()
+    {
+        for (int i = 0; i < extraRungs.Length; i++)
+        {
+            if (extraRungs[i])
+            {
+                extraRungs[i].SetActive(lengthLevel >= (i + 1));
+            }
+        }
+    }
+
+    // ìŠ¬ë¡¯ì— ë¶€ì°©
     public void AttachTo(LadderPlaceSpot spot, bool alignRotation = true)
     {
         if (!spot || !spot.ladderAnchor) return;
 
-        // ±âÁ¸ ½½·Ô ºñ¿ì±â
+        // ê¸°ì¡´ ìë¦¬ ë¹„ìš°ê¸°
         if (currentSpot) currentSpot.occupied = false;
 
-        // ½º³À & Á¡À¯
+        // ë¬¼ë¦¬ì  ì´ë™
         transform.position = spot.ladderAnchor.position;
         if (alignRotation) transform.rotation = spot.ladderAnchor.rotation;
+
+        // ë°ì´í„° ê°±ì‹ 
         currentSpot = spot;
         spot.occupied = true;
 
-        // ¿À¸£±â Å¸°Ù ¿¬°á
-        var climb = GetComponent<LadderClimbInteractable>();
-        if (climb && spot.climbTarget) climb.target = spot.climbTarget;
+        // â˜… ìƒí˜¸ì‘ìš© ì»´í¬ë„ŒíŠ¸ì— "ì–´ë””ë¡œ ì˜¬ë¼ê°ˆì§€" ì£¼ì…
+        if (_climbInteractable && spot.climbPoint)
+        {
+            _climbInteractable.climbDestination = spot.climbPoint;
+        }
+
+        _ladderSoundController?.PlayPlaceLadder();
     }
 
+    // ë–¼ì–´ë‚´ê¸° (ë“œë˜ê·¸ ì‹œì‘ ì‹œ)
     public void Detach()
     {
-        if (currentSpot) currentSpot.occupied = false;
-        currentSpot = null;
+        if (currentSpot)
+        {
+            currentSpot.occupied = false;
+            currentSpot = null;
+        }
 
-        // ¿À¸£±â ºñÈ°¼ºÈ­(¼±ÅÃ)
-        var climb = GetComponent<LadderClimbInteractable>();
-        if (climb) climb.target = null;
+        // ëª©ì ì§€ ì œê±° (ì˜¬ë¼ê°€ê¸° ë¶ˆê°€ëŠ¥)
+        if (_climbInteractable)
+        {
+            _climbInteractable.climbDestination = null;
+        }
+
+        _ladderSoundController?.PlayPlaceLadder();
     }
 }

@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using DG.Tweening;
 
 public class TweenNoiseAdapter : MonoBehaviour
@@ -33,18 +33,18 @@ public class TweenNoiseAdapter : MonoBehaviour
     {
         if (t == null || adapter == null) return t;
 
-        // Æ®À©ÀÌ ÀÌ¹Ì ÇÃ·¹ÀÌ ÁßÀÌ¸é ½ÃÀÛ ÈÅÀ» Áï½Ã 1È¸ È£Ãâ
+        // Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ 1È¸ È£ï¿½ï¿½
         if (t.active && t.IsPlaying())
         {
             adapter.StartTweenNoise();
         }
         else
         {
-            // Ã¹ Àç»ý ½ÃÁ¡¿¡ È®½ÇÈ÷ È£Ãâ
+            // Ã¹ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½
             t.OnStart(adapter.StartTweenNoise);
         }
 
-        // Á¾·á ÈÅÀº ¿Ï·á/Å³ ¸ðµÎ¿¡¼­ º¸Àå
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½/Å³ ï¿½ï¿½Î¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         t.OnComplete(adapter.StopTweenNoise)
          .OnKill(adapter.StopTweenNoise);
 

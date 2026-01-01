@@ -55,7 +55,9 @@ half3 LightingCellShading(SurfaceData surfaceData, Light light, half3 normalWS, 
 
     radiance *= smoothstep(0.1, 0.1 + 0.02, light.shadowAttenuation);
 
-    radiance *= light.distanceAttenuation * light.color;
+    // radiance *= smoothstep(0.1, 0.1 + 0.01, light.distanceAttenuation) * light.color;
+    // radiance *= light.distanceAttenuation * light.color;
+    // radiance *= step(0.1, light.distanceAttenuation) * light.color;
 
     //half smoothness = exp2(10 * surfaceData.smoothness + 1);
     float3 halfVec = SafeNormalize(float3(light.direction) + float3(viewDir));
@@ -71,7 +73,7 @@ half3 LightingCellShading(SurfaceData surfaceData, Light light, half3 normalWS, 
     float3 specularReflection = surfaceData.specular.rgb * modifier;
     half spec = light.color * specularReflection;
 
-    return  radiance * surfaceData.albedo + spec;
+    return (radiance * light.color * surfaceData.albedo + spec) * light.distanceAttenuation;
 }
 
 half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,

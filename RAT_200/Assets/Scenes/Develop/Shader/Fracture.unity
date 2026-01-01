@@ -195,6 +195,19 @@ MonoBehaviour:
   needNa: 2
   needWater: 1
   needGel: 4
+  btnNa3D: {fileID: 1549480222}
+  btnWater3D: {fileID: 1360602827}
+  btnGel3D: {fileID: 1869550099}
+  btnMix3D: {fileID: 2117093704}
+  tubeNaObj: {fileID: 0}
+  tubeWaterObj: {fileID: 0}
+  tubeGelObj: {fileID: 0}
+  steamParticle: {fileID: 0}
+  bridgeManager: {fileID: 1465548608}
+  bridgeSideCam: {fileID: 541855561}
+  steamShowDuration: 1.5
+  bridgeCamDuration: 2.5
+  rewardCardObj: {fileID: 0}
   OnMakeBigNoise:
     m_PersistentCalls:
       m_Calls:
@@ -210,14 +223,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  bridgeManager: {fileID: 1465548608}
-  bridgeSideCam: {fileID: 541855561}
-  bridgeCamDuration: 2.5
-  btnNa3D: {fileID: 1549480222}
-  btnWater3D: {fileID: 1360602827}
-  btnGel3D: {fileID: 1869550099}
-  btnMix3D: {fileID: 2117093704}
-  hidePlayerDuringMicro: 1
 --- !u!65 &27148362
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -421,8 +426,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43320b9f0c481e458c4ef54da68f5ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startPoint: {fileID: 0}
   lengthLevel: 1
   currentSpot: {fileID: 0}
+  extraRungs: []
+  _ladderSoundController: {fileID: 0}
 --- !u!114 &41922695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -471,10 +479,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Interact
   requiredDistance: 1.2
-  target: {fileID: 0}
   yThreshold: 0.9
   duration: 0.6
   ease: 4
+  climbDestination: {fileID: 0}
+  _ladderSoundController: {fileID: 0}
 --- !u!65 &41922698
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -708,6 +717,7 @@ MonoBehaviour:
   surveillanceThreshold: 0.8
   thresholdHysteresis: 0.05
   current01: 0
+  isDebugPaused: 0
 --- !u!4 &70985797
 Transform:
   m_ObjectHideFlags: 0
@@ -1975,10 +1985,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Interact
   requiredDistance: 1.2
-  target: {fileID: 0}
   yThreshold: 0.9
   duration: 0.6
   ease: 4
+  climbDestination: {fileID: 0}
+  _ladderSoundController: {fileID: 0}
 --- !u!65 &159852434
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4063,7 +4074,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ladderAnchor: {fileID: 1488247342}
-  climbTarget: {fileID: 372941844}
+  climbPoint: {fileID: 0}
   requiredLengthLevel: 1
   snapRadius: 0.6
   occupied: 0
@@ -4080,7 +4091,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   climbPoint: {fileID: 0}
-  closeVCam: {fileID: 0}
 --- !u!65 &372941845
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4710,10 +4720,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Interact
   requiredDistance: 1.2
-  target: {fileID: 1446440362}
   yThreshold: 0.9
   duration: 0.6
   ease: 4
+  climbDestination: {fileID: 0}
+  _ladderSoundController: {fileID: 0}
 --- !u!114 &433142007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4726,8 +4737,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43320b9f0c481e458c4ef54da68f5ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startPoint: {fileID: 0}
   lengthLevel: 1
   currentSpot: {fileID: 1446440365}
+  extraRungs: []
+  _ladderSoundController: {fileID: 0}
 --- !u!114 &433142008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4845,7 +4859,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ladderAnchor: {fileID: 1473191374}
-  climbTarget: {fileID: 446388008}
+  climbPoint: {fileID: 0}
   requiredLengthLevel: 1
   snapRadius: 0.6
   occupied: 0
@@ -4862,7 +4876,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   climbPoint: {fileID: 955511515}
-  closeVCam: {fileID: 1087534588}
 --- !u!114 &446388009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6234,23 +6247,7 @@ MonoBehaviour:
   eyePivot: {fileID: 1061560803}
   doorHinge: {fileID: 772371286}
   player: {fileID: 2058422713}
-  doorOpenEuler: {x: 0, y: 168, z: 0}
-  doorClosedEuler: {x: 0, y: 270, z: 0}
-  introDelay: 5
-  searchDuration: 20
-  focusDuration: 5
-  noiseResetLevel: 0.2
-  obstacleMask:
-    serializedVersion: 2
-    m_Bits: 4194304
-  catchDistance: 1
-  roomCenter: {fileID: 581806211}
-  scanAreaSize: {x: 8, y: 8}
-  scanMoveSpeed: 3
-  handModel: {fileID: 0}
-  OnGameOver:
-    m_PersistentCalls:
-      m_Calls: []
+  npcTarget: {fileID: 0}
   OnSummonStarted:
     m_PersistentCalls:
       m_Calls: []
@@ -6263,6 +6260,30 @@ MonoBehaviour:
   OnPlayerCaught:
     m_PersistentCalls:
       m_Calls: []
+  OnNpcCaught:
+    m_PersistentCalls:
+      m_Calls: []
+  doorOpenEuler: {x: 0, y: 168, z: 0}
+  doorClosedEuler: {x: 0, y: 270, z: 0}
+  introDelay: 5
+  searchDuration: 20
+  focusDuration: 5
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4194304
+  catchDistance: 1
+  roomCenter: {fileID: 581806211}
+  scanAreaSize: {x: 8, y: 8}
+  scanMoveSpeed: 3
+  handModel: {fileID: 0}
+  OnGameOver:
+    m_PersistentCalls:
+      m_Calls: []
+  _summonAlertClip: {fileID: 0}
+  _doorCreakClip: {fileID: 0}
+  _spotlightToggleClip: {fileID: 0}
+  _lightBuzzClip: {fileID: 0}
+  _caughtScareClip: {fileID: 0}
 --- !u!4 &590452115
 Transform:
   m_ObjectHideFlags: 0
@@ -6648,10 +6669,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Interact
   requiredDistance: 1.2
-  target: {fileID: 0}
   yThreshold: 1
   duration: 0.6
   ease: 4
+  climbDestination: {fileID: 0}
+  _ladderSoundController: {fileID: 0}
 --- !u!1 &687957684
 GameObject:
   m_ObjectHideFlags: 0
@@ -7868,7 +7890,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ladderAnchor: {fileID: 667678972}
-  climbTarget: {fileID: 821887852}
+  climbPoint: {fileID: 0}
   requiredLengthLevel: 1
   snapRadius: 0.6
   occupied: 0
@@ -7885,7 +7907,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   climbPoint: {fileID: 1229870443}
-  closeVCam: {fileID: 500513304}
 --- !u!114 &821887855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12572,7 +12593,10 @@ MonoBehaviour:
   onBand_41_60:
     m_PersistentCalls:
       m_Calls: []
-  onBand_61_90:
+  onBand_61_80:
+    m_PersistentCalls:
+      m_Calls: []
+  onBand_81_90:
     m_PersistentCalls:
       m_Calls: []
   onBand_91_99:
@@ -13596,7 +13620,7 @@ Light:
   serializedVersion: 11
   m_Type: 0
   m_Color: {r: 0.9764151, g: 0.9764151, b: 0.9764151, a: 1}
-  m_Intensity: 100
+  m_Intensity: 1
   m_Range: 7.6216726
   m_SpotAngle: 89.642235
   m_InnerSpotAngle: 71.1893
@@ -14080,7 +14104,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   climbPoint: {fileID: 1649076574}
-  closeVCam: {fileID: 450746875}
 --- !u!4 &1446440363
 Transform:
   m_ObjectHideFlags: 0
@@ -14146,7 +14169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ladderAnchor: {fileID: 1132736269}
-  climbTarget: {fileID: 1446440362}
+  climbPoint: {fileID: 0}
   requiredLengthLevel: 1
   snapRadius: 0.6
   occupied: 0
@@ -14186,6 +14209,10 @@ MonoBehaviour:
   w2Init: 1
   w3Init: 2
   w4Init: 0
+  ratObj: {fileID: 0}
+  shockEffects: []
+  crossbarObj: {fileID: 0}
+  rewardCardObj: {fileID: 0}
   OnSolved:
     m_PersistentCalls:
       m_Calls: []
@@ -14434,16 +14461,16 @@ MonoBehaviour:
   ropeObj: {fileID: 0}
   acidSmokeEffect: {fileID: 0}
   cardRb: {fileID: 0}
-  cardSpawnPoint: {fileID: 0}
   bookPivot: {fileID: 328625576}
-  bookObj: {fileID: 328625576}
+  bookRb: {fileID: 0}
   bookWalkableCol: {fileID: 328625577}
   bookFallRotation: {x: -150, y: 107.335, z: 0}
-  fallDuration: 0.8
-  fallEase: 30
-  bridgeNavMeshLink: {fileID: 1944642215}
+  bridgeBlocker: {fileID: 0}
   bridgeCameraTriggerObj: {fileID: 1686579396}
+  collapseTriggerObj: {fileID: 0}
   noiseAmount: 0.3
+  collapseNoiseAmount: 1
+  playerFallDrag: 5
 --- !u!4 &1465548609
 Transform:
   m_ObjectHideFlags: 0
@@ -14508,10 +14535,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Interact
   requiredDistance: 1.2
-  target: {fileID: 0}
   yThreshold: 1
   duration: 0.6
   ease: 4
+  climbDestination: {fileID: 0}
+  _ladderSoundController: {fileID: 0}
 --- !u!65 &1473191376
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14635,10 +14663,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Interact
   requiredDistance: 1.2
-  target: {fileID: 372941844}
   yThreshold: 0.9
   duration: 0.6
   ease: 4
+  climbDestination: {fileID: 0}
+  _ladderSoundController: {fileID: 0}
 --- !u!65 &1488247344
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14747,10 +14776,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Interact
   requiredDistance: 1.2
-  target: {fileID: 1446440362}
   yThreshold: 0.9
   duration: 0.6
   ease: 4
+  climbDestination: {fileID: 0}
+  _ladderSoundController: {fileID: 0}
 --- !u!65 &1493495038
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16072,7 +16102,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5f7eb7dfd2cb3843839e83143b683f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sideViewCam: {fileID: 541855561}
+  targetCamera: {fileID: 0}
+  activePriority: 100
 --- !u!1 &1696753387
 GameObject:
   m_ObjectHideFlags: 0
@@ -16492,7 +16523,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5038edd7af33a2240838914d1d80dd97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainKey: 287
+  itemGiveKey: 287
+  noiseToggleKey: 286
   requireShift: 0
   requireCtrl: 0
   requireAlt: 0
@@ -16649,7 +16681,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ladderAnchor: {fileID: 0}
-  climbTarget: {fileID: 1775774482}
+  climbPoint: {fileID: 0}
   requiredLengthLevel: 1
   snapRadius: 0.6
   occupied: 0
@@ -16666,7 +16698,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   climbPoint: {fileID: 0}
-  closeVCam: {fileID: 1903128472}
 --- !u!65 &1775774483
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -18617,6 +18648,7 @@ GameObject:
   - component: {fileID: 2019276630}
   - component: {fileID: 2019276629}
   - component: {fileID: 2019276634}
+  - component: {fileID: 2019276635}
   m_Layer: 11
   m_Name: Safe
   m_TagString: Untagged
@@ -18667,6 +18699,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38e9fe6ea190c5f449ad4a52a16246db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  displayName: Interact
+  requiredDistance: 1.2
   spade: {fileID: 1054187139}
   heart: {fileID: 820963344}
   diamond: {fileID: 1283222968}
@@ -18680,11 +18714,7 @@ MonoBehaviour:
   openEase: 3
   linkedPart: {fileID: 2021017594}
   linkedPartOpenEuler: {x: 0, y: 0, z: 0}
-  paperPrefab: {fileID: 0}
-  paperSpawnPoint: {fileID: 0}
-  paperFormat: "\u2660 {0}\n\u2665 {1}\n\u2666 {2}\n\u2663 {3}"
-  randomSeed: 0
-  hidePlayerDuringMicro: 1
+  dispenser: {fileID: 0}
 --- !u!23 &2019276632
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -18759,6 +18789,32 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.5000004, y: 1.8090018, z: 0.09577074}
   m_Center: {x: 0.75000066, y: 0.9045006, z: -0.0000009536743}
+--- !u!114 &2019276635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2019276627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f4c6b8a7b105f44296faffa3b8944f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  benchCloseupCam: {fileID: 0}
+  microCloseupCam: {fileID: 0}
+  mixingStation: {fileID: 0}
+  hintCanvas: {fileID: 0}
+  lockPlayerWhileMicro: 1
+  showCursorWhileMicro: 1
+  OnEnterMicro:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExitMicro:
+    m_PersistentCalls:
+      m_Calls: []
+  reenterBlockSec: 0.2
+  hostOverride: {fileID: 0}
 --- !u!1 &2021017593
 GameObject:
   m_ObjectHideFlags: 0
@@ -19704,6 +19760,19 @@ MonoBehaviour:
   needNa: 2
   needWater: 1
   needGel: 4
+  btnNa3D: {fileID: 1582981799}
+  btnWater3D: {fileID: 750932293}
+  btnGel3D: {fileID: 379685331}
+  btnMix3D: {fileID: 1973086828}
+  tubeNaObj: {fileID: 0}
+  tubeWaterObj: {fileID: 0}
+  tubeGelObj: {fileID: 0}
+  steamParticle: {fileID: 0}
+  bridgeManager: {fileID: 0}
+  bridgeSideCam: {fileID: 0}
+  steamShowDuration: 1.5
+  bridgeCamDuration: 2.5
+  rewardCardObj: {fileID: 0}
   OnMakeBigNoise:
     m_PersistentCalls:
       m_Calls:
@@ -19719,14 +19788,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  bridgeManager: {fileID: 0}
-  bridgeSideCam: {fileID: 0}
-  bridgeCamDuration: 2.5
-  btnNa3D: {fileID: 1582981799}
-  btnWater3D: {fileID: 750932293}
-  btnGel3D: {fileID: 379685331}
-  btnMix3D: {fileID: 1973086828}
-  hidePlayerDuringMicro: 1
 --- !u!65 &2093472136
 BoxCollider:
   m_ObjectHideFlags: 0

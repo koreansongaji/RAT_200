@@ -1,85 +1,115 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 using UnityEngine.Events;
 using TMPro;
 using DG.Tweening;
+using System.Collections;
 
-/// 4øÕ¿ÃæÓ°ø3¥‹ ≥Ù¿Ã ∆€¡Ò ƒ¡∆Æ∑—∑Ø.
-/// - ∏Ò«•: ∏µÁ W∞° ≥Ù¿Ã 0
-/// - πˆ∆∞ øµ«‚(πÆ¡¶ ¡§¿«): 
-///   B1:(1,0,1,0)  B2:(0,1,0,1)  B3:(1,1,1,0)  B4:(0,1,1,1)
-/// - ∞¢ πˆ∆∞¿∫ øµ«‚πﬁ¥¬ øÕ¿ÃæÓ¿« ≥Ù¿Ã∏¶ +1(mod 3) Ω√≈¥
-/// - 8»∏ ¿ÃªÛ ¥©∏£∏È Ω«∆–(Noise 100%)
 public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroHidePlayerPreference
 {
-    public bool hidePlayerDuringMicro = true; // ∆€¡Ò∫∞∑Œ ≈‰±€
+    public bool hidePlayerDuringMicro = true;
     public bool HidePlayerDuringMicro => hidePlayerDuringMicro;
 
-    [Header("Wires (Transforms at current piece root)")]
+    [Header("Wires")]
     public Transform w1;
     public Transform w2;
     public Transform w3;
     public Transform w4;
 
-    [Header("Local snap positions for levels (0=ø¨∞·,1=¿ß,2=±◊∫∏¥Ÿ ¿ß)")]
+    [Header("Local snap positions")]
     public Vector3 level0Local = new(0f, 0.00f, 0f);
     public Vector3 level1Local = new(0f, 0.04f, 0f);
     public Vector3 level2Local = new(0f, 0.08f, 0f);
     [Min(0f)] public float snapDuration = 0.12f;
     public Ease snapEase = Ease.OutQuad;
 
-    [Header("3D Buttons")]
+    [Header("Buttons")]
     public PressableButton3D b1;
     public PressableButton3D b2;
     public PressableButton3D b3;
     public PressableButton3D b4;
 
-    [Header("UI (º±≈√)")]
-    public TMP_Text txtMovesLeft;      // "Moves: 0/7" µÓ
-    public TMP_Text[] wireDebugTexts;  // W1~W4 ≥Ù¿Ã µπˆ±◊ «•±‚(º±≈√)
-    public Canvas worldCanvas;         // ººº« ¡ﬂø°∏∏ ON
+    [Header("UI")]
+    public TMP_Text txtMovesLeft;
+    public TMP_Text[] wireDebugTexts;
+    public Canvas worldCanvas;
 
     [Header("Rules")]
-    [Tooltip("πˆ∆∞ ¥©∏ß »Ωºˆ 8 ¿ÃªÛ¿Ã∏È Ω«∆–")]
-    public int failAtPresses = 8;      // 8 ¿ÃªÛ¿Ã∏È Ω«∆–
-    [Tooltip("√ ±‚ ≥Ù¿Ã (0/1/2)")]
+    public int failAtPresses = 8;
     [Range(0, 2)] public int w1Init = 0;
     [Range(0, 2)] public int w2Init = 1;
     [Range(0, 2)] public int w3Init = 2;
     [Range(0, 2)] public int w4Init = 0;
 
+    [Header("Cage Rat Event")]
+    public GameObject ratObj;
+    public GameObject deadRat;
+    public ParticleSystem[] shockEffects;
+    public GameObject crossbarObj;
+
+    [Header("Reward")]
+    public GameObject rewardCardObj;
+
     [Header("Events")]
     public UnityEvent OnSolved;
     public UnityEvent OnFailed;
 
-    // ººº« ªÛ≈¬
     bool _session;
-    int[] _h = new int[4];  // W1..W4
+    int[] _h = new int[4];
     int _pressCount;
     PlayerInteractor _lastPlayer;
     MicroZoomSession _micro;
+    Collider _mainCollider;
 
+    bool _isSolved = false;
+    bool _isAnimating = false;
     Vector3[] _baseLocalPos = new Vector3[4];
 
-    // πˆ∆∞°ÊøÕ¿ÃæÓ øµ«‚ («œµÂƒ⁄µÂ: πÆ¡¶ ¡§¿« ±◊¥Î∑Œ)
-    // rows: B1..B4, cols: W1..W4
     static readonly bool[,] INFL = new bool[4, 4] {
-        { true,  false, true,  false }, // B1
-        { false, true,  false, true  }, // B2
-        { true,  true,  true,  false }, // B3
-        { false, true,  true,  true  }  // B4
+        { true,  false, true,  false },
+        { false, true,  false, true  },
+        { true,  true,  true,  false },
+        { false, true,  true,  true  }
     };
 
-    // ≈¨∑°Ω∫ « µÂø° ∞°µÂ √ﬂ∞°
-    bool _ending = false;
+
+    private WirePuzzleSoundController _wirePuzzleSoundController;
 
     void Awake()
     {
+        if (TryGetComponent(out _wirePuzzleSoundController))
+        {
+            _wirePuzzleSoundController = gameObject.AddComponent<WirePuzzleSoundController>();
+        }
+
         _micro = GetComponent<MicroZoomSession>();
+        _mainCollider = GetComponent<Collider>();
+
+        // ‚òÖ [ÌïµÏã¨] ÌïòÏúÑ Î≤ÑÌäº ÏÑ∏ÏÖò Î∞îÏù∏Îî© & Ïû¨Î∂ÄÌåÖ
+        RefreshMicroBind(b1);
+        RefreshMicroBind(b2);
+        RefreshMicroBind(b3);
+        RefreshMicroBind(b4);
+
         WireButtons();
         if (worldCanvas) worldCanvas.enabled = false;
-
-        // √ ±‚ πËƒ°∞™ ƒ≥Ω√ (ø°µ≈Õø°º≠ πËƒ°«— ±◊¥Î∑Œ ∫∏¡∏)
         CacheBaseLocalPositions();
+        if (rewardCardObj) rewardCardObj.SetActive(false);
+        if (crossbarObj) crossbarObj.SetActive(false);
+        if (ratObj) ratObj.SetActive(true);
+        if (deadRat) deadRat.SetActive(false);
+        if (shockEffects != null)
+        {
+            foreach (var fx in shockEffects) if (fx) fx.Stop();
+        }
+    }
+
+    // ‚òÖ Î∞îÏù∏Îî© Ìó¨Ìçº Ìï®Ïàò
+    void RefreshMicroBind(PressableButton3D btn)
+    {
+        if (!btn) return;
+        if (!btn.micro && _micro) btn.micro = _micro;
+        btn.enabled = false;
+        btn.enabled = true;
     }
 
     void CacheBaseLocalPositions()
@@ -98,52 +128,48 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         if (b4) b4.OnPressed.AddListener(() => OnPress(3));
     }
 
-    // ===== BaseInteractable =====
-    public override bool CanInteract(PlayerInteractor i)
-    {
-        // ººº« ¡ﬂ ¡ﬂ∫π ¡¯¿‘ πÊ¡ˆ
-        return !_session;
-    }
+    public override bool CanInteract(PlayerInteractor i) => !_session && !_isSolved && !_isAnimating;
 
     public override void Interact(PlayerInteractor i)
     {
-        // Micro ººº« ø£∆Æ∏Æ¥¬ µ˚∑Œ MicroEntryInteractable¿ª Ω·µµ µ«∞Ì,
-        // ∆€¡Ò¿Ã ¡˜¡¢ Micro∏¶ ø≠æÓµµ µ . ø©±‚º≠¥¬ Micro∞° ∫ŸæÓ¿÷¥Ÿ∏È ±◊¬ ¿∏∑Œ ¡¯¿‘∏∏ ¿ß¿”.
-        if (_session) return;
+        if (!CanInteract(i)) return;
         _lastPlayer = i;
-        if (_micro && _micro.TryEnter(i)) return;
-        // Micro∞° æ¯¿ª ∂ß ¡˜¡¢ Ω√¿€
+
+        // [ÏàòÏ†ïÎê®] MicroÍ∞Ä ÏûàÎã§Î©¥ TryEnterÏùò ÏÑ±Í≥µ Ïó¨Î∂ÄÏôÄ Í¥ÄÍ≥ÑÏóÜÏù¥ Î¶¨ÌÑ¥Ìï©ÎãàÎã§.
+        // Ï¶â, Ïø®ÌÉÄÏûÑ Îì±ÏúºÎ°ú ÏßÑÏûÖ Ïã§Ìå® Ïãú 'Í∞ïÏ†ú ÏãúÏûë' ÌïòÏßÄ ÏïäÍ≥† ÏûÖÎ†•ÏùÑ Î¨¥ÏãúÌï©ÎãàÎã§.
+        if (_micro)
+        {
+            _micro.TryEnter(i);
+            return;
+        }
+
+        // MicroÍ∞Ä ÏóÜÏùÑ ÎïåÎßå Î∞îÎ°ú ÏÑ∏ÏÖò ÏãúÏûë
         StartSession();
     }
 
-    // ===== IMicroSessionHost =====
-    public bool CanBeginMicro(PlayerInteractor player) => !_session;
+    public bool CanBeginMicro(PlayerInteractor player) => !_session && !_isSolved && !_isAnimating;
 
     public void OnMicroEnter(PlayerInteractor player)
     {
+        if (_mainCollider) _mainCollider.enabled = false;
         _lastPlayer = player;
         StartSession();
     }
 
     public void OnMicroExit(PlayerInteractor player)
     {
+        if (_mainCollider) _mainCollider.enabled = true;
         CancelSession();
     }
 
-    // ===== Session =====
     public void StartSession()
     {
         _session = true;
-        _ending = false;
         _pressCount = 0;
         _h[0] = w1Init; _h[1] = w2Init; _h[2] = w3Init; _h[3] = w4Init;
-
-        // »§Ω√ ∑±≈∏¿”ø° «¡∏Æ∆’ ¿ÁπËƒ°µ∆¿ª ºˆ ¿÷¿∏¥œ ººº« Ω√¿€ ∂ßµµ «— π¯ ¥ı ƒ≥Ω√
         CacheBaseLocalPositions();
-
         if (worldCanvas) worldCanvas.enabled = true;
         SetButtonsInteractable(true);
-
         SnapAll();
         RefreshTexts();
     }
@@ -155,6 +181,7 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         SetButtonsInteractable(false);
     }
 
+    // ... (Ïù¥Ìïò SetButtonsInteractable, OnPress, Routine_SuccessSequence Îì± Í∏∞Ï°¥ Î°úÏßÅ Ïú†ÏßÄ) ...
     void SetButtonsInteractable(bool on)
     {
         if (b1) b1.SetInteractable(on);
@@ -165,73 +192,72 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
 
     void OnPress(int bIndex)
     {
-        if (!_session || _ending) return;
-
-        // πˆ∆∞ øµ«‚ ¿˚øÎ (+1 mod 3)
-        for (int w = 0; w < 4; w++)
-            if (INFL[bIndex, w])
-                _h[w] = (_h[w] + 1) % 3;
-
+        if (!_session || _isAnimating || _isSolved) return;
+        for (int w = 0; w < 4; w++) if (INFL[bIndex, w]) _h[w] = (_h[w] + 1) % 3;
         _pressCount++;
-
         SnapAll();
         RefreshTexts();
 
-        // º∫∞¯ √º≈©
         if (_h[0] == 0 && _h[1] == 0 && _h[2] == 0 && _h[3] == 0)
         {
-            _ending = true;
-            SetButtonsInteractable(false);
-            OnSolved?.Invoke();
-
-            // Micro ¡æ∑· ¿Øµµ °Ê IMicroSessionHost.OnMicroExit °Ê CancelSession()
-            if (_micro) _micro.Exit();
-            else CancelSession();
+            Debug.Log("[WirePuzzle] ÏÑ±Í≥µ!");
+            _isSolved = true;
+            StartCoroutine(Routine_SuccessSequence());
             return;
         }
 
-        // Ω«∆– √º≈©
         if (_pressCount >= failAtPresses)
         {
-            _ending = true;
+            Debug.Log("[WirePuzzle] Ïã§Ìå®!");
             SetButtonsInteractable(false);
-
-            // º“¿Ω 100%
             if (NoiseSystem.Instance) NoiseSystem.Instance.FireImpulse(1f);
             OnFailed?.Invoke();
+            CommonSoundController.Instance?.PlayPuzzleFail();
 
-            if (_micro) _micro.Exit();
-            else CancelSession();
+            // [ÏàòÏ†ïÎê®] Micro ÏÉÅÌÉúÍ∞Ä Ïã§Ï†úÎ°ú ÌôúÏÑ±ÌôîÎêòÏñ¥ ÏûàÏùÑ ÎïåÎßå Exit() Ìò∏Ï∂ú
+            // Í∑∏Î†áÏßÄ ÏïäÎã§Î©¥(Ï¢ÄÎπÑ ÏÑ∏ÏÖò Îì±) Í∞ïÏ†úÎ°ú CancelSession() Ìò∏Ï∂ú
+            if (_micro && _micro.InMicro)
+            {
+                _micro.Exit();
+            }
+            else
+            {
+                CancelSession();
+            }
         }
+    }
+
+    IEnumerator Routine_SuccessSequence()
+    {
+        _isAnimating = true;
+        SetButtonsInteractable(false);
+        if (worldCanvas) worldCanvas.enabled = false;
+        CommonSoundController.Instance?.PlaySpark();
+        if (shockEffects != null) foreach (var fx in shockEffects) if (fx) fx.Play();
+        yield return new WaitForSeconds(1.5f);
+        if (ratObj) ratObj.SetActive(false);
+        if (deadRat) deadRat.SetActive(true);
+        if (crossbarObj) crossbarObj.SetActive(true);
+        if (rewardCardObj) rewardCardObj.SetActive(true);
+        OnSolved?.Invoke();
+        yield return new WaitForSeconds(0.5f);
+        if (_micro) _micro.Exit();
+        else CancelSession();
+        _isAnimating = false;
     }
 
     void SnapAll()
     {
-        Snap(w1, 0, _h[0]);
-        Snap(w2, 1, _h[1]);
-        Snap(w3, 2, _h[2]);
-        Snap(w4, 3, _h[3]);
+        Snap(w1, 0, _h[0]); Snap(w2, 1, _h[1]); Snap(w3, 2, _h[2]); Snap(w4, 3, _h[3]);
     }
 
     void Snap(Transform t, int index, int h)
     {
         if (!t) return;
-
-        // level0/1/2Local¿« y∏∏ ªÁøÎ (x/z¥¬ √ ±‚∞™ ¿Ø¡ˆ)
-        float y = h switch
-        {
-            0 => level0Local.y,
-            1 => level1Local.y,
-            _ => level2Local.y
-        };
-
-        // √ ±‚ πËƒ°«— x/z∏¶ ªÁøÎ
+        float y = h switch { 0 => level0Local.y, 1 => level1Local.y, _ => level2Local.y };
         var basePos = _baseLocalPos[index];
-        var target = new Vector3(basePos.x, y, basePos.z);
-
-        // ¡ﬂ∫π ∆Æ¿© πÊ¡ˆ
         t.DOKill();
-        t.DOLocalMove(target, snapDuration).SetEase(snapEase);
+        t.DOLocalMove(new Vector3(basePos.x, y, basePos.z), snapDuration).SetEase(snapEase);
     }
 
     void RefreshTexts()
@@ -245,11 +271,4 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
             if (wireDebugTexts[3]) wireDebugTexts[3].text = $"W4:{_h[3]}";
         }
     }
-
-#if UNITY_EDITOR
-    void OnValidate()
-    {
-        failAtPresses = Mathf.Max(1, failAtPresses);
-    }
-#endif
 }

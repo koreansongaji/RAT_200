@@ -1,80 +1,246 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using DG.Tweening;
-using Unity.Cinemachine;
+using UnityEngine.AI;
+using System.Collections;
 
-public class LabToFridgeBridgeManager : MonoBehaviour
+public class LabToFridgeManager : MonoBehaviour
 {
-    [Header("1. Rope (¹åÁÙ)")]
+    [Header("1. Rope & Card")]
     public Transform ropeObj;
     public ParticleSystem acidSmokeEffect;
-
-    [Header("2. Card (Ä«µå)")]
     public Rigidbody cardRb;
-    public Transform cardSpawnPoint;
 
-    [Header("3. Book Bridge (Ã¥ ´Ù¸®)")]
+    [Header("2. Book Bridge")]
     public Transform bookPivot;
-    public Transform bookObj;
-    public Collider bookWalkableCol; // ´Ù¸® ¹Ù´Ú ÆÇÁ¤¿ë (Ground)
+    public Rigidbody bookRb;
+    public Collider bookWalkableCol; // ï¿½ï¿½ï¿½ ï¿½ëµµ
+
+    [Header("Bridge Animation")]
     public Vector3 bookFallRotation = new Vector3(0, 0, 90);
-    public float fallDuration = 0.8f;
-    public Ease fallEase = Ease.OutBounce;
 
-    [Header("4. NavMesh & Camera Trigger (Áß¿ä)")]
-    public GameObject bridgeNavMeshLink; // ´Ù¸® ±æ ¿¬°á (NavMeshLink)
+    [Header("3. Navigation")]
+    public NavMeshObstacle bridgeBlocker;
 
-    // ¡å¡å¡å [Ãß°¡] ´Ù¸®°¡ ³õÀÌ¸é ÄÑÁú Ä«¸Þ¶ó Æ®¸®°Å ¿µ¿ª ¡å¡å¡å
-    [Tooltip("BridgeCameraTrigger°¡ ºÙÀº ¿ÀºêÁ§Æ®. ´Ù¸®°¡ »ý±â¸é ÄÑÁÝ´Ï´Ù.")]
+    [Header("4. Camera & Event")]
     public GameObject bridgeCameraTriggerObj;
-    // ¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã
+    public GameObject collapseTriggerObj;
 
     [Header("Settings")]
     public float noiseAmount = 0.3f;
+    public float collapseNoiseAmount = 1.0f;
+
+    [Header("Fall Physics")]
+    public float playerFallDrag = 5.0f;
+
+    private bool _isCollapsing = false;
+
+    [Header("Fuse Single")]
+    public GameObject fuse;
+
+    void Start()
+    {
+        if (bridgeBlocker) bridgeBlocker.enabled = true;
+        if (bookWalkableCol) bookWalkableCol.enabled = false;
+        if (collapseTriggerObj) collapseTriggerObj.SetActive(false);
+        if (bridgeCameraTriggerObj) bridgeCameraTriggerObj.SetActive(false);
+
+        if (bookRb) bookRb.isKinematic = true;
+    }
 
     public void PlaySequence()
     {
-        // 1. »ê¼º ¿¬±â
         if (acidSmokeEffect) acidSmokeEffect.Play();
-
-        // 2. ¹åÁÙ ²÷¾îÁü
         if (ropeObj)
         {
             ropeObj.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InBack)
                 .OnComplete(() => ropeObj.gameObject.SetActive(false));
         }
-
-        // 3. Ä«µå ¶³¾îÁü
         if (cardRb)
         {
             cardRb.isKinematic = false;
             cardRb.AddForce(Vector3.right * 0.5f, ForceMode.Impulse);
         }
-
-        // 4. Ã¥ ³Ñ¾îÁü (´Ù¸® »ý¼º)
         if (bookPivot)
         {
             DOVirtual.DelayedCall(0.5f, () => {
-                bookPivot.DOLocalRotate(bookFallRotation, fallDuration)
-                    .SetEase(fallEase)
+                bookPivot.DOLocalRotate(bookFallRotation, 0.8f)
+                    .SetRelative(true).SetEase(Ease.OutBounce)
                     .OnComplete(OnBridgeLanded);
             });
         }
     }
 
-    // Ã¥ÀÌ ¹Ù´Ú¿¡ ´ê¾ÒÀ» ¶§ ÈÄÃ³¸®
     void OnBridgeLanded()
     {
-        // 1. Äô! ¼ÒÀ½ ¹ß»ý
         if (NoiseSystem.Instance) NoiseSystem.Instance.FireImpulse(noiseAmount);
-
-        // 2. ÇÃ·¹ÀÌ¾î°¡ ¹â°í Áö³ª°¥ ¼ö ÀÖ°Ô ÄÝ¶óÀÌ´õ/¸µÅ© È°¼ºÈ­
+        if (bridgeBlocker) bridgeBlocker.enabled = false;
         if (bookWalkableCol) bookWalkableCol.enabled = true;
-        if (bridgeNavMeshLink) bridgeNavMeshLink.SetActive(true);
-
-        // ¡å¡å¡å [Ãß°¡] Ä«¸Þ¶ó Æ®¸®°Å È°¼ºÈ­! ¡å¡å¡å
         if (bridgeCameraTriggerObj) bridgeCameraTriggerObj.SetActive(true);
-        // ¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã
+    }
 
-        Debug.Log("[Bridge] Ã¥ ´Ù¸® & Ä«¸Þ¶ó Æ®¸®°Å ¿¬°á ¿Ï·á!");
+    public void EnableCollapseTrigger()
+    {
+        if (collapseTriggerObj) collapseTriggerObj.SetActive(true);
+    }
+
+    public void CollapseBridge()
+    {
+        if (_isCollapsing) return;
+        _isCollapsing = true;
+
+        StartCoroutine(Routine_CollapseSequence());
+    }
+
+    IEnumerator Routine_CollapseSequence()
+    {
+        Debug.Log("[Bridge] ï¿½Ø±ï¿½ ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½ ï¿½ï¿½È¹!");
+
+        // 1. ï¿½ï¿½ [ï¿½Ù½ï¿½] ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½!
+        // ï¿½Ì°ï¿½ ï¿½ï¿½ ï¿½Ï¸ï¿½ ï¿½ï¿½é¸®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.
+        FreezePlayerOnBridge();
+
+        // 2. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Â¦ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½)
+        if (bookPivot) bookPivot.DOShakeRotation(0.5f, 5f, 20);
+
+        // 3. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ Âªï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ (0.3ï¿½ï¿½)
+        yield return new WaitForSeconds(0.3f);
+
+        // 4. ï¿½ï¿½ï¿½ï¿½ & ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        if (NoiseSystem.Instance) NoiseSystem.Instance.FireImpulse(collapseNoiseAmount);
+        if (bridgeBlocker) bridgeBlocker.enabled = true;
+
+        // 5. Ã¥ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ (Collider ï¿½ï¿½ï¿½)
+        if (bookPivot)
+        {
+            var allBookColliders = bookPivot.GetComponentsInChildren<Collider>();
+            foreach (var col in allBookColliders) col.enabled = false;
+        }
+
+        // 6. Ã¥ ï¿½ß¶ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ±ï¿½)
+        if (bookRb)
+        {
+            bookPivot.DOKill();
+            bookRb.isKinematic = false;
+            bookRb.useGravity = true;
+            bookRb.detectCollisions = false; // ï¿½æµ¹ ï¿½ï¿½ï¿½ï¿½ (È®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
+
+            bookRb.AddTorque(Vector3.forward * 10f, ForceMode.Impulse);
+            bookRb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+        }
+
+        // 7. ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½×´ï¿½ ï¿½ã¸¦ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½ß¸ï¿½
+        // (Ã¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Â¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 0.05ï¿½Ê¸ï¿½ ï¿½ï¿½ ï¿½ï¿½)
+        yield return new WaitForSeconds(0.05f);
+        DropPlayer();
+
+        // 8. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        yield return new WaitForSeconds(2.0f);
+        if (bookPivot) Destroy(bookPivot.gameObject);
+        if (bridgeCameraTriggerObj) bridgeCameraTriggerObj.SetActive(false);
+        if (collapseTriggerObj) collapseTriggerObj.SetActive(false);
+
+        RecoverPlayer();
+    }
+
+    // ï¿½ï¿½ [ï¿½Å±ï¿½ ï¿½Ô¼ï¿½] ï¿½ã¸¦ ï¿½ï¿½ ï¿½Ú¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½! ï¿½ï¿½Å°ï¿½ï¿½ ï¿½Ô¼ï¿½
+    void FreezePlayerOnBridge()
+    {
+        var player = GameObject.FindGameObjectWithTag("Player");
+        if (player)
+        {
+            // 1. ï¿½Ìµï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ï¿½ï¿½ (Å¬ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+            var inputEvents = player.GetComponent<ClickMoveOrInteract_Events>();
+            if (inputEvents) inputEvents.enabled = false;
+
+            // 2. NavMeshAgent ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            var agent = player.GetComponent<NavMeshAgent>();
+            if (agent)
+            {
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½Ú¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+                if (agent.isOnNavMesh) agent.ResetPath();
+                agent.velocity = Vector3.zero;
+                agent.isStopped = true;
+                agent.enabled = false; // ï¿½Æ¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            }
+
+            // 3. (ï¿½ï¿½ï¿½ï¿½) ï¿½ã°¡ "ï¿½ï¿½?" ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ ï¿½Ö´Ù¸ï¿½ ï¿½ï¿½ï¿½â¼­ ï¿½ï¿½ï¿½ï¿½
+            // var animator = player.GetComponentInChildren<Animator>();
+            // if(animator) animator.SetTrigger("Surprise");
+        }
+    }
+
+    // (ï¿½ï¿½ï¿½ï¿½ DropPlayer ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½×´ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ïµï¿½, NavMesh ï¿½ï¿½ï¿½ ï¿½Îºï¿½ï¿½ï¿½ ï¿½ßºï¿½ï¿½Ç¾îµµ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
+    void DropPlayer()
+    {
+        var player = GameObject.FindGameObjectWithTag("Player");
+        if (player)
+        {
+            // Rigidbody ï¿½Ñ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            var rb = player.GetComponent<Rigidbody>();
+            if (rb)
+            {
+                rb.isKinematic = false;
+                rb.useGravity = true;
+                rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+                rb.linearDamping = playerFallDrag;
+
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ ï¿½Ù·ï¿½ ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½Ó´Ï´ï¿½
+                rb.linearVelocity = Vector3.zero;
+                rb.AddForce(Vector3.down * 2f, ForceMode.Impulse);
+            }
+
+            var col = player.GetComponent<Collider>();
+            if (col)
+            {
+                col.enabled = true;
+                col.isTrigger = false;
+            }
+
+            fuse.gameObject.GetComponent<DrawerItemDispenser>().Dispense();
+            fuse.gameObject.GetComponent<InteractionBlocker>().Unlock();
+        }
+    }
+    void RecoverPlayer()
+    {
+        var player = GameObject.FindGameObjectWithTag("Player");
+        if (player)
+        {
+            
+
+            Debug.Log("[Bridge] ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½...");
+
+            // 1. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ NavMeshï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½ï¿½)
+            var rb = player.GetComponent<Rigidbody>();
+            if (rb)
+            {
+                rb.isKinematic = true; // ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½
+                rb.useGravity = false; // ï¿½ß·ï¿½ ï¿½ï¿½ï¿½
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+            }
+
+            // 2. ï¿½Ù´ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ (NavMesh ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+            var agent = player.GetComponent<NavMeshAgent>();
+            if (agent)
+            {
+                agent.enabled = true; // ï¿½Ñ±ï¿½
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡(transform.position)ï¿½ï¿½ NavMesh ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­
+                if (NavMesh.SamplePosition(player.transform.position, out NavMeshHit hit, 2.0f, NavMesh.AllAreas))
+                {
+                    agent.Warp(hit.position);
+                }
+                agent.updatePosition = true;
+                agent.updateRotation = true;
+                agent.isStopped = false;
+            }
+
+            // 3. ï¿½Ô·ï¿½ ï¿½ï¿½Å©ï¿½ï¿½Æ® ï¿½Ù½ï¿½ ï¿½Ñ±ï¿½ (ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½!)
+            var inputEvents = player.GetComponent<ClickMoveOrInteract_Events>();
+            if (inputEvents) inputEvents.enabled = true;
+
+            // 4. Trigger ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ Triggerï¿½ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½Æ´Ï¸ï¿½ ï¿½×´ï¿½ï¿½ ï¿½ï¿½)
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ß¿ï¿½ï¿½ï¿½ ï¿½æµ¹Ã¼ï¿½ï¿½ï¿½ï¿½ ï¿½Ï¹Ç·ï¿½ isTrigger=false ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ãµ
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Triggerï¿½ï¿½ï¿½ß¸ï¿½ ï¿½Ñ´Ù¸ï¿½ ï¿½ï¿½ï¿½â¼­ trueï¿½ï¿½ ï¿½Ù²Ù¼ï¿½ï¿½ï¿½.
+        }
     }
 }

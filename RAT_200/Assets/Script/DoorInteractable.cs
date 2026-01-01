@@ -1,37 +1,36 @@
 using UnityEngine;
 using DG.Tweening;
-using UnityEngine.Events; // └╠║е╞о ╗ч┐ы└╗ └з╟╪ ├▀░б
+using UnityEngine.Events; // я┐╜╠║я┐╜╞о я┐╜я┐╜я┐╜я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜ я┐╜▀░я┐╜
 
 public class DoorInteractable : BaseInteractable
 {
     [Header("Door Target")]
-    [Tooltip("╜╟┴ж╖╬ ╚╕└№╟╥ Transform. ║ё┐ь╕щ └╠ ╜║┼й╕│╞о░б ║┘└║ ┐└║ъ┴з╞о╕ж ╗ч┐ы.")]
+    [Tooltip("я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ ╚╕я┐╜я┐╜я┐╜я┐╜ Transform. я┐╜я┐╜я┐╜я┐╜ я┐╜я┐╜ я┐╜я┐╜┼йя┐╜я┐╜╞оя┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜╞оя┐╜я┐╜ я┐╜я┐╜я┐╜.")]
     [SerializeField] private Transform door;
 
     [Header("Open Settings")]
-    [Tooltip("┤▌╚∙ ╗є┼┬┐б╝н Y├р└╕╖╬ ╕ю ╡╡ ┐н╕▒┴Ў(+┤┬ ╟╤┬╩, -┤┬ ╣▌┤ы ╣ц╟т).")]
+    [Tooltip("я┐╜я┐╜я┐╜я┐╜ я┐╜я┐╜я┐╜┬┐я┐╜я┐╜я┐╜ Yя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ я┐╜я┐╜ я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜(+я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜, -я┐╜я┐╜ я┐╜▌┤я┐╜ я┐╜я┐╜я┐╜я┐╜).")]
     [SerializeField] private float openAngle = 90f;
-    [Tooltip("┐▐┬╩/┐└╕е┬╩ ╣о ╣ц╟т└╠ ╣▌┤ы└╧ ╢з ├╝┼й╟╧╕щ ░в╡╡░б ╣▌┤ы╖╬ └√┐ы╡╩.")]
+    [Tooltip("я┐╜я┐╜я┐╜я┐╜/я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ я┐╜▌┤я┐╜я┐╜я┐╜ я┐╜я┐╜ ├╝┼йя┐╜╧╕я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ я┐╜▌┤я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜.")]
     [SerializeField] private bool invertDirection = false;
     [SerializeField] private bool startOpened = false;
 
     [Header("Restrictions")]
     [SerializeField] private bool openOnlyOnce = false;
 
-    // бхбхбх [├▀░б] └с▒▌ ▒т┤╔ бхбхбх
+    // я┐╜я┐╜я┐╜я┐╜ [я┐╜▀░я┐╜] я┐╜я┐╜я┐╜ я┐╜я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜
     [Header("Lock Settings")]
-    [Tooltip("├╝┼й╡╟╕щ ┼м╕п╟╪╡╡ ╛╚ ┐н╕▓. ┐▄║╬(┼░╞╨╡х ╡ю)┐б╝н Unlock ╟╪┴р╛▀ ╟╘.")]
+    [Tooltip("├╝┼йя┐╜╟╕я┐╜ ┼мя┐╜я┐╜я┐╜╪╡я┐╜ я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜. я┐╜▄║я┐╜(┼░я┐╜╨╡я┐╜ я┐╜я┐╜)я┐╜я┐╜я┐╜я┐╜ Unlock я┐╜я┐╜я┐╜я┐╜я┐╜ я┐╜я┐╜.")]
     public bool isLocked = false;
-    [Tooltip("└с░▄└╓└╗ ╢з ┼м╕п╟╧╕щ ╜╟╟р╡╔ └╠║е╞о (┐╣: '└с░▄└╓┤┘' ╕▐╜├┴Ў, ┤·─╚░┼╕о┤┬ ╝╥╕о)")]
+    [Tooltip("я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ я┐╜я┐╜ ┼мя┐╜я┐╜я┐╜╧╕я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜ я┐╜╠║я┐╜╞о (я┐╜я┐╜: 'я┐╜я┐╜я┐╜я┐╜╓┤я┐╜' я┐╜▐╜я┐╜я┐╜я┐╜, я┐╜я┐╜я┐╜╚░┼╕я┐╜я┐╜я┐╜ я┐╜╥╕я┐╜)")]
     public UnityEvent OnTryLockedInteract;
-    // бубубубубубубубубубубубубубубубубубубубубу
+    // я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
 
     [Header("Tween")]
     [SerializeField] private float duration = 0.4f;
     [SerializeField] private Ease ease = Ease.OutCubic;
 
     [Header("Audio (Optional)")]
-    public AudioSource sfxSource;
     public AudioClip openSound;
     public AudioClip closeSound;
 
@@ -43,6 +42,12 @@ public class DoorInteractable : BaseInteractable
 
     void Awake()
     {
+        // ьВмьЪ┤ыУЬ эБ┤ыж╜ ыбЬыУЬ
+        if(openSound == null)
+            openSound = Resources.Load<AudioClip>("Sounds/Effect/Universal/creak_a");
+        if(closeSound == null)
+            closeSound = Resources.Load<AudioClip>("Sounds/Effect/Universal/creak_b");
+        
         if (!door) door = transform;
 
         _closedEuler = door.localEulerAngles;
@@ -57,22 +62,22 @@ public class DoorInteractable : BaseInteractable
     {
         if (_isAnimating) return false;
 
-        // ╟╤╣°╕╕ ┐н▒т ╕Ё╡х└╠░э └╠╣╠ ┐н╖┴└╓└╕╕щ ║╥░б
+        // я┐╜╤╣я┐╜я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜╠░я┐╜ я┐╜╠╣я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ я┐╜╥░я┐╜
         if (openOnlyOnce && _isOpen) return false;
 
-        // б┌ └с░▄└╓└╕╕щ ╗є╚г└█┐ы ║╥░б (╟╧┴Ў╕╕ ┼м╕п ╜├╡╡ └╠║е╞о┤┬ ╣▀╗¤╜├┼░▒т └з╟╪ true╕ж ╣▌╚п╟╧░э Interact┐б╝н ├│╕о╟╥ ╝Ў╡╡ └╓└╜.
-        // ┐й▒т╝н┤┬ '┐н ╝Ў ╛°└╜'└╗ ╕э╚о╚ў ╟╧▒т └з╟╪ false╕ж ╣▌╚п╟╧╡╟, 
-        // ┼м╕п ╟╟╡х╣щ└╠ ╟╩┐ф╟╧╕щ ╖╬┴ў└╗ Interact╖╬ ┐┼░▄╛▀ ╟╘. 
-        // └╧┤▄└║ └с░▄└╓└╕╕щ '╗є╚г└█┐ы ╕╢┼й'░б ╛╚ ╢▀░╘ false ├│╕о)
+        // я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ я┐╜я┐╜╚гя┐╜█┐я┐╜ я┐╜╥░я┐╜ (я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ ┼мя┐╜я┐╜ я┐╜├╡я┐╜ я┐╜╠║я┐╜╞оя┐╜я┐╜ я┐╜▀╗я┐╜я┐╜я┐╜┼░я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜ trueя┐╜я┐╜ я┐╜я┐╜╚пя┐╜╧░я┐╜ Interactя┐╜я┐╜я┐╜я┐╜ ├│я┐╜я┐╜я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜.
+        // я┐╜я┐╜я┐╜т╝ня┐╜я┐╜ 'я┐╜я┐╜ я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜'я┐╜я┐╜ я┐╜я┐╜╚оя┐╜я┐╜ я┐╜╧▒я┐╜ я┐╜я┐╜я┐╜я┐╜ falseя┐╜я┐╜ я┐╜я┐╜╚пя┐╜╧╡я┐╜, 
+        // ┼мя┐╜я┐╜ я┐╜╟╡я┐╜я┐╜я┐╜я┐╜ я┐╜╩┐я┐╜я┐╜╧╕я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ Interactя┐╜я┐╜ я┐╜┼░▄╛я┐╜ я┐╜я┐╜. 
+        // я┐╜╧┤я┐╜я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ 'я┐╜я┐╜╚гя┐╜█┐я┐╜ я┐╜я┐╜┼й'я┐╜я┐╜ я┐╜я┐╜ я┐╜▀░я┐╜ false ├│я┐╜я┐╜)
         if (isLocked) return false;
 
         return base.CanInteract(i);
     }
 
-    // ╟├╖╣└╠╛ю░б ┴ў┴в ┼м╕п╟▀└╗ ╢з
+    // я┐╜├╖я┐╜я┐╜╠╛ю░б я┐╜я┐╜я┐╜я┐╜ ┼мя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ я┐╜я┐╜
     public override void Interact(PlayerInteractor i)
     {
-        // CanInteract┐б╝н └╠╣╠ ░╔╖п┴Ў┴Ў╕╕, ╚д╜├ ╕Ё╕г┤╧ ├╝┼й
+        // CanInteractя┐╜я┐╜я┐╜я┐╜ я┐╜╠╣я┐╜ я┐╜╔╖я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜, ╚дя┐╜я┐╜ я┐╜Ё╕г┤я┐╜ ├╝┼й
         if (isLocked)
         {
             OnTryLockedInteract?.Invoke();
@@ -86,7 +91,7 @@ public class DoorInteractable : BaseInteractable
         GetComponent<DrawerItemDispenser>()?.Dispense();
     }
 
-    // │╗║╬ ╡┐└█ ╖╬┴ў
+    // я┐╜я┐╜я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜
     void ToggleMove()
     {
         _isOpen = !_isOpen;
@@ -95,27 +100,24 @@ public class DoorInteractable : BaseInteractable
 
         Vector3 targetEuler = _isOpen ? _openedEuler : _closedEuler;
 
-        // ╝╥╕о └ч╗¤
-        if (sfxSource)
-        {
-            var clip = _isOpen ? openSound : closeSound;
-            if (clip) sfxSource.PlayOneShot(clip);
-        }
+        // я┐╜╥╕я┐╜ я┐╜я┐╜я┐╜
+        var clip = _isOpen ? openSound : closeSound;
+        if (clip) AudioManager.Instance.Play(clip);
 
-        // Tween ╜╟╟р
+        // Tween я┐╜я┐╜я┐╜я┐╜
         var t = door.DOLocalRotate(targetEuler, duration)
             .SetEase(ease)
             .OnComplete(() => _isAnimating = false);
 
-        // ╝╥└╜ ╜├╜║┼█ ┐м╡┐
+        // я┐╜я┐╜я┐╜я┐╜ я┐╜├╜я┐╜я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜
         var noise = GetComponent<TweenNoiseAdapter>();
         _tween = TweenNoiseAdapter.WithNoise(t, noise);
     }
 
-    // бхбхбх [├▀░б] ┐▄║╬┐б╝н ╚г├т╟╥ ╟╘╝Ў╡щ (UnityEvent ┐м░с┐ы) бхбхбх
+    // я┐╜я┐╜я┐╜я┐╜ [я┐╜▀░я┐╜] я┐╜▄║╬┐я┐╜я┐╜я┐╜ ╚гя┐╜я┐╜я┐╜я┐╜ я┐╜╘╝я┐╜я┐╜я┐╜ (UnityEvent я┐╜я┐╜я┐╜я┐╜я┐╜) я┐╜я┐╜я┐╜я┐╜
 
     /// <summary>
-    /// └с▒▌└╗ ╟╪┴ж╟╧░э ╣о└╗ ┐▒┤╧┤┘. (║ё╣╨╣°╚г ╝║░° ╜├ ┐м░с)
+    /// я┐╜я┐╜я┐╜я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜╧░я┐╜ я┐╜я┐╜я┐╜я┐╜ я┐╜я┐╜я┐╜╧┤я┐╜. (я┐╜я┐╜╨╣я┐╜╚г я┐╜я┐╜я┐╜я┐╜ я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜)
     /// </summary>
     public void UnlockAndOpen()
     {
@@ -124,7 +126,7 @@ public class DoorInteractable : BaseInteractable
     }
 
     /// <summary>
-    /// ░н┴ж╖╬ ┐▒┤╧┤┘ (└с▒▌ ╗є┼┬ ╣л╜├).
+    /// я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ я┐╜я┐╜я┐╜╧┤я┐╜ (я┐╜я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜ я┐╜я┐╜я┐╜я┐╜).
     /// </summary>
     public void ForceOpen()
     {
@@ -132,7 +134,7 @@ public class DoorInteractable : BaseInteractable
     }
 
     /// <summary>
-    /// ░н┴ж╖╬ ┤▌╜└┤╧┤┘.
+    /// я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ я┐╜▌╜я┐╜я┐╜╧┤я┐╜.
     /// </summary>
     public void ForceClose()
     {
@@ -140,13 +142,13 @@ public class DoorInteractable : BaseInteractable
     }
 
     /// <summary>
-    /// └с▒▌╕╕ ╟╪┴ж╟╒┤╧┤┘ (╣о└║ ▒╫┤ы╖╬).
+    /// я┐╜я┐╜▌╕я┐╜ я┐╜я┐╜я┐╜я┐╜я┐╜╒┤╧┤я┐╜ (я┐╜я┐╜я┐╜я┐╜ я┐╜╫┤я┐╜я┐╜).
     /// </summary>
     public void UnlockOnly()
     {
         isLocked = true;
     }
-    // бубубубубубубубубубубубубубубубубубубубубубубубубубубубубубубубубубубубубубу
+    // я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
 
     void OnDisable()
     {

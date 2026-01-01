@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PickupInteractable : BaseInteractable
 {
-    [SerializeField] string itemId = "Sodium"; // "Sodium" | "Gel" | "Flask" | "Recipe" µî
+    [SerializeField] string itemId = "Sodium"; // "Sodium" | "Gel" | "Flask" | "Recipe" ï¿½ï¿½
     [SerializeField] bool oneTime = true;
     bool _picked;
 
@@ -16,13 +16,14 @@ public class PickupInteractable : BaseInteractable
     public override void Interact(PlayerInteractor i)
     {
         if (!CanInteract(i)) return;
-        i.AddItem(itemId); // º¸À¯ ÇÃ·¡±×¸¸ ON (¼Ò¸ð X)
-
-        Debug.Log($"[PickupInteractable] ÇÃ·¹ÀÌ¾î°¡ ¾ÆÀÌÅÛ '{itemId}' È¹µæ");
+        i.AddItem(itemId, transform.position); // ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½×¸ï¿½ ON (ï¿½Ò¸ï¿½ X)
+        
+        Debug.Log($"[PickupInteractable] ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ '{itemId}' È¹ï¿½ï¿½");
 
         _picked = true;
-        // °£´Ü Ç¥½Ä: »ç¶óÁö°Å³ª ¹ÝÂ¦ÀÌ°Å³ª
+        // ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å³ï¿½ ï¿½ï¿½Â¦ï¿½Ì°Å³ï¿½
         gameObject.SetActive(!oneTime);
-        // (¼±ÅÃ) SFX / Åä½ºÆ® µî
+        // (ï¿½ï¿½ï¿½ï¿½) SFX / ï¿½ä½ºÆ® ï¿½ï¿½
+        CommonSoundController.Instance?.PlayPickUp();
     }
 }
