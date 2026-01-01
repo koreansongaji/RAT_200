@@ -60,6 +60,7 @@ public class TitlePage : MonoBehaviour
 
         SlideInTitlePage();
         if (_optionPage) _optionPage.SlideOutOptionPage();
+        if (_howToPlayPage) _howToPlayPage.SlideOut();
 
         if (_titleBGM == null) _titleBGM = Resources.Load<AudioClip>("Sounds/BGM/bgm_title");
         AudioManager.Instance.Play(_titleBGM, AudioManager.Sound.BGM);
