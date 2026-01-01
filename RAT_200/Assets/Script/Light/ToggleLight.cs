@@ -13,19 +13,20 @@ public class ToggleLight : MonoBehaviour
     }
     public void TurnOnBigLight()
     {
-        b_Light.SetActive(true);
-        s_Light.SetActive(false);
+        if (!b_Light.activeSelf) b_Light.SetActive(true);
+        if (s_Light.activeSelf) s_Light.SetActive(false);
+            
     }
     
     public void TurnOnSmallLight()
     {
-        b_Light.SetActive(false);
-        s_Light.SetActive(true);
+        if(b_Light.activeSelf) b_Light.SetActive(false);
+        if(!s_Light.activeSelf) s_Light.SetActive(true);
     }
     
     public void TurnOffAllLight()
     {
-        b_Light.SetActive(false);
-        s_Light.SetActive(false);
+        if(b_Light.activeSelf) b_Light.SetActive(false);
+        if(s_Light.activeSelf) s_Light.SetActive(false);
     }
 }

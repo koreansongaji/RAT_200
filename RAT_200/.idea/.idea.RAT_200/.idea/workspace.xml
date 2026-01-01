@@ -6,7 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="9a50adee-ec7a-4782-bb48-036fabc44743" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.RAT_200/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RAT_200/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/Manager/AudioManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Manager/AudioManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/Light/ToggleLight.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Light/ToggleLight.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/SoundPlay/BgmController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/SoundPlay/BgmController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Shader/Settings/PC_Renderer.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shader/Settings/PC_Renderer.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -14,7 +16,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="9" />
+    <option name="cachedIndexableFilesCount" value="20" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
@@ -100,7 +102,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "develop",
+    "git-widget-placeholder": "PostProcessing/Glitch",
     "junie.onboarding.icon.badge.shown": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -200,6 +202,7 @@
       <workItem from="1767179717988" duration="1015000" />
       <workItem from="1767183909057" duration="1355000" />
       <workItem from="1767260323128" duration="1093000" />
+      <workItem from="1767263160889" duration="2122000" />
     </task>
     <servers />
   </component>
