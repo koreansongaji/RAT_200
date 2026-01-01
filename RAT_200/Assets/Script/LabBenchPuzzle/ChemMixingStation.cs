@@ -8,7 +8,7 @@ using System.Collections;
 
 public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHidePlayerPreference
 {
-    // ... (기존 변수들) ...
+    // ... (기존 변수들 그대로 유지) ...
     [Header("필요 아이템 ID")]
     [SerializeField] string sodiumId = "Sodium";
     [SerializeField] string gelId = "Gel";
@@ -64,20 +64,21 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
     MicroZoomSession _micro;
     Collider _mainCollider;
 
+    // ... (Awake, CanInteract, Interact, OnMicroEnter, OnMicroExit 등 기존 코드 유지) ...
+
     public bool HidePlayerDuringMicro => true;
 
     [Header("Audio Clips")]
     [SerializeField] private AudioClip _chemMixingSuccessSound;
     [SerializeField] private AudioClip _chemMixingFailSound;
     [SerializeField] private AudioClip _chemMixingSound;
-    
+
     void Awake()
     {
         if (panel) panel.enabled = true;
         _micro = GetComponent<MicroZoomSession>();
         _mainCollider = GetComponent<Collider>();
 
-        // ★ [핵심] 하위 버튼들에게 Micro 세션 주입 & 재부팅
         RefreshMicroBind(btnNa3D);
         RefreshMicroBind(btnWater3D);
         RefreshMicroBind(btnGel3D);
@@ -93,29 +94,19 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         RefreshTexts();
         if (txtRecipe) txtRecipe.text = "MIX";
 
-        // Load audio clips if not assigned
-        if(_chemMixingSuccessSound == null) _chemMixingSuccessSound = Resources.Load<AudioClip>("Sounds/Effect/Experiment/reaction_mix");
+        if (_chemMixingSuccessSound == null) _chemMixingSuccessSound = Resources.Load<AudioClip>("Sounds/Effect/Experiment/reaction_mix");
         if (_chemMixingFailSound == null) _chemMixingFailSound = Resources.Load<AudioClip>("Sounds/Effect/Experiment/reaction_fail");
         if (_chemMixingSound == null) _chemMixingSound = Resources.Load<AudioClip>("Sounds/Effect/Experiment/reaction_mix");
     }
 
-    // ★ [추가] 금고 퍼즐에서 가져온 바인딩 헬퍼 함수
     void RefreshMicroBind(PressableButton3D btn)
     {
         if (!btn) return;
-
-        // Micro 세션 주입
-        if (!btn.micro && _micro)
-        {
-            btn.micro = _micro;
-        }
-
-        // 껐다 켜서 OnEnable 다시 실행 (이벤트 구독 갱신 등)
+        if (!btn.micro && _micro) btn.micro = _micro;
         btn.enabled = false;
         btn.enabled = true;
     }
 
-    // --- 1. 진입 ---
     public override bool CanInteract(PlayerInteractor i) => !_session && !_isSuccessSequence && !_isSolved;
 
     public override void Interact(PlayerInteractor i)
@@ -127,7 +118,6 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
 
     public bool CanBeginMicro(PlayerInteractor player) => !_session && !_isSuccessSequence && !_isSolved;
 
-    // 줌인/아웃 시 메인 콜라이더 제어 (이것도 같이 챙겨드립니다)
     public void OnMicroEnter(PlayerInteractor player)
     {
         if (_mainCollider) _mainCollider.enabled = false;
@@ -140,11 +130,11 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         CancelSession();
     }
 
-    // ... (이하 StartSession, WireButtons, 로직 등은 기존 유지) ...
     void StartSession(PlayerInteractor player)
     {
         _session = true;
-        _cNa = 0; _cWater = 0; _cGel = 0;
+        // StartSession에서는 초기화하지 않고 현재 값 유지 (재진입 시 이어하기 원한다면)
+        // 하지만 요청하신 건 '나갈 때 초기화'이므로 들어올 땐 0이 되어있을 것입니다.
         if (panel) panel.enabled = true;
 
         if (player != null)
@@ -160,6 +150,7 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         if (txtRecipe) txtRecipe.text = "MIX";
     }
 
+    // ... (CheckAndPlaceItem, SetButtonsState 등 기존 코드 유지) ...
     void CheckAndPlaceItem(PlayerInteractor player, string itemId, ref bool isPlaced, GameObject visualObj)
     {
         if (isPlaced) return;
@@ -192,9 +183,13 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         if (btnMix3D) btnMix3D.SetInteractable(ready);
     }
 
+    // ★ [수정] 세션 종료 시(나갈 때) 카운터 초기화
     public void CancelSession()
     {
         _session = false;
+        // 값 초기화 및 텍스트 갱신
+        _cNa = 0; _cWater = 0; _cGel = 0;
+        RefreshTexts();
     }
 
     void WireButtons()
@@ -210,8 +205,22 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         if (btnMix3D) btnMix3D.OnPressed.AddListener(Submit);
     }
 
-    void Tap(ref int counter, int need) { if (!_session) return; counter++; RefreshTexts(); }
-    void Tap3D(ref int counter, int need) { if (!_session) return; counter++; RefreshTexts(); }
+    // ★ [수정] 5개 제한 추가
+    void Tap(ref int counter, int need)
+    {
+        if (!_session) return;
+        if (counter >= 5) return; // 5개 이상이면 무시
+        counter++;
+        RefreshTexts();
+    }
+
+    void Tap3D(ref int counter, int need)
+    {
+        if (!_session) return;
+        if (counter >= 5) return; // 5개 이상이면 무시
+        counter++;
+        RefreshTexts();
+    }
 
     void RefreshTexts()
     {
@@ -221,6 +230,7 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         if (txtGel) txtGel.text = $"{Mark(_cGel, needGel)}";
     }
 
+    // ... (Submit, Routine_SuccessSequence, BeginSessionFromExternal 등 기존 코드 유지) ...
     void Submit()
     {
         if (!_session || _isSuccessSequence) return;
@@ -228,9 +238,7 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
 
         if (!success)
         {
-            // 실패 소리
             AudioManager.Instance.Play(_chemMixingFailSound);
-
             Debug.Log("[ChemStation] 혼합 실패!");
             if (NoiseSystem.Instance) NoiseSystem.Instance.FireImpulse(0.5f);
             OnMakeBigNoise?.Invoke();
@@ -240,7 +248,6 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         }
 
         Debug.Log("[ChemStation] 혼합 성공!");
-        // 성공 소리
         AudioManager.Instance.Play(_chemMixingSuccessSound);
         _isSolved = true;
         StartCoroutine(Routine_SuccessSequence());
