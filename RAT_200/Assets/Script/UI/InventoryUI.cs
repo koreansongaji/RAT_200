@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Unity.VisualScripting;
 
 /// <summary>
 /// E 키로 화면 하단 인벤토리 바를 토글 (DOTween 애니메이션 + 아이템 순차 등장).
@@ -41,6 +42,9 @@ public class InventoryUI : MonoBehaviour
         new("Recipe",        "레시피 종이"),
     };
 
+    [Header("Data Source")]
+    [SerializeField] ItemDatabase database;
+
     [Header("오디오 클립")]
     [SerializeField] AudioClip _inventoryopenSound;
     [SerializeField] AudioClip _inventorycloseSound;
@@ -58,6 +62,9 @@ public class InventoryUI : MonoBehaviour
     private Vector2 _bgAnchorMax;
     private Vector2 _panelAnchorMin;
     private Vector2 _panelAnchorMax;
+
+    [Header("Inspector Link")]
+    [SerializeField] ItemInspectorUI inspectorUI;
 
     [System.Serializable]
     public struct ItemLabel
@@ -286,34 +293,60 @@ public class InventoryUI : MonoBehaviour
     void RefreshUI()
     {
         if (player == null || itemSlots == null || itemSlots.Length == 0) return;
+        if (database == null) return;
 
         int slotIndex = 0;
 
-        for (int i = 0; i < knownItems.Count; i++)
+        for (int i = 0; i < database.items.Count; i++)
         {
             if (slotIndex >= itemSlots.Length) break;
 
-            var itemInfo = knownItems[i];
+            var itemInfo = database.items[i];
             if (string.IsNullOrEmpty(itemInfo.id)) continue;
 
             if (player.HasItem(itemInfo.id))
             {
-                if (itemSlots[slotIndex] != null)
+                Image slotImage = itemSlots[slotIndex];
+
+                if (slotImage != null)
                 {
-                    itemSlots[slotIndex].sprite = itemInfo.icon;
-                    itemSlots[slotIndex].preserveAspect = true;
-                    itemSlots[slotIndex].enabled = true;
+                    slotImage.sprite = itemInfo.icon;
+                    slotImage.preserveAspect = true;
+                    slotImage.enabled = true;
+
+                    // ★★★ [추가된 부분] 클릭 이벤트 연결 ★★★
+                    // 슬롯 게임오브젝트에 Button 컴포넌트가 있어야 합니다.
+                    Button btn = slotImage.GetComponent<Button>();
+                    if (btn == null) btn = slotImage.gameObject.AddComponent<Button>();
+
+                    // 기존 리스너 제거 (중복 방지) 후 새 리스너 등록
+                    btn.onClick.RemoveAllListeners();
+
+                    // 클로저 문제 방지를 위해 로컬 변수 캡처
+                    var currentItemData = itemInfo;
+                    btn.onClick.AddListener(() => OnSlotClick(currentItemData));
                 }
                 slotIndex++;
             }
         }
 
+        // 남은 슬롯 비활성화
         for (int i = slotIndex; i < itemSlots.Length; i++)
         {
             if (itemSlots[i] != null)
             {
                 itemSlots[i].enabled = false;
+                // 비활성 슬롯은 버튼도 꺼야 함
+                Button btn = itemSlots[i].GetComponent<Button>();
+                if (btn) btn.onClick.RemoveAllListeners();
             }
+        }
+    }
+    void OnSlotClick(ItemDatabase.ItemData data)
+    {
+        if (inspectorUI != null)
+        {
+            inspectorUI.OpenInspector(data);
         }
     }
 }

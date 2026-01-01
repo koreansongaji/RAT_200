@@ -39,8 +39,8 @@ public class ChemStorageDrawerInteractable : BaseInteractable
         OnInteract?.Invoke();
 
         // 아이템 지급
-        i.AddItem(sodiumId);
-        i.AddItem(gelId);
+        i.AddItem(sodiumId, transform.position);
+        i.AddItem(gelId, transform.position);
         _given = true;
 
         OnGive?.Invoke();

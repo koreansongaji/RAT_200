@@ -1,26 +1,33 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI; // 혹시 기본 Text를 쓴다면 필요
+using TMPro;          // ★ [New] TextMeshPro 사용 시 필요
 using DG.Tweening;
 
-// ★ 우선순위는 그대로 유지 (마이크로 줌 감지용)
 [DefaultExecutionOrder(-100)]
 public class TitlePage : MonoBehaviour
 {
     [SerializeField] private Transform _slideOutPosition;
     [SerializeField] private Transform _slideInPosition;
     [SerializeField] private OptionPage _optionPage;
+    [SerializeField] private HowToPlayPage _howToPlayPage;
     [SerializeField] private GameObject _uiBlocker;
 
-    // 게임 시작 시 외부(인트로 매니저)로 신호를 보낼 이벤트
+    // ★ [New] 버튼 텍스트를 바꾸기 위한 참조 변수
+    [Header("UI Text")]
+    [SerializeField] private TextMeshProUGUI _startButtonText;
+    // 만약 Legacy Text를 쓴다면: [SerializeField] private Text _startButtonText;
+
     [Header("Events")]
     public UnityEvent onGameStart;
-
-    // 캐싱 변수 삭제! (_cachedOutPos 등 제거)
 
     private Tween _currentTween;
     private bool _isTransitioning;
     private bool _isPageHidden;
+
+    // ★ [New] 게임이 한 번이라도 시작되었는지 체크하는 플래그
+    private bool _hasGameStarted = false;
 
     [SerializeField] private AudioClip _titleBGM;
     [SerializeField] private BgmController _bgmController;
@@ -34,9 +41,6 @@ public class TitlePage : MonoBehaviour
             return;
         }
 
-        // ★ [수정] 캐싱하지 않고, 바로 위치를 잡습니다.
-        // Awake 시점엔 UI 좌표가 불안정할 수 있지만, 초기 배치용으로는 일단 둡니다.
-        // 실제 중요한 이동(Start 이후)은 아래 함수들에서 처리합니다.
         transform.position = _slideOutPosition.position;
 
         if (_bgmController == null)
@@ -50,9 +54,12 @@ public class TitlePage : MonoBehaviour
         _isPageHidden = false;
         SetBlocker(true);
 
-        // ★ Start 시점에는 UI 레이아웃이 잡혔을 것이므로 정상적으로 들어옵니다.
+        // ★ [New] 씬이 처음 로드되었을 때는 무조건 START
+        _hasGameStarted = false;
+        UpdateStartButtonText();
+
         SlideInTitlePage();
-        _optionPage.SlideOutOptionPage();
+        if (_optionPage) _optionPage.SlideOutOptionPage();
 
         if (_titleBGM == null) _titleBGM = Resources.Load<AudioClip>("Sounds/BGM/bgm_title");
         AudioManager.Instance.Play(_titleBGM, AudioManager.Sound.BGM);
@@ -60,10 +67,32 @@ public class TitlePage : MonoBehaviour
 
     private void Update()
     {
-        if (_isPageHidden && Input.GetKeyDown(KeyCode.Escape))
+        // 1. 게임 플레이 중일 때 -> ESC 누르면 메뉴 열기 (기존 로직)
+        if (_isPageHidden)
         {
-            if (IsAnyMicroZoomActive()) return;
-            OpenMenu();
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                // 마이크로 줌(퍼즐) 중이면 메뉴 안 열림 (퍼즐 나가기가 우선)
+                if (IsAnyMicroZoomActive()) return;
+
+                OpenMenu();
+            }
+        }
+        // 2. 메뉴(타이틀)가 열려 있을 때 -> ESC 누르면 메뉴 닫기 (새로운 로직)
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                // ★ 핵심 조건:
+                // (1) 게임이 이미 시작된 상태여야 함 (START 모드에선 ESC로 못 끔)
+                // (2) 화면 전환 중(슬라이드 중)이 아니어야 함
+                if (_hasGameStarted && !_isTransitioning)
+                {
+                    // StartGame() 내부에서 _hasGameStarted가 true면
+                    // 자동으로 'Resume(단순 닫기)' 로직이 실행됩니다.
+                    StartGame();
+                }
+            }
         }
     }
 
@@ -81,25 +110,64 @@ public class TitlePage : MonoBehaviour
     {
         _isPageHidden = false;
         SetBlocker(true);
+
+        // ★ [New] 메뉴가 열릴 때 텍스트 갱신 (이미 시작했다면 RESUME이 됨)
+        UpdateStartButtonText();
+
         SlideInTitlePage();
+    }
+
+    // ★ [New] 상태에 따라 텍스트를 바꿔주는 헬퍼 함수
+    private void UpdateStartButtonText()
+    {
+        if (_startButtonText == null) return;
+
+        // 게임이 이미 시작된 상태(_hasGameStarted)라면 RESUME, 아니면 START
+        _startButtonText.text = _hasGameStarted ? "RESUME" : "START";
     }
 
     public void StartGame()
     {
         if (_isTransitioning) return;
-        _isTransitioning = true;
 
-        // BGM 에러가 나도 게임은 시작되도록 예외 처리
-        if (_bgmController != null)
+        // ★ [New] 이미 게임이 시작된 상태에서 'RESUME'을 누른 거라면
+        // 이벤트를 다시 발동시키지 않고 단순히 페이지만 닫아야 할 수도 있습니다.
+        // 하지만 만약 단순히 닫는 게 아니라, 매번 연출을 원한다면 아래 로직을 조정해야 합니다.
+        // 여기서는 "Resume 시에는 오프닝 연출(뚜껑 열기 등)을 스킵하고 페이지만 닫기"로 구현해 봅니다.
+
+        if (_hasGameStarted)
         {
-            try { _bgmController.PlayFirstStep(); }
-            catch (Exception e) { Debug.LogWarning($"BGM Error: {e.Message}"); }
+            // [Resume 로직]
+            // 이미 게임 중이므로 onGameStart(오프닝 연출)은 실행하지 않음
+            CloseTitleOnly();
         }
+        else
+        {
+            // [First Start 로직]
+            _isTransitioning = true;
+            _hasGameStarted = true; // 이제부터는 게임 중인 상태
 
-        // 인트로 연출 시작 (뚜껑 열기 등)
-        onGameStart?.Invoke();
+            if (_bgmController != null)
+            {
+                try { _bgmController.PlayFirstStep(); }
+                catch (Exception e) { Debug.LogWarning($"BGM Error: {e.Message}"); }
+            }
 
-        // 2. 타이틀을 치우고 게임 상태로 전환
+            onGameStart?.Invoke(); // 인트로/오프닝 실행
+
+            SlideOutTitlePage(onComplete: () =>
+            {
+                _isPageHidden = true;
+                _isTransitioning = false;
+                SetBlocker(false);
+            });
+        }
+    }
+
+    // ★ [New] Resume 전용 닫기 (이벤트 발생 X)
+    private void CloseTitleOnly()
+    {
+        _isTransitioning = true;
         SlideOutTitlePage(onComplete: () =>
         {
             _isPageHidden = true;
@@ -113,7 +181,6 @@ public class TitlePage : MonoBehaviour
         if (_isTransitioning || _optionPage == null) return;
         _isTransitioning = true;
 
-        // ★ [수정] 람다 식 오류 해결 (onComplete 명시)
         SlideOutTitlePage(onComplete: () =>
         {
             _optionPage.SlideInOptionPage(onComplete: () =>
@@ -128,7 +195,6 @@ public class TitlePage : MonoBehaviour
         if (_uiBlocker) _uiBlocker.SetActive(active);
     }
 
-    // ★ [수정] Transform.position을 직접 사용하여 "현재 시점의 정확한 위치"로 이동
     public void SlideOutTitlePage(float duration = 0.5f, Ease ease = Ease.InOutQuad, Action onComplete = null)
     {
         KillTween();
@@ -154,6 +220,21 @@ public class TitlePage : MonoBehaviour
         if (_currentTween != null && _currentTween.IsActive())
             _currentTween.Kill();
         _currentTween = null;
+    }
+
+    public void HowToPlay()
+    {
+        if (_isTransitioning || _howToPlayPage == null) return;
+        _isTransitioning = true;
+
+        // 타이틀이 나가고(SlideOut) -> 완료되면 -> 설명창이 들어옴(SlideIn)
+        SlideOutTitlePage(onComplete: () =>
+        {
+            _howToPlayPage.SlideIn(onComplete: () =>
+            {
+                _isTransitioning = false;
+            });
+        });
     }
 
     public void QuitGame()
