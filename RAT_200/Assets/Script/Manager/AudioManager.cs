@@ -255,44 +255,15 @@ public class AudioManager : Singleton<AudioManager>
         }
         else
         {
-            // 효과음은 동시에 여러 개가 겹칠 수 있도록 별도의 AudioSource를 생성하여 재생합니다.
-            // 기존 PlayOneShot 방식은 하나의 AudioSource에 연속으로 호출되며 클립이 잘려 재생될 수 있습니다.
-
-            if (audioClip == null)
+            AudioSource audioSource = _audioSources[(int)type];
+            if (audioSource == null)
             {
+                Debug.LogWarning($"[AudioManager] AudioSource for {type} is not assigned!");
                 return;
             }
-
-            // 새 게임 오브젝트를 생성하여 일회성 효과음을 재생합니다.
-            GameObject effectGO = new GameObject("EffectSound");
-            effectGO.transform.SetParent(transform);
-            AudioSource newSource = effectGO.AddComponent<AudioSource>();
-
-            // 기본 설정
-            newSource.clip = audioClip;
-            newSource.pitch = pitch;
-            newSource.volume = volumeScale;
-            newSource.loop = false;
-            newSource.dopplerLevel = 0f;
-
-            // Mixer 그룹 할당 (Effect는 항상 SFX)
-            if (_audioMixer != null)
-            {
-                var groups = _audioMixer.FindMatchingGroups("SFX");
-                if (groups.Length > 0)
-                {
-                    newSource.outputAudioMixerGroup = groups[0];
-                }
-            }
-
-            // 재생 및 볼륨 적용
-            newSource.Play();
-
-            // 현재 Effect 볼륨을 적용 (dB 변환)
+            audioSource.pitch = pitch;
+            audioSource.PlayOneShot(audioClip, volumeScale);
             SetEffectVolume(EffectVolume);
-
-            // 클립 길이 후 오브젝트를 파괴하여 메모리 누수 방지
-            GameObject.Destroy(effectGO, audioClip.length + 0.1f);
         }
 
         SetMasterVolume(MasterVolume);
@@ -402,13 +373,8 @@ public class AudioManager : Singleton<AudioManager>
     {
         if (_audioMixer != null)
         {
-            // 0~1 범위를 -40dB ~ +6dB로 매핑 (사용자가 100%일 때 약 2배 볼륨을 원함)
-            float dB = volume > 0 ? Mathf.Lerp(-40f, 6f, volume) : -80f;
-            if (volume <= 0.01f) dB = -80f; // 거의 0이면 무음
-
-            bool success = _audioMixer.SetFloat("MasterVol", dB);
-            if (!success) Debug.LogWarning("[AudioManager] Failed to set 'MasterVol' parameter.");
-            else Debug.Log($"[AudioManager] MasterVol set to {dB}dB (vol: {volume})");
+            bool success = _audioMixer.SetFloat("MasterVol", Mathf.Log10(Mathf.Max(0.0001f, volume)) * 20f);
+            if (!success) Debug.LogWarning("[AudioManager] Failed to set 'MasterVol' parameter. Is it exposed and named correctly?");
         }
         else
         {
@@ -420,12 +386,8 @@ public class AudioManager : Singleton<AudioManager>
     {
         if (_audioMixer != null)
         {
-            float dB = volume > 0 ? Mathf.Lerp(-40f, 6f, volume) : -80f;
-            if (volume <= 0.01f) dB = -80f;
-
-            bool success = _audioMixer.SetFloat("BGMVol", dB);
-            if (!success) Debug.LogWarning("[AudioManager] Failed to set 'BGMVol' parameter.");
-            else Debug.Log($"[AudioManager] BGMVol set to {dB}dB (vol: {volume})");
+            bool success = _audioMixer.SetFloat("BGMVol", Mathf.Log10(Mathf.Max(0.0001f, volume)) * 20f);
+            if (!success) Debug.LogWarning("[AudioManager] Failed to set 'BGMVol' parameter. Is it exposed and named correctly?");
         }
         else
         {
@@ -437,12 +399,8 @@ public class AudioManager : Singleton<AudioManager>
     {
         if (_audioMixer != null)
         {
-            float dB = volume > 0 ? Mathf.Lerp(-40f, 6f, volume) : -80f;
-            if (volume <= 0.01f) dB = -80f;
-
-            bool success = _audioMixer.SetFloat("SFXVol", dB);
-            if (!success) Debug.LogWarning("[AudioManager] Failed to set 'SFXVol' parameter.");
-            else Debug.Log($"[AudioManager] SFXVol set to {dB}dB (vol: {volume})");
+            bool success = _audioMixer.SetFloat("SFXVol", Mathf.Log10(Mathf.Max(0.0001f, volume)) * 20f);
+            if (!success) Debug.LogWarning("[AudioManager] Failed to set 'SFXVol' parameter. Is it exposed and named correctly?");
         }
         else
         {
