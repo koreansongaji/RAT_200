@@ -64,7 +64,7 @@ public class CommonSoundController : Singleton<CommonSoundController>
     /// <summary>
     /// 전기 스파크나 퓨즈가 튀는 소리를 재생합니다.
     /// </summary>
-    public void PlaySpark() => PlayCommonSound(_sparkClip);
+    public void PlaySpark() => AudioManager.Instance.Play(_sparkClip, AudioManager.Sound.Effect, 1f, 1.5f);
 
     /// <summary>
     /// 퍼즐을 성공적으로 완료했을 때의 효과음을 재생합니다.
