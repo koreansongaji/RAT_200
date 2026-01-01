@@ -24,5 +24,6 @@ public class PickupInteractable : BaseInteractable
         // ���� ǥ��: ������ų� ��¦�̰ų�
         gameObject.SetActive(!oneTime);
         // (����) SFX / �佺Ʈ ��
+        CommonSoundController.Instance?.PlayPickUp();
     }
 }
