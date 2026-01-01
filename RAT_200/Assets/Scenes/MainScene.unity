@@ -8174,6 +8174,7 @@ MonoBehaviour:
   gameUI: {fileID: 0}
   sfxSource: {fileID: 0}
   ratDeathClip: {fileID: 0}
+  audioManager: {fileID: 1621517716}
   deathDelay: 2
   fadeDuration: 1.5
 --- !u!4 &488819649
@@ -25340,7 +25341,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1417587271}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 11
   m_Type: 0
   m_Color: {r: 0.9764151, g: 0.9764151, b: 0.9764151, a: 1}
@@ -28775,6 +28776,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4f393daf54755d44d8cbe0b71ca857fc, type: 3}
   m_PrefabInstance: {fileID: 600997377}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1621517716 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9004814914868589935, guid: 40337044cac305343a1385a8a547397a, type: 3}
+  m_PrefabInstance: {fileID: 714371632}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9709cf83f505bc4e9f34323c023dfae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1625433944
 GameObject:
   m_ObjectHideFlags: 0
