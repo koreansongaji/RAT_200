@@ -25,7 +25,7 @@ public class SinkInteractable : BaseInteractable
 
         // ����: Flask -> WaterInFlask
         i.RemoveItem(flaskId);
-        i.AddItem(waterInFlaskId);
+        i.AddItem(waterInFlaskId, transform.position);
         
         // 소리 출력
         AudioManager.Instance.Play(_fillWaterClip);

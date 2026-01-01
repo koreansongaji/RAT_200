@@ -1,8 +1,9 @@
 using UnityEngine;
 using System.Collections;
-using Unity.Cinemachine; // 시네머신 사용
+using Unity.Cinemachine;
 using UnityEngine.UI;
-using DG.Tweening; // DOTween 사용
+using DG.Tweening;
+using UnityEngine.SceneManagement; // 씬 리로드를 위해 필요
 
 public class EndingVentInteractable : BaseInteractable
 {
@@ -10,43 +11,55 @@ public class EndingVentInteractable : BaseInteractable
     [Tooltip("엔딩 시 활성화될 방 전체를 비추는 와이드 카메라")]
     public CinemachineCamera roomWideCamera;
 
-    [Tooltip("페이드 인 될 컬러 이미지를 가진 캔버스 그룹")]
+    [Header("UI References (Canvas Groups)")]
+    [Tooltip("방 전체 컬러 이미지 (기존)")]
     public CanvasGroup overlayCanvasGroup;
 
-    [Tooltip("이미지가 페이드 인 되는 데 걸리는 시간")]
-    public float fadeDuration = 3.0f;
+    [Tooltip("'Credits' 텍스트가 포함된 UI 그룹")]
+    public CanvasGroup creditsGroup;
+
+    [Tooltip("'Thank you for playing' 텍스트가 포함된 UI 그룹")]
+    public CanvasGroup thankYouGroup;
+
+    [Tooltip("마지막에 화면을 덮을 검은색 패널")]
+    public CanvasGroup blackCurtainGroup;
+
+    [Header("Timing Settings")]
+    public float overlayFadeDuration = 3.0f; // 컬러 이미지 페이드 시간
+    public float textFadeDuration = 1.0f;    // 텍스트 나타남/사라짐 시간
+    public float textStayDuration = 2.5f;    // 텍스트 머무르는 시간
+    public float finalBlackFadeDuration = 2.0f; // 마지막 암전 시간
 
     private bool _isEndingStarted = false;
 
     void Start()
     {
-        // 초기화: 오버레이 이미지는 안 보이고 투명하게 시작
-        if (overlayCanvasGroup)
-        {
-            overlayCanvasGroup.alpha = 0f;
-            overlayCanvasGroup.gameObject.SetActive(false);
-            // 클릭 방지를 위해 Raycast Target도 꺼두는 것이 좋습니다.
-            overlayCanvasGroup.blocksRaycasts = false;
-        }
+        // 1. 모든 UI 요소 초기화 (안 보이게)
+        InitCanvasGroup(overlayCanvasGroup);
+        InitCanvasGroup(creditsGroup);
+        InitCanvasGroup(thankYouGroup);
 
-        // 엔딩 카메라는 평소엔 우선순위를 낮게 설정
-        if (roomWideCamera)
-        {
-            roomWideCamera.Priority = 10;
-        }
+        // 블랙 커튼은 시작할 때 꺼져 있어야 함 (만약 씬 시작 페이드인이 필요하면 별도 처리)
+        InitCanvasGroup(blackCurtainGroup);
+
+        if (roomWideCamera) roomWideCamera.Priority = 10;
     }
 
-    public override bool CanInteract(PlayerInteractor i)
+    void InitCanvasGroup(CanvasGroup cg)
     {
-        // 엔딩이 시작되지 않았을 때만 상호작용 가능
-        return !_isEndingStarted;
+        if (cg)
+        {
+            cg.alpha = 0f;
+            cg.gameObject.SetActive(false);
+            cg.blocksRaycasts = false;
+        }
     }
+
+    public override bool CanInteract(PlayerInteractor i) => !_isEndingStarted;
 
     public override void Interact(PlayerInteractor i)
     {
         if (_isEndingStarted) return;
-
-        Debug.Log("=== Game Ending Sequence Started ===");
         StartCoroutine(Routine_EndingSequence(i.gameObject));
     }
 
@@ -54,32 +67,55 @@ public class EndingVentInteractable : BaseInteractable
     {
         _isEndingStarted = true;
 
-        // 1. 플레이어 쥐 사라짐 (비활성화)
-        if (playerObj)
-        {
-            playerObj.SetActive(false);
-        }
-
-        // 2. 1초 지연
+        // 1. 플레이어 퇴장
+        if (playerObj) playerObj.SetActive(false);
         yield return new WaitForSeconds(1.0f);
 
-        // 3. 카메라 전환 (방 전체 뷰)
-        // 기존 카메라들의 Priority가 보통 10~20 내외일 테니, 확실하게 높게 설정하여 전환합니다.
-        if (roomWideCamera)
-        {
-            roomWideCamera.Priority = 999;
-        }
+        // 2. 카메라 전환 (방 전체)
+        if (roomWideCamera) roomWideCamera.Priority = 999;
 
-        // 4. 오버레이 이미지 페이드 인
+        // 3. 컬러 이미지 페이드 인
         if (overlayCanvasGroup)
         {
             overlayCanvasGroup.gameObject.SetActive(true);
-            // DOTween을 사용하여 alpha 값을 0에서 1로 부드럽게 변경
-            overlayCanvasGroup.DOFade(1f, fadeDuration).SetEase(Ease.InOutQuad);
+            // 이미지가 다 나올 때까지 대기
+            yield return overlayCanvasGroup.DOFade(1f, overlayFadeDuration).WaitForCompletion();
         }
 
-        // (옵션) 페이드 인이 끝난 후 완전히 종료하거나 크레딧 씬으로 넘어가려면 여기에 추가 로직 작성
-        // yield return new WaitForSeconds(fadeDuration);
-        // Debug.Log("Ending Sequence Complete.");
+        // 4. Credits 등장 -> 대기 -> 퇴장
+        if (creditsGroup)
+        {
+            creditsGroup.gameObject.SetActive(true);
+            yield return creditsGroup.DOFade(1f, textFadeDuration).WaitForCompletion();
+            yield return new WaitForSeconds(textStayDuration);
+            yield return creditsGroup.DOFade(0f, textFadeDuration).WaitForCompletion();
+            creditsGroup.gameObject.SetActive(false);
+        }
+
+        // 5. Thank You 등장 -> 대기 -> 퇴장
+        if (thankYouGroup)
+        {
+            thankYouGroup.gameObject.SetActive(true);
+            yield return thankYouGroup.DOFade(1f, textFadeDuration).WaitForCompletion();
+            yield return new WaitForSeconds(textStayDuration);
+            yield return thankYouGroup.DOFade(0f, textFadeDuration).WaitForCompletion();
+            thankYouGroup.gameObject.SetActive(false);
+        }
+
+        // 6. Black Curtain 페이드 인 (암전)
+        if (blackCurtainGroup)
+        {
+            blackCurtainGroup.gameObject.SetActive(true);
+            yield return blackCurtainGroup.DOFade(1f, finalBlackFadeDuration).WaitForCompletion();
+        }
+
+        // 7. 암전 상태에서 컬러 이미지 끄기 (다음에 보이지 않게)
+        if (overlayCanvasGroup) overlayCanvasGroup.gameObject.SetActive(false);
+
+        // 8. 씬 리로드 (타이틀 화면으로 복귀)
+        // 주의: 리로드 후 Black Curtain이 서서히 걷히는 연출은 
+        // 씬 시작 스크립트(SceneFader 등)가 담당해야 자연스럽습니다.
+        // 현재는 씬을 다시 로드하여 초기 상태로 돌립니다.
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

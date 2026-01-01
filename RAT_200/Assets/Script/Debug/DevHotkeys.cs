@@ -77,7 +77,7 @@ public class DevHotkeys : MonoBehaviour
     void Give(PlayerInteractor pi, string id)
     {
         if (string.IsNullOrEmpty(id)) return;
-        pi.AddItem(id);
+        pi.AddItem(id, transform.position);
     }
 }
 #endif

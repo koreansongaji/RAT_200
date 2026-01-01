@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using DG.Tweening;
 using UnityEngine.AI;
 using System.Collections;
@@ -13,7 +13,7 @@ public class LabToFridgeManager : MonoBehaviour
     [Header("2. Book Bridge")]
     public Transform bookPivot;
     public Rigidbody bookRb;
-    public Collider bookWalkableCol; // ¹â´Â ¿ëµµ
+    public Collider bookWalkableCol; // ï¿½ï¿½ï¿½ ï¿½ëµµ
 
     [Header("Bridge Animation")]
     public Vector3 bookFallRotation = new Vector3(0, 0, 90);
@@ -93,47 +93,47 @@ public class LabToFridgeManager : MonoBehaviour
 
     IEnumerator Routine_CollapseSequence()
     {
-        Debug.Log("[Bridge] ºØ±« ½ÃÀÛ - Áã Æ÷È¹!");
+        Debug.Log("[Bridge] ï¿½Ø±ï¿½ ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½ ï¿½ï¿½È¹!");
 
-        // 1. ¡Ú [ÇÙ½É] µô·¹ÀÌ °®±â Àü¿¡ ÁãºÎÅÍ ¸ØÃç ¼¼¿ó´Ï´Ù!
-        // ÀÌ°É ¾È ÇÏ¸é Èçµé¸®´Â µ¿¾È µµ¸Á°¡¹ö¸³´Ï´Ù.
+        // 1. ï¿½ï¿½ [ï¿½Ù½ï¿½] ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½!
+        // ï¿½Ì°ï¿½ ï¿½ï¿½ ï¿½Ï¸ï¿½ ï¿½ï¿½é¸®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.
         FreezePlayerOnBridge();
 
-        // 2. ÀüÁ¶ Áõ»ó: ´ú´ú ¶³¸² (ÀÌÁ¦ Áã´Â ²ÄÂ¦¾øÀÌ °°ÀÌ ¶³¾î¾ß ÇÔ)
+        // 2. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Â¦ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½)
         if (bookPivot) bookPivot.DOShakeRotation(0.5f, 5f, 20);
 
-        // 3. °øÆ÷°¨À» ÁÖ´Â ÂªÀº ´ë±â ½Ã°£ (0.3ÃÊ)
+        // 3. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ Âªï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ (0.3ï¿½ï¿½)
         yield return new WaitForSeconds(0.3f);
 
-        // 4. ¼ÒÀ½ & ±æ ¸·±â
+        // 4. ï¿½ï¿½ï¿½ï¿½ & ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (NoiseSystem.Instance) NoiseSystem.Instance.FireImpulse(collapseNoiseAmount);
         if (bridgeBlocker) bridgeBlocker.enabled = true;
 
-        // 5. Ã¥ À¯·É ¸ðµå (Collider ²ô±â)
+        // 5. Ã¥ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ (Collider ï¿½ï¿½ï¿½)
         if (bookPivot)
         {
             var allBookColliders = bookPivot.GetComponentsInChildren<Collider>();
             foreach (var col in allBookColliders) col.enabled = false;
         }
 
-        // 6. Ã¥ Ãß¶ô (¹°¸® ÄÑ±â)
+        // 6. Ã¥ ï¿½ß¶ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ±ï¿½)
         if (bookRb)
         {
             bookPivot.DOKill();
             bookRb.isKinematic = false;
             bookRb.useGravity = true;
-            bookRb.detectCollisions = false; // Ãæµ¹ ¹«½Ã (È®½ÇÈ÷ ºüÁö°Ô)
+            bookRb.detectCollisions = false; // ï¿½æµ¹ ï¿½ï¿½ï¿½ï¿½ (È®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
 
             bookRb.AddTorque(Vector3.forward * 10f, ForceMode.Impulse);
             bookRb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
         }
 
-        // 7. ¡Ú ÀÌÁ¦ ¹­¾îµ×´ø Áã¸¦ ¹°¸® ¿£ÁøÀ¸·Î ÀüÈ¯ÇØ¼­ ¶³¾î¶ß¸²
-        // (Ã¥ÀÌ ¸ÕÀú »ìÂ¦ ºüÁö´Â ´À³¦À» À§ÇØ 0.05ÃÊ¸¸ ´õ ÁÜ)
+        // 7. ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½×´ï¿½ ï¿½ã¸¦ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½ß¸ï¿½
+        // (Ã¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Â¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 0.05ï¿½Ê¸ï¿½ ï¿½ï¿½ ï¿½ï¿½)
         yield return new WaitForSeconds(0.05f);
         DropPlayer();
 
-        // 8. °¨»ó ¹× Á¤¸®
+        // 8. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         yield return new WaitForSeconds(2.0f);
         if (bookPivot) Destroy(bookPivot.gameObject);
         if (bridgeCameraTriggerObj) bridgeCameraTriggerObj.SetActive(false);
@@ -142,40 +142,40 @@ public class LabToFridgeManager : MonoBehaviour
         RecoverPlayer();
     }
 
-    // ¡Ú [½Å±Ô ÇÔ¼ö] Áã¸¦ ±× ÀÚ¸®¿¡ ¾óÀ½! ½ÃÅ°´Â ÇÔ¼ö
+    // ï¿½ï¿½ [ï¿½Å±ï¿½ ï¿½Ô¼ï¿½] ï¿½ã¸¦ ï¿½ï¿½ ï¿½Ú¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½! ï¿½ï¿½Å°ï¿½ï¿½ ï¿½Ô¼ï¿½
     void FreezePlayerOnBridge()
     {
         var player = GameObject.FindGameObjectWithTag("Player");
         if (player)
         {
-            // 1. ÀÌµ¿ ÀÔ·Â Â÷´Ü (Å¬¸¯ ¹«½Ã)
+            // 1. ï¿½Ìµï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ï¿½ï¿½ (Å¬ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
             var inputEvents = player.GetComponent<ClickMoveOrInteract_Events>();
             if (inputEvents) inputEvents.enabled = false;
 
-            // 2. NavMeshAgent Áï½Ã Á¤Áö
+            // 2. NavMeshAgent ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             var agent = player.GetComponent<NavMeshAgent>();
             if (agent)
             {
-                // °¡´ø ±æ Ãë¼ÒÇÏ°í Á¦ÀÚ¸®¿¡ ¸ØÃã
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½Ú¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 if (agent.isOnNavMesh) agent.ResetPath();
                 agent.velocity = Vector3.zero;
                 agent.isStopped = true;
-                agent.enabled = false; // ¾Æ¿¹ ²¨¹ö¸²
+                agent.enabled = false; // ï¿½Æ¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             }
 
-            // 3. (¼±ÅÃ) Áã°¡ "¾î?" ÇÏ°í ³î¶ó´Â ¾Ö´Ï¸ÞÀÌ¼ÇÀÌ ÀÖ´Ù¸é ¿©±â¼­ ½ÇÇà
+            // 3. (ï¿½ï¿½ï¿½ï¿½) ï¿½ã°¡ "ï¿½ï¿½?" ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ ï¿½Ö´Ù¸ï¿½ ï¿½ï¿½ï¿½â¼­ ï¿½ï¿½ï¿½ï¿½
             // var animator = player.GetComponentInChildren<Animator>();
             // if(animator) animator.SetTrigger("Surprise");
         }
     }
 
-    // (±âÁ¸ DropPlayer ÇÔ¼ö´Â ±×´ë·Î »ç¿ëÇÏµÇ, NavMesh ²ô´Â ºÎºÐÀº Áßº¹µÇ¾îµµ »ó°ü¾øÀ½)
+    // (ï¿½ï¿½ï¿½ï¿½ DropPlayer ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½×´ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ïµï¿½, NavMesh ï¿½ï¿½ï¿½ ï¿½Îºï¿½ï¿½ï¿½ ï¿½ßºï¿½ï¿½Ç¾îµµ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
     void DropPlayer()
     {
         var player = GameObject.FindGameObjectWithTag("Player");
         if (player)
         {
-            // Rigidbody ÄÑ¼­ ¹°¸® ³«ÇÏ ½ÃÀÛ
+            // Rigidbody ï¿½Ñ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             var rb = player.GetComponent<Rigidbody>();
             if (rb)
             {
@@ -184,7 +184,7 @@ public class LabToFridgeManager : MonoBehaviour
                 rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
                 rb.linearDamping = playerFallDrag;
 
-                // Á¤Áö »óÅÂ¿¡¼­ ¹Ù·Î ¾Æ·¡·Î ¹Ó´Ï´Ù
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ ï¿½Ù·ï¿½ ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½Ó´Ï´ï¿½
                 rb.linearVelocity = Vector3.zero;
                 rb.AddForce(Vector3.down * 2f, ForceMode.Impulse);
             }
@@ -207,24 +207,24 @@ public class LabToFridgeManager : MonoBehaviour
         {
             
 
-            Debug.Log("[Bridge] ÇÃ·¹ÀÌ¾î º¹±¸ ½ÃÀÛ...");
+            Debug.Log("[Bridge] ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½...");
 
-            // 1. ¹°¸® ²ô±â (ÀÌÁ¦ NavMesh°¡ ´Ù½Ã Á¶Á¾ÇØ¾ß ÇÔ)
+            // 1. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ NavMeshï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½ï¿½)
             var rb = player.GetComponent<Rigidbody>();
             if (rb)
             {
-                rb.isKinematic = true; // ´Ù½Ã °íÁ¤
-                rb.useGravity = false; // Áß·Â ²ô±â
+                rb.isKinematic = true; // ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½
+                rb.useGravity = false; // ï¿½ß·ï¿½ ï¿½ï¿½ï¿½
                 rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
             }
 
-            // 2. ¹Ù´Ú À§Ä¡ º¸Á¤ (NavMesh À§·Î ¾ÈÂø)
+            // 2. ï¿½Ù´ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ (NavMesh ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
             var agent = player.GetComponent<NavMeshAgent>();
             if (agent)
             {
-                agent.enabled = true; // ÄÑ±â
-                // ÇöÀç ¹°¸® À§Ä¡(transform.position)¸¦ NavMesh »óÀÇ À§Ä¡·Î °­Á¦ µ¿±âÈ­
+                agent.enabled = true; // ï¿½Ñ±ï¿½
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡(transform.position)ï¿½ï¿½ NavMesh ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­
                 if (NavMesh.SamplePosition(player.transform.position, out NavMeshHit hit, 2.0f, NavMesh.AllAreas))
                 {
                     agent.Warp(hit.position);
@@ -234,13 +234,13 @@ public class LabToFridgeManager : MonoBehaviour
                 agent.isStopped = false;
             }
 
-            // 3. ÀÔ·Â ½ºÅ©¸³Æ® ´Ù½Ã ÄÑ±â (ÀÌÁ¦ Å¬¸¯ÇÏ¸é ¿òÁ÷ÀÓ!)
+            // 3. ï¿½Ô·ï¿½ ï¿½ï¿½Å©ï¿½ï¿½Æ® ï¿½Ù½ï¿½ ï¿½Ñ±ï¿½ (ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½!)
             var inputEvents = player.GetComponent<ClickMoveOrInteract_Events>();
             if (inputEvents) inputEvents.enabled = true;
 
-            // 4. Trigger º¹±¸ (¿ø·¡ Trigger¿´´Ù¸é º¹±¸, ¾Æ´Ï¸é ±×´ë·Î µÒ)
-            // º¸Åë ÀÌµ¿ Áß¿¡´Â Ãæµ¹Ã¼¿©¾ß ÇÏ¹Ç·Î isTrigger=false À¯Áö ÃßÃµ
-            // ¸¸¾à »óÈ£ÀÛ¿ëÀ» À§ÇØ Trigger¿©¾ß¸¸ ÇÑ´Ù¸é ¿©±â¼­ true·Î ¹Ù²Ù¼¼¿ä.
+            // 4. Trigger ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ Triggerï¿½ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½Æ´Ï¸ï¿½ ï¿½×´ï¿½ï¿½ ï¿½ï¿½)
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ß¿ï¿½ï¿½ï¿½ ï¿½æµ¹Ã¼ï¿½ï¿½ï¿½ï¿½ ï¿½Ï¹Ç·ï¿½ isTrigger=false ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ãµ
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Triggerï¿½ï¿½ï¿½ß¸ï¿½ ï¿½Ñ´Ù¸ï¿½ ï¿½ï¿½ï¿½â¼­ trueï¿½ï¿½ ï¿½Ù²Ù¼ï¿½ï¿½ï¿½.
         }
     }
 }

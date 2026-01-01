@@ -26,19 +26,29 @@ public class GameLoopManager : MonoBehaviour
         Instance = this;
 
         Time.timeScale = 1.0f; // 0으로 멈췄던 시간을 다시 흐르게 함
-        DOTween.KillAll();     // 이전 씬에서 남은 트윈이 있다면 제거 (충돌 방지)
+        DOTween.KillAll();     // 이전 씬에서 남은 트윈이 있다면 제거
+
+        // ★ [수정] Start보다 먼저 실행되는 Awake에서 화면을 검게 덮어버립니다.
+        // 그래야 게임이 켜지자마자 "깜빡"하는 현상 없이 완벽한 검은 화면에서 시작합니다.
+        if (blackCurtain)
+        {
+            blackCurtain.gameObject.SetActive(true);
+            blackCurtain.alpha = 1f; // 시작하자마자 완전 검정
+            blackCurtain.blocksRaycasts = true; // 터치 방지
+        }
     }
 
     void Start()
     {
-        // 씬 시작 시: 검은 화면 -> 투명하게 (Fade In)
+        // 씬 시작 시: 검은 화면(Alpha 1) -> 투명하게(Alpha 0) (Fade In 연출)
         if (blackCurtain)
         {
-            blackCurtain.gameObject.SetActive(true);
-            blackCurtain.alpha = 1f;
-            blackCurtain.DOFade(0f, fadeDuration).OnComplete(() => {
-                blackCurtain.gameObject.SetActive(false); // 다 걷히면 끄기
-            });
+            blackCurtain.DOFade(0f, fadeDuration)
+                .SetEase(Ease.InOutQuad) // 부드러운 이징 추가
+                .OnComplete(() => {
+                    blackCurtain.gameObject.SetActive(false); // 다 걷히면 끄기
+                    blackCurtain.blocksRaycasts = false;
+                });
         }
 
         // 타이틀 패널 켜기 (리로드 되었으므로 타이틀부터 시작)
@@ -65,10 +75,12 @@ public class GameLoopManager : MonoBehaviour
         // 2. 비명 지르고 잠시 대기 (화면은 그대로)
         yield return new WaitForSeconds(deathDelay);
 
-        // 3. 암전 시작 (Fade Out)
+        // 3. 암전 시작 (Fade Out: 투명 -> 검정)
         if (blackCurtain)
         {
             blackCurtain.gameObject.SetActive(true);
+            blackCurtain.blocksRaycasts = true;
+
             // 1초 동안 검게 변함
             yield return blackCurtain.DOFade(1f, fadeDuration).WaitForCompletion();
         }
@@ -78,7 +90,6 @@ public class GameLoopManager : MonoBehaviour
         }
 
         // 4. 씬 리로드 (완전 초기화)
-        // 현재 씬의 이름을 가져와서 다시 로드
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -87,6 +98,5 @@ public class GameLoopManager : MonoBehaviour
     {
         if (titlePanel) titlePanel.SetActive(false);
         if (gameUI) gameUI.SetActive(true);
-        // 필요한 경우 플레이어 조작 잠금 해제 등 수행
     }
 }

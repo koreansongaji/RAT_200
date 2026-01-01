@@ -166,6 +166,12 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
         if (!agent.pathPending && agent.hasPath && Arrived())
             HardStop();
 
+        if (agent.isActiveAndEnabled && agent.isOnNavMesh)
+        {
+            if (!agent.pathPending && agent.hasPath && Arrived())
+                HardStop();
+        }
+
         if (_activeDrag != null)
         {
             var pos = Mouse.current != null ? Mouse.current.position.ReadValue() : (Vector2)Input.mousePosition;
@@ -340,6 +346,10 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
 
     bool TrySetPath(Vector3 dst)
     {
+        if (!agent || !agent.isActiveAndEnabled || !agent.isOnNavMesh)
+            return false;
+
+
         if (_path == null) _path = new NavMeshPath();
         if (agent.CalculatePath(dst, _path) && _path.status == NavMeshPathStatus.PathComplete)
         {

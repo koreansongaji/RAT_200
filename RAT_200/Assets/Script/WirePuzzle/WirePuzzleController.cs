@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
 using DG.Tweening;
@@ -42,6 +42,7 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
 
     [Header("Cage Rat Event")]
     public GameObject ratObj;
+    public GameObject deadRat;
     public ParticleSystem[] shockEffects;
     public GameObject crossbarObj;
 
@@ -95,7 +96,7 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         if (rewardCardObj) rewardCardObj.SetActive(false);
         if (crossbarObj) crossbarObj.SetActive(false);
         if (ratObj) ratObj.SetActive(true);
-
+        if (deadRat) deadRat.SetActive(false);
         if (shockEffects != null)
         {
             foreach (var fx in shockEffects) if (fx) fx.Stop();
@@ -133,7 +134,16 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
     {
         if (!CanInteract(i)) return;
         _lastPlayer = i;
-        if (_micro && _micro.TryEnter(i)) return;
+
+        // [수정됨] Micro가 있다면 TryEnter의 성공 여부와 관계없이 리턴합니다.
+        // 즉, 쿨타임 등으로 진입 실패 시 '강제 시작' 하지 않고 입력을 무시합니다.
+        if (_micro)
+        {
+            _micro.TryEnter(i);
+            return;
+        }
+
+        // Micro가 없을 때만 바로 세션 시작
         StartSession();
     }
 
@@ -202,12 +212,18 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
             SetButtonsInteractable(false);
             if (NoiseSystem.Instance) NoiseSystem.Instance.FireImpulse(1f);
             OnFailed?.Invoke();
-
-            // 공용 사운드 재생: 와이어 퍼즐 실패 (퓨즈 스파크 소리)
             CommonSoundController.Instance?.PlayPuzzleFail();
 
-            if (_micro) _micro.Exit();
-            else CancelSession();
+            // [수정됨] Micro 상태가 실제로 활성화되어 있을 때만 Exit() 호출
+            // 그렇지 않다면(좀비 세션 등) 강제로 CancelSession() 호출
+            if (_micro && _micro.InMicro)
+            {
+                _micro.Exit();
+            }
+            else
+            {
+                CancelSession();
+            }
         }
     }
 
@@ -220,6 +236,7 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         if (shockEffects != null) foreach (var fx in shockEffects) if (fx) fx.Play();
         yield return new WaitForSeconds(1.5f);
         if (ratObj) ratObj.SetActive(false);
+        if (deadRat) deadRat.SetActive(true);
         if (crossbarObj) crossbarObj.SetActive(true);
         if (rewardCardObj) rewardCardObj.SetActive(true);
         OnSolved?.Invoke();

@@ -1,35 +1,40 @@
-﻿using Unity.Cinemachine;
+﻿using System.Collections;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI; // [New] 버튼 제어를 위해 추가 필수!
 
 public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
 {
     [Header("Cameras")]
-    [SerializeField] CinemachineCamera benchCloseupCam; // (옵션, 안쓰면 무시)
-    [SerializeField] CinemachineCamera microCloseupCam; // 0↔30
+    [SerializeField] CinemachineCamera benchCloseupCam;
+    [SerializeField] CinemachineCamera microCloseupCam;
+
+    [Header("UI")]
+    [SerializeField] Button closeButton; // [New] 닫기(X) 버튼 연결용
 
     [Header("Mixing (optional, legacy fallback)")]
-    [SerializeField] ChemMixingStation mixingStation;   // Host 없을 때만 폴백
-    [SerializeField] Canvas hintCanvas;                 // 힌트 패널 on/off
+    [SerializeField] ChemMixingStation mixingStation;
+    [SerializeField] Canvas hintCanvas;
 
     [Header("Control Locks")]
-    [SerializeField] bool lockPlayerWhileMicro = true;  // 플레이어 입력 잠금
-    [SerializeField] bool showCursorWhileMicro = true;  // 마이크로 동안 커서 표시
+    [SerializeField] bool lockPlayerWhileMicro = true;
+    [SerializeField] bool showCursorWhileMicro = true;
 
     public UnityEvent OnEnterMicro, OnExitMicro;
 
     [Header("Re-enter guard")]
-    [SerializeField] float reenterBlockSec = 0.2f;      // ESC 직후 재진입 차단
+    [SerializeField] float reenterBlockSec = 0.2f;
 
     [Header("Host Override (optional)")]
-    [SerializeField] MonoBehaviour hostOverride;         // 특정 오브젝트를 호스트로 강제할 때
+    [SerializeField] MonoBehaviour hostOverride;
 
     bool _inMicro;
     float _blockUntil;
     PlayerInteractor _pi;
 
-    public bool InMicro => _inMicro; // 기존 참조용
-    public bool InZoom => _inMicro;  // IZoomStateProvider 구현
+    public bool InMicro => _inMicro;
+    public bool InZoom => _inMicro;
 
     IMicroSessionHost _host;
 
@@ -41,6 +46,13 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
              ?? GetComponent<IMicroSessionHost>()
              ?? GetComponentInChildren<IMicroSessionHost>()
              ?? GetComponentInParent<IMicroSessionHost>();
+
+        // [New] 버튼이 할당되어 있다면 클릭 이벤트 연결 & 시작 시 숨기기
+        if (closeButton)
+        {
+            closeButton.onClick.AddListener(Exit); // 클릭하면 Exit() 함수 실행
+            closeButton.gameObject.SetActive(false); // 평소엔 안 보임
+        }
     }
 
     public bool TryEnter(PlayerInteractor player)
@@ -66,6 +78,15 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
         if (showCursorWhileMicro) SetCursor(true);
         if (hintCanvas) hintCanvas.enabled = true;
 
+        // [New] 마이크로 줌 진입 시 X 버튼 켜기
+        if (closeButton) closeButton.gameObject.SetActive(true);
+
+        if (_pi != null)
+        {
+            var col = _pi.GetComponent<Collider>();
+            if (col) col.enabled = false;
+        }
+
         if (_host != null) _host.OnMicroEnter(_pi);
         else if (mixingStation) mixingStation.BeginSessionFromExternal();
 
@@ -90,10 +111,35 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
         if (showCursorWhileMicro) SetCursor(true);
         if (hintCanvas) hintCanvas.enabled = false;
 
+        // 여기서 즉시 끄지 않고, 코루틴으로 처리를 미룹니다.
+        // 이렇게 해야 이번 프레임의 이동 판정(Update)에서 UI가 살아있는 것으로 인식되어
+        // 바닥 클릭(이동)을 막을 수 있습니다.
+        StartCoroutine(Routine_ExitCleanup());
+
         if (_host != null) _host.OnMicroExit(_pi);
         else if (mixingStation) mixingStation.EndSessionFromExternal();
 
         OnExitMicro?.Invoke();
+    }
+
+    IEnumerator Routine_ExitCleanup()
+    {
+        // 이번 프레임의 모든 렌더링/로직이 끝날 때까지 대기
+        // (이동 스크립트의 Update보다 뒤에 실행됨)
+        yield return new WaitForEndOfFrame();
+
+        if (lockPlayerWhileMicro) TogglePlayerControls(true);
+        if (showCursorWhileMicro) SetCursor(true);
+        if (hintCanvas) hintCanvas.enabled = false;
+
+        // 버튼도 이제서야 끕니다.
+        if (closeButton) closeButton.gameObject.SetActive(false);
+
+        if (_pi != null)
+        {
+            var col = _pi.GetComponent<Collider>();
+            if (col) col.enabled = true;
+        }
     }
 
     void Update()
@@ -102,15 +148,11 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
             Exit();
     }
 
+    // ... (아래 TogglePlayerControls, SetCursor 등은 기존 유지) ...
     void TogglePlayerControls(bool enable)
     {
         var input = _pi ? _pi.GetComponent<RatInput>() : null;
         if (input) input.enabled = enable;
-
-        // Micro 중에도 다이얼/버튼 같은 IInteractable을 눌러야 하므로
-        // ClickMoveOrInteract_Events는 비활성화하지 않는다.
-        var clicker = _pi ? _pi.GetComponent<ClickMoveOrInteract_Events>() : null;
-        // if (clicker) clicker.enabled = enable; // 비활성화 금지
     }
 
     void SetCursor(bool visible)
