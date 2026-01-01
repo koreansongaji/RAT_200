@@ -7843,6 +7843,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Researcher
       objectReference: {fileID: 0}
+    - target: {fileID: 1705726258676023640, guid: 30dafe654ca649b45a8f79cfe71ac57a, type: 3}
+      propertyPath: _researcherRunSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 4ba3b88e66568e24d8ea6598956a36a9, type: 3}
     - target: {fileID: 2344679051181993756, guid: 30dafe654ca649b45a8f79cfe71ac57a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
