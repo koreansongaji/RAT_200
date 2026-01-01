@@ -21,18 +21,22 @@ public class GlitchController : MonoBehaviour
         {
             _glitchVolume = GetComponent<Volume>();
         }
-        _glitchProfile = _glitchVolume.profile;
 
-        // Try to get the GlitchVol component from the profile and cache it
-        if (_glitchProfile == null)
+        if (_glitchVolume != null)
         {
-            Debug.LogWarning("GlitchController: VolumeProfile is null on the assigned Volume.");
-            return;
-        }
-
-        if (!_glitchProfile.TryGet<GlitchVol>(out _glitchComponent))
-        {
-            Debug.LogWarning("GlitchController: GlitchVol component not found in the VolumeProfile.");
+            _glitchProfile = _glitchVolume.profile;
+            if (_glitchProfile != null)
+            {
+                // 여러 볼륨 컴포넌트 중 GlitchVol만 가져옵니다.
+                if (!_glitchProfile.TryGet<GlitchVol>(out _glitchComponent))
+                {
+                    Debug.LogWarning("GlitchController: GlitchVol component not found in the VolumeProfile.");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("GlitchController: VolumeProfile is null on the assigned Volume.");
+            }
         }
     }
 
