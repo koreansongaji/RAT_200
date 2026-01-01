@@ -15,6 +15,9 @@ public class NoiseSystem : MonoBehaviour
     [Header("Runtime (read-only)")]
     [Range(0f, 1f)] public float current01 = 0f;
 
+    [Header("Impulse Smooth Settings")]
+    public float impulseRiseSpeed = 2f;
+
     // ���� [�߰�] ������ ����� �÷��� ����
     [Header("Debug")]
     [Tooltip("üũ�ϸ� ������ �� �̻� �������� �ʽ��ϴ�.")]
@@ -39,6 +42,8 @@ public class NoiseSystem : MonoBehaviour
     bool _aboveThreshold;
     float _lastNoiseTime = -999f;
 
+    private float _targetNoiseLevel = 0f;
+
     void Awake()
     {
         if (Instance && Instance != this) { Destroy(this); return; }
@@ -51,6 +56,7 @@ public class NoiseSystem : MonoBehaviour
         _ownerIndex.Clear();
         _nextId = 1;
         _aboveThreshold = false;
+        _targetNoiseLevel = 0f;
     }
 
     public int BeginContinuous(UnityEngine.Object owner, string tag, float ratePerSecond)
@@ -121,46 +127,70 @@ public class NoiseSystem : MonoBehaviour
 
         if (add01 <= 0f) return;
 
-        current01 = Mathf.Clamp01(current01 + add01);
-        _lastNoiseTime = Time.time;
 
-        OnValueChanged?.Invoke(current01);
-        CheckThresholdTransition();
+        //current01 = Mathf.Clamp01(current01 + add01);
+        //_lastNoiseTime = Time.time;
+
+        //OnValueChanged?.Invoke(current01);
+        //CheckThresholdTransition();
+
+        float baseLevel = Mathf.Max(current01, _targetNoiseLevel);
+        _targetNoiseLevel = Mathf.Clamp01(baseLevel + add01);
+
+        _lastNoiseTime = Time.time;
     }
 
     void Update()
     {
         float dt = Time.deltaTime;
-
         float sumRate = 0f;
-        foreach (var s in _sources.Values)
-            if (s.active) sumRate += s.ratePerSecond;
-
+        foreach (var s in _sources.Values) if (s.active) sumRate += s.ratePerSecond;
         bool hasContinuousNoise = sumRate > 0f;
 
-        // ���� [����] �Ͻ����� ���°� �ƴ� ���� ���� ���� ó�� ����
+        // 1. 지속 소음 처리 (Continuous)
         if (hasContinuousNoise && !isDebugPaused)
         {
             _lastNoiseTime = Time.time;
+            float nextVal = current01 + sumRate * dt;
 
-            float afterAcc = Mathf.Clamp01(current01 + sumRate * dt);
-            if (!Mathf.Approximately(afterAcc, current01))
-            {
-                current01 = afterAcc;
+            // 지속 소음은 즉시 반영하되, Impulse 목표치도 같이 밀어올림
+            current01 = Mathf.Clamp01(nextVal);
+            if (current01 > _targetNoiseLevel) _targetNoiseLevel = current01;
+
+            if (!Mathf.Approximately(current01, nextVal)) // 값이 변했으면 알림
                 OnValueChanged?.Invoke(current01);
-            }
 
             CheckThresholdTransition();
             return;
         }
 
-        // ���� ���� (�Ͻ��������� ������ �پ��� �� �������, �ƿ� ������ ����. ���⼭�� �پ��� ��)
+        // 2. Impulse로 인한 부드러운 상승 처리 (Impulse Rise)
+        if (current01 < _targetNoiseLevel)
+        {
+            // 부드럽게 증가 (MoveTowards)
+            current01 = Mathf.MoveTowards(current01, _targetNoiseLevel, impulseRiseSpeed * dt);
+
+            // 상승 중에는 감쇄 타이머 리셋 (감소 방지)
+            _lastNoiseTime = Time.time;
+
+            OnValueChanged?.Invoke(current01);
+            CheckThresholdTransition();
+            return; // 상승 중에는 감쇄 로직 실행 X
+        }
+        else
+        {
+            // 목표치에 도달했거나 더 높다면, 목표치를 현재값으로 맞춤 (하강 준비)
+            _targetNoiseLevel = current01;
+        }
+
+        // 3. 자연 감쇄 처리 (Decay)
         if (current01 > 0f && Time.time - _lastNoiseTime >= waitBeforeDecay)
         {
             float afterDecay = Mathf.Max(0f, current01 - decayPerSecond * dt);
             if (!Mathf.Approximately(afterDecay, current01))
             {
                 current01 = afterDecay;
+                _targetNoiseLevel = current01; // 감쇄 시 목표치도 같이 내림
                 OnValueChanged?.Invoke(current01);
             }
         }
@@ -192,6 +222,9 @@ public class NoiseSystem : MonoBehaviour
         if (Mathf.Approximately(v, current01)) return;
 
         current01 = v;
+        _targetNoiseLevel = v;
+
+
         _lastNoiseTime = Time.time;
         OnValueChanged?.Invoke(current01);
         CheckThresholdTransition();

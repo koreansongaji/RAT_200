@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.AI; // NavMeshAgent 제어를 위해 필요
+using UnityEngine.AI;
 using DG.Tweening;
 using Unity.Cinemachine;
 using System.Collections;
@@ -12,9 +12,13 @@ public class GameIntroManager : MonoBehaviour
 
     [Header("Actors")]
     public Transform playerRat;
-    public Transform partnerRat; // 동료 쥐
+    public Transform partnerRat;
     [Tooltip("들썩거리고 열릴 케이지 뚜껑")]
     public Transform cageLid;
+
+    // ★ [New] 케이지 비추는 조명 연결용
+    [Header("Lights")]
+    public GameObject cageLight;
 
     [Header("Start Positions")]
     public Transform cageInsidePos;
@@ -55,7 +59,6 @@ public class GameIntroManager : MonoBehaviour
     {
         if (cageIntroCam) cageIntroCam.Priority = 100;
 
-        // ★ [핵심] 위치 잡기 전에 Agent 끄기 (충돌/스냅 방지)
         SetAgentState(playerRat, false);
         SetAgentState(partnerRat, false);
 
@@ -64,6 +67,9 @@ public class GameIntroManager : MonoBehaviour
             if (playerRat) playerRat.position = cageInsidePos.position;
             if (partnerRat) partnerRat.position = cageInsidePos.position + new Vector3(0.2f, 0, 0.2f);
         }
+
+        // ★ [New] 게임 시작/재시작 시 조명 켜기
+        if (cageLight) cageLight.SetActive(true);
 
         StartLidShaking();
     }
@@ -87,7 +93,7 @@ public class GameIntroManager : MonoBehaviour
 
     IEnumerator Routine_OpenAndJump()
     {
-        // 1. 뚜껑 열기 연출
+        // 1. 뚜껑 열기
         _shakeTween?.Kill();
         if (cageLid)
         {
@@ -106,12 +112,10 @@ public class GameIntroManager : MonoBehaviour
         // 2. 플레이어 점프
         if (playerRat && playerLandPos)
         {
-            // ★ 점프 중에도 Agent는 꺼져 있어야 함 (PrepareIntro에서 이미 껐음)
             playerRat.DOJump(playerLandPos.position, jumpPower, 1, jumpDuration)
                      .SetEase(Ease.OutQuad)
                      .OnComplete(() =>
                      {
-                         // ★ [핵심] 착지 후 Agent 다시 켜기 & 위치 동기화
                          SetAgentState(playerRat, true);
                      });
         }
@@ -123,19 +127,23 @@ public class GameIntroManager : MonoBehaviour
                       .SetEase(Ease.OutQuad)
                       .OnComplete(() =>
                       {
-                          // ★ 착지 후 Agent 다시 켜기
                           SetAgentState(partnerRat, true);
                       });
         }
 
+        // 연출이 끝날 때까지 대기
         yield return new WaitForSeconds(jumpDuration * 0.6f);
 
+        // 카메라 전환
         if (cageIntroCam) cageIntroCam.Priority = 0;
+
+        // ★ [New] 연출 종료 후 조명 끄기
+        // (카메라가 빠지면서 조명도 같이 꺼주어 최적화 및 분위기 전환)
+        if (cageLight) cageLight.SetActive(false);
 
         Debug.Log("[Intro] 게임 시작 시퀀스 완료!");
     }
 
-    // NavMeshAgent 끄고 켜는 헬퍼 함수
     void SetAgentState(Transform target, bool enabled)
     {
         if (!target) return;
@@ -144,7 +152,6 @@ public class GameIntroManager : MonoBehaviour
         {
             if (enabled)
             {
-                // 켤 때: 위치를 강제로 맞추고 경로 초기화
                 agent.Warp(target.position);
                 agent.enabled = true;
                 agent.ResetPath();
@@ -152,7 +159,6 @@ public class GameIntroManager : MonoBehaviour
             }
             else
             {
-                // 껄 때
                 agent.enabled = false;
             }
         }

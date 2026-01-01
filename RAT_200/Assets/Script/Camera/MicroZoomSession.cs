@@ -38,6 +38,7 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
 
     IMicroSessionHost _host;
 
+    private ResearcherController _researcher;
     void Awake()
     {
         if (microCloseupCam) microCloseupCam.Priority = CloseupCamManager.MicroOff;
@@ -53,12 +54,19 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
             closeButton.onClick.AddListener(Exit); // 클릭하면 Exit() 함수 실행
             closeButton.gameObject.SetActive(false); // 평소엔 안 보임
         }
+
+        _researcher = FindFirstObjectByType<ResearcherController>();
     }
 
     public bool TryEnter(PlayerInteractor player)
     {
         if (_inMicro) return false;
         if (Time.unscaledTime < _blockUntil) return false;
+
+        if (_researcher != null && _researcher.CurrentState != ResearcherController.State.Idle)
+        {
+            return false;
+        }
 
         if (_host != null && !_host.CanBeginMicro(player))
             return false;

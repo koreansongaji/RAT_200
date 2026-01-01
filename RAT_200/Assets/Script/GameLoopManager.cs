@@ -37,6 +37,7 @@ public class GameLoopManager : MonoBehaviour
             blackCurtain.alpha = 1f; // 시작하자마자 완전 검정
             blackCurtain.blocksRaycasts = true; // 터치 방지
         }
+
     }
 
     void Start()
