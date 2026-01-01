@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using Random = UnityEngine.Random;
 
 public class Draggable3D : MonoBehaviour
 {
@@ -33,7 +34,6 @@ public class Draggable3D : MonoBehaviour
     
     void Awake()
     {
-        if (_slideSound == null) _slideSound = Resources.Load<AudioClip>("Sounds/Effect/Fridge - Light Puzzle/fridge_block_slide");
         _cam = Camera.main;
     }
 
@@ -46,6 +46,9 @@ public class Draggable3D : MonoBehaviour
 
     public void BeginDrag(Ray pointerRay)
     {
+        if(_slideSound != null)
+            AudioManager.Instance.Play(_slideSound, AudioManager.Sound.Effect, Random.Range(0.9f, 1.1f));
+        
         _dragging = true;
 
         if (planeMode == PlaneMode.WorldUp)
