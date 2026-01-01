@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Audio; // 추가
 using System.Collections.Generic;
@@ -36,7 +37,10 @@ public class AudioManager : Singleton<AudioManager>
     {
 
     }
-
+    private void Update()
+    {
+        //if(Input.GetKeyDown(KeyCode.Space)) KillAllSounds();
+    }
     public void PlayBgmWithFade(AudioClip clip, float fadeDuration = 1.0f)
     {
         if (clip == null) return;
@@ -403,5 +407,35 @@ public class AudioManager : Singleton<AudioManager>
             Debug.LogWarning("[AudioManager] AudioMixer is not assigned!");
         }
     }
+    
+    public void KillAllSounds()
+    {
+        foreach (var source in _audioSources)
+        {
+            if (source != null)
+            {
+                source.Stop();
+                source.clip = null;
+            }
+        }
 
+        foreach (var bgmSource in _bgmSources)
+        {
+            if (bgmSource != null)
+            {
+                bgmSource.Stop();
+                bgmSource.clip = null;
+            }
+        }
+
+        foreach (var loopSource in _loopSources.Values)
+        {
+            if (loopSource != null)
+            {
+                loopSource.Stop();
+                loopSource.clip = null;
+            }
+        }
+        _loopSources.Clear();
+    }
 }
