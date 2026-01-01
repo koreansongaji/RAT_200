@@ -15,10 +15,10 @@ MonoBehaviour:
   active: 1
   m_NormalOutlineSensitive:
     m_OverrideState: 1
-    m_Value: 2.02
+    m_Value: 2.1
   m_ColorOutlineSensitive:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 1.92
   m_Sensitive:
     m_OverrideState: 1
     m_Value: 0.21

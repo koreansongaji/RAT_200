@@ -6,12 +6,15 @@ using DinoFracture;
 public class BeakerBreakable : MonoBehaviour
 {
     [Header("Settings")]
+    [Tooltip("체크 해제하면 플레이어가 몸으로 부딪혀도 안 깨집니다. (이벤트 연출용)")]
+    public bool breakOnTouch = true; // ★ 새로 추가된 옵션
+
     [Tooltip("깨트릴 대상의 태그 (Player)")]
     public string targetTag = "Player";
 
     [Header("Sound")]
     public AudioSource sfxSource;
-    public AudioClip breakSound; // 쨍그랑 소리
+    public AudioClip breakSound;
 
     private PreFracturedGeometry _preFracture;
     private bool _isBroken = false;
@@ -20,23 +23,22 @@ public class BeakerBreakable : MonoBehaviour
     {
         _preFracture = GetComponent<PreFracturedGeometry>();
 
-        // 안전장치: 혹시 isTrigger가 꺼져있으면 켜줌
         var col = GetComponent<Collider>();
         if (col && !col.isTrigger) col.isTrigger = true;
     }
 
-    // ★ Trigger 감지로 변경
     private void OnTriggerEnter(Collider other)
     {
-        if (_isBroken) return;
+        // 이미 깨졌거나, '접촉 파괴'가 꺼져있으면 무시
+        if (_isBroken || !breakOnTouch) return;
 
-        // 태그 확인 (플레이어인가?)
         if (other.CompareTag(targetTag))
         {
             Break();
         }
     }
 
+    // 이 함수는 breakOnTouch 옵션과 상관없이 외부(ChemMixingStation)에서 호출하면 무조건 깨집니다.
     public void Break()
     {
         if (_isBroken) return;
@@ -45,18 +47,16 @@ public class BeakerBreakable : MonoBehaviour
         {
             _isBroken = true;
 
-            if (sfxSource && breakSound)
-            {
-                sfxSource.PlayOneShot(breakSound);
-            }
+            //if (sfxSource && breakSound)
+            //{
+            //    sfxSource.PlayOneShot(breakSound);
+            //}
 
-            // 1. 폭발 위치 설정
+            AudioManager.Instance.Play(breakSound);
+
             FracturePieceHandler.SetBlastPoint(transform.position);
-
-            // 2. 파편 교체
             _preFracture.Fracture();
 
-            // 3. 파편 튀기기
             var handlers = _preFracture.GeneratedPieces.GetComponentsInChildren<FracturePieceHandler>();
             foreach (var h in handlers)
             {
@@ -65,7 +65,7 @@ public class BeakerBreakable : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"[Beaker] 파편 데이터가 없습니다. Inspector에서 'Create Fractures'를 확인하세요.");
+            Debug.LogWarning($"[Beaker] 파편 데이터가 없습니다.");
         }
     }
 }

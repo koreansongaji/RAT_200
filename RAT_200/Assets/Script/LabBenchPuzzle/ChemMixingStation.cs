@@ -5,10 +5,11 @@ using TMPro;
 using DG.Tweening;
 using Unity.Cinemachine;
 using System.Collections;
+using DinoFracture; // 네임스페이스 확인
 
 public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHidePlayerPreference
 {
-    // ... (기존 변수들 그대로 유지) ...
+    // ... (기존 변수들 유지) ...
     [Header("필요 아이템 ID")]
     [SerializeField] string sodiumId = "Sodium";
     [SerializeField] string gelId = "Gel";
@@ -50,11 +51,17 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
     public float steamShowDuration = 1.5f;
     public float bridgeCamDuration = 3.0f;
 
-    [Header("Reward")]
+    [Header("Reward & Break")]
     public GameObject rewardCardObj;
+    [Tooltip("성공 시 깨뜨릴 플라스크 (BeakerBreakable 스크립트가 붙은 오브젝트)")]
+    public BeakerBreakable finalFlaskToBreak; // ★ 새로 추가됨
+    [Tooltip("플라스크가 깨지고 카드가 뿅 나타날 때까지의 딜레이")]
+    public float cardRevealDelay = 0.1f;      // ★ 새로 추가됨
 
     [Header("Sound & Event")]
     public UnityEvent OnMakeBigNoise;
+
+    private PreFracturedGeometry _preFracture;
 
     int _cNa, _cWater, _cGel;
     bool _hasPlacedNa, _hasPlacedWater, _hasPlacedGel;
@@ -63,8 +70,6 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
     bool _isSolved = false;
     MicroZoomSession _micro;
     Collider _mainCollider;
-
-    // ... (Awake, CanInteract, Interact, OnMicroEnter, OnMicroExit 등 기존 코드 유지) ...
 
     public bool HidePlayerDuringMicro => true;
 
@@ -97,7 +102,12 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         if (_chemMixingSuccessSound == null) _chemMixingSuccessSound = Resources.Load<AudioClip>("Sounds/Effect/Experiment/reaction_mix");
         if (_chemMixingFailSound == null) _chemMixingFailSound = Resources.Load<AudioClip>("Sounds/Effect/Experiment/reaction_fail");
         if (_chemMixingSound == null) _chemMixingSound = Resources.Load<AudioClip>("Sounds/Effect/Experiment/reaction_mix");
+
+        _preFracture = GetComponent<PreFracturedGeometry>();
     }
+
+    // ... (기존 메서드들 생략: RefreshMicroBind, CanInteract, Interact, OnMicroEnter/Exit, StartSession, CheckAndPlaceItem, SetButtonsState, CancelSession, WireButtons, Tap, Tap3D, RefreshTexts, Submit, BeginSessionFromExternal, EndSessionFromExternal, SetGelNeed) ...
+    // 기존 코드 그대로 유지하세요. 아래 Routine_SuccessSequence만 변경하면 됩니다.
 
     void RefreshMicroBind(PressableButton3D btn)
     {
@@ -133,8 +143,6 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
     void StartSession(PlayerInteractor player)
     {
         _session = true;
-        // StartSession에서는 초기화하지 않고 현재 값 유지 (재진입 시 이어하기 원한다면)
-        // 하지만 요청하신 건 '나갈 때 초기화'이므로 들어올 땐 0이 되어있을 것입니다.
         if (panel) panel.enabled = true;
 
         if (player != null)
@@ -150,7 +158,6 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         if (txtRecipe) txtRecipe.text = "MIX";
     }
 
-    // ... (CheckAndPlaceItem, SetButtonsState 등 기존 코드 유지) ...
     void CheckAndPlaceItem(PlayerInteractor player, string itemId, ref bool isPlaced, GameObject visualObj)
     {
         if (isPlaced) return;
@@ -183,11 +190,9 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         if (btnMix3D) btnMix3D.SetInteractable(ready);
     }
 
-    // ★ [수정] 세션 종료 시(나갈 때) 카운터 초기화
     public void CancelSession()
     {
         _session = false;
-        // 값 초기화 및 텍스트 갱신
         _cNa = 0; _cWater = 0; _cGel = 0;
         RefreshTexts();
     }
@@ -205,11 +210,10 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         if (btnMix3D) btnMix3D.OnPressed.AddListener(Submit);
     }
 
-    // ★ [수정] 5개 제한 추가
     void Tap(ref int counter, int need)
     {
         if (!_session) return;
-        if (counter >= 5) return; // 5개 이상이면 무시
+        if (counter >= 5) return;
         counter++;
         RefreshTexts();
     }
@@ -217,7 +221,7 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
     void Tap3D(ref int counter, int need)
     {
         if (!_session) return;
-        if (counter >= 5) return; // 5개 이상이면 무시
+        if (counter >= 5) return;
         counter++;
         RefreshTexts();
     }
@@ -230,7 +234,6 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         if (txtGel) txtGel.text = $"{Mark(_cGel, needGel)}";
     }
 
-    // ... (Submit, Routine_SuccessSequence, BeginSessionFromExternal 등 기존 코드 유지) ...
     void Submit()
     {
         if (!_session || _isSuccessSequence) return;
@@ -258,15 +261,36 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         _isSuccessSequence = true;
         SetButtonsState(false);
         if (panel) panel.enabled = false;
+
+        // 1. 연기 연출
         if (steamParticle) steamParticle.Play();
         yield return new WaitForSeconds(steamShowDuration);
+
+        // 2. 카메라 연출
         if (bridgeSideCam) bridgeSideCam.Priority = 100;
         yield return new WaitForSeconds(0.5f);
+
+        // 3. 외부 연결 장치 작동
         if (bridgeManager) bridgeManager.PlaySequence();
         yield return new WaitForSeconds(bridgeCamDuration);
+
         if (bridgeSideCam) bridgeSideCam.Priority = 0;
         if (_micro && _micro.InMicro) _micro.Exit();
+
+        // ★ [핵심 추가 부분] 플라스크 깨트리기
+        if (finalFlaskToBreak != null)
+        {
+            // 플라스크를 깨트림 (BeakerBreakable의 Break 함수 호출)
+            finalFlaskToBreak.Break();
+            NoiseSystem.Instance.FireImpulse(0.3f);
+
+            // 파편이 튀는 찰나의 순간 대기
+            yield return new WaitForSeconds(cardRevealDelay);
+        }
+
+        // 4. 보상 카드 등장 (깨진 플라스크 자리에서 나타남)
         if (rewardCardObj) rewardCardObj.SetActive(true);
+
         _isSuccessSequence = false;
     }
 

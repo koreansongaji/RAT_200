@@ -5,12 +5,14 @@ using Unity.Cinemachine;
 [RequireComponent(typeof(MicroZoomSession))]
 public class FuseBoxPuzzleController : BaseInteractable, IMicroSessionHost, IMicroHidePlayerPreference
 {
-    [Header("Puzzle Target")]
-    [Tooltip("이 퍼즐을 풀면 해금될 사다리 자리")]
-    public LadderPlaceSpot targetSpotToUnlock;
+    [Header("Puzzle Target (Vent)")]
+    [Tooltip("퍼즐 해결 후 상호작용이 가능해질 진짜 환풍구 오브젝트 (초기엔 Default 레이어)")]
+    public GameObject realVentObject;
+
+    [Tooltip("연출용: 위에서 아래로 툭 떨어질 가짜 환풍구 덮개 (Rigidbody 필수)")]
+    public GameObject fallingVentProp;
 
     [Header("Visuals")]
-    // ★ [수정] 단일 파티클 -> 배열로 변경
     [Tooltip("스파크 파티클들 (여러 개 연결 가능, 처음엔 켜져 있음)")]
     public ParticleSystem[] sparkEffects;
 
@@ -18,7 +20,11 @@ public class FuseBoxPuzzleController : BaseInteractable, IMicroSessionHost, IMic
     public GameObject fuseVisual;
 
     [Header("Settings")]
-    public float successDelay = 1.5f; // 스파크 꺼지고 나갈 때까지 대기 시간
+    [Tooltip("연출이 진행되는 시간 (덮개가 떨어지는 걸 지켜보는 시간)")]
+    public float successDelay = 2.0f; 
+
+    [Header("Sound")]
+    public AudioClip ventFallSound; // 쿵! 하고 떨어지는 소리
 
     // 인터페이스 구현
     public bool HidePlayerDuringMicro => true;
@@ -33,8 +39,9 @@ public class FuseBoxPuzzleController : BaseInteractable, IMicroSessionHost, IMic
         _myCollider = GetComponent<Collider>();
 
         if (fuseVisual) fuseVisual.SetActive(false);
+        if (fallingVentProp) fallingVentProp.SetActive(false); // 연출용은 숨겨둠
 
-        // ★ [수정] 모든 스파크 재생
+        // 스파크 재생
         if (sparkEffects != null)
         {
             foreach (var fx in sparkEffects)
@@ -42,9 +49,14 @@ public class FuseBoxPuzzleController : BaseInteractable, IMicroSessionHost, IMic
                 if (fx) fx.Play();
             }
         }
-
-        // 시작 시 타겟 구역을 잠급니다.
-        if (targetSpotToUnlock) targetSpotToUnlock.isLocked = true;
+        
+        // ★ 시작 시 진짜 환풍구는 상호작용 불가능하게(Default) 설정
+        // (에디터에서 미리 설정했다면 이 코드는 없어도 되지만 안전장치로 둠)
+        if (realVentObject)
+        {
+            // 혹시 모르니 시작할 땐 Default 레이어로 강제 (상호작용 불가)
+            realVentObject.layer = LayerMask.NameToLayer("Default");
+        }
     }
 
     // --- 1. 진입 제어 ---
@@ -61,7 +73,6 @@ public class FuseBoxPuzzleController : BaseInteractable, IMicroSessionHost, IMic
 
     public void OnMicroEnter(PlayerInteractor player)
     {
-        // 줌인 시 겉면 콜라이더 꺼서 내부 슬롯 클릭 가능하게 함
         if (_myCollider) _myCollider.enabled = false;
     }
 
@@ -84,7 +95,7 @@ public class FuseBoxPuzzleController : BaseInteractable, IMicroSessionHost, IMic
         // 1. 퓨즈 끼우기 시각화
         if (fuseVisual) fuseVisual.SetActive(true);
 
-        // 2. ★ [수정] 모든 스파크 끄기
+        // 2. 스파크 끄기
         if (sparkEffects != null)
         {
             foreach (var fx in sparkEffects)
@@ -93,22 +104,51 @@ public class FuseBoxPuzzleController : BaseInteractable, IMicroSessionHost, IMic
             }
         }
 
-        // 3. 성공 사운드 (스파크 꺼지는 소리 or 기계 작동음)
+        // 3. 퓨즈 끼우는 소리 (찰칵/전기음)
         CommonSoundController.Instance?.PlaySpark();
 
-        // 4. 잠시 대기
-        yield return new WaitForSeconds(successDelay);
 
-        // 5. 줌 아웃 (자동 Exit)
+        // 6. 줌 아웃 (자동 Exit)
         if (_micro) _micro.Exit();
 
-        // 6. 사다리 구역 해금!
-        if (targetSpotToUnlock)
+        // --- ★ [핵심] 환풍구 덮개 낙하 연출 ---
+        if (fallingVentProp)
         {
-            targetSpotToUnlock.UnlockSpot();
+            fallingVentProp.SetActive(true); // 활성화되면서 중력에 의해 떨어짐
+            
+            // 만약 약간 튕겨나가게 하고 싶다면 힘을 추가
+            Rigidbody rb = fallingVentProp.GetComponent<Rigidbody>();
+            if (rb)
+            {
+                rb.AddForce((Vector3.forward + Vector3.down) * 1f, ForceMode.Impulse);
+                rb.AddTorque(Random.insideUnitSphere * 3f, ForceMode.Impulse);
+            }
         }
 
-        // 성공 사운드
+        
+
+        // 5. 플레이어가 떨어지는 걸 볼 수 있게 대기
+        yield return new WaitForSeconds(successDelay);
+
+        // 4. 덮개 떨어지는 소리 (쿵!)
+        if (ventFallSound)
+        {
+            // 플레이어 위치나 카메라 위치에서 들리게 재생
+            AudioManager.Instance.Play(ventFallSound, AudioManager.Sound.Effect, 1.0f);
+        }
+
+        NoiseSystem.Instance.FireImpulse(1.0f);
+
+        // --- ★ [핵심] 진짜 환풍구 상호작용 해금 ---
+        if (realVentObject)
+        {
+            // 레이어를 Interactable로 변경하여 플레이어가 클릭할 수 있게 만듦
+            realVentObject.layer = LayerMask.NameToLayer("Interactable");
+            Debug.Log("[FuseBox] Vent Unlocked! Layer changed to Interactable.");
+        }
+
+        // 성공 BGM/UI 사운드
         CommonSoundController.Instance?.PlayPuzzleSuccess();
+
     }
 }
