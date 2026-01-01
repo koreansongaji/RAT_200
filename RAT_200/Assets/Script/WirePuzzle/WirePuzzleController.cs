@@ -6,6 +6,7 @@ using System.Collections;
 
 public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroHidePlayerPreference
 {
+    // ... (기존 변수들 유지) ...
     public bool hidePlayerDuringMicro = true;
     public bool HidePlayerDuringMicro => hidePlayerDuringMicro;
 
@@ -40,6 +41,7 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
     [Range(0, 2)] public int w3Init = 2;
     [Range(0, 2)] public int w4Init = 0;
 
+    // ... (중간 생략: Event, Cage Rat Event 등) ...
     [Header("Cage Rat Event")]
     public GameObject ratObj;
     public GameObject deadRat;
@@ -71,7 +73,6 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         { false, true,  true,  true  }
     };
 
-
     private WirePuzzleSoundController _wirePuzzleSoundController;
 
     void Awake()
@@ -84,7 +85,6 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         _micro = GetComponent<MicroZoomSession>();
         _mainCollider = GetComponent<Collider>();
 
-        // ★ [핵심] 하위 버튼 세션 바인딩 & 재부팅
         RefreshMicroBind(b1);
         RefreshMicroBind(b2);
         RefreshMicroBind(b3);
@@ -103,7 +103,6 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         }
     }
 
-    // ★ 바인딩 헬퍼 함수
     void RefreshMicroBind(PressableButton3D btn)
     {
         if (!btn) return;
@@ -112,6 +111,7 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         btn.enabled = true;
     }
 
+    // ... (CacheBaseLocalPositions, WireButtons, CanInteract 등 유지) ...
     void CacheBaseLocalPositions()
     {
         _baseLocalPos[0] = w1 ? w1.localPosition : Vector3.zero;
@@ -134,16 +134,11 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
     {
         if (!CanInteract(i)) return;
         _lastPlayer = i;
-
-        // [수정됨] Micro가 있다면 TryEnter의 성공 여부와 관계없이 리턴합니다.
-        // 즉, 쿨타임 등으로 진입 실패 시 '강제 시작' 하지 않고 입력을 무시합니다.
         if (_micro)
         {
             _micro.TryEnter(i);
             return;
         }
-
-        // Micro가 없을 때만 바로 세션 시작
         StartSession();
     }
 
@@ -174,14 +169,23 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         RefreshTexts();
     }
 
+    // ★ [수정] 나갈 때(Cancel) 퍼즐 상태 초기화
     public void CancelSession()
     {
         _session = false;
         if (worldCanvas) worldCanvas.enabled = false;
         SetButtonsInteractable(false);
+
+        // 초기화 로직: 초기값 복원
+        _pressCount = 0;
+        _h[0] = w1Init; _h[1] = w2Init; _h[2] = w3Init; _h[3] = w4Init;
+
+        // 시각적 갱신 (SnapAll로 즉시 이동)
+        SnapAll();
+        RefreshTexts();
     }
 
-    // ... (이하 SetButtonsInteractable, OnPress, Routine_SuccessSequence 등 기존 로직 유지) ...
+    // ... (SetButtonsInteractable, OnPress, Routine_SuccessSequence, SnapAll, Snap, RefreshTexts 기존 유지) ...
     void SetButtonsInteractable(bool on)
     {
         if (b1) b1.SetInteractable(on);
@@ -214,16 +218,8 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
             OnFailed?.Invoke();
             CommonSoundController.Instance?.PlayPuzzleFail();
 
-            // [수정됨] Micro 상태가 실제로 활성화되어 있을 때만 Exit() 호출
-            // 그렇지 않다면(좀비 세션 등) 강제로 CancelSession() 호출
-            if (_micro && _micro.InMicro)
-            {
-                _micro.Exit();
-            }
-            else
-            {
-                CancelSession();
-            }
+            if (_micro && _micro.InMicro) _micro.Exit();
+            else CancelSession();
         }
     }
 
