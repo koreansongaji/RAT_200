@@ -2,7 +2,7 @@
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI; // [New] 버튼 제어를 위해 추가 필수!
+using UnityEngine.UI;
 
 public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
 {
@@ -11,7 +11,7 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
     [SerializeField] CinemachineCamera microCloseupCam;
 
     [Header("UI")]
-    [SerializeField] Button closeButton; // [New] 닫기(X) 버튼 연결용
+    [SerializeField] Button closeButton;
 
     [Header("Mixing (optional, legacy fallback)")]
     [SerializeField] ChemMixingStation mixingStation;
@@ -20,6 +20,9 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
     [Header("Control Locks")]
     [SerializeField] bool lockPlayerWhileMicro = true;
     [SerializeField] bool showCursorWhileMicro = true;
+
+    // ★ [삭제됨] 기존의 수동 거리 설정 변수는 제거합니다.
+    // [SerializeField] float maxEntryDistance = 3.0f; 
 
     public UnityEvent OnEnterMicro, OnExitMicro;
 
@@ -37,8 +40,8 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
     public bool InZoom => _inMicro;
 
     IMicroSessionHost _host;
-
     private ResearcherController _researcher;
+
     void Awake()
     {
         if (microCloseupCam) microCloseupCam.Priority = CloseupCamManager.MicroOff;
@@ -48,11 +51,10 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
              ?? GetComponentInChildren<IMicroSessionHost>()
              ?? GetComponentInParent<IMicroSessionHost>();
 
-        // [New] 버튼이 할당되어 있다면 클릭 이벤트 연결 & 시작 시 숨기기
         if (closeButton)
         {
-            closeButton.onClick.AddListener(Exit); // 클릭하면 Exit() 함수 실행
-            closeButton.gameObject.SetActive(false); // 평소엔 안 보임
+            closeButton.onClick.AddListener(Exit);
+            closeButton.gameObject.SetActive(false);
         }
 
         _researcher = FindFirstObjectByType<ResearcherController>();
@@ -63,6 +65,43 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
         if (_inMicro) return false;
         if (Time.unscaledTime < _blockUntil) return false;
 
+        // ★ [Modified] PlayerReach 컴포넌트 값을 자동으로 가져와 거리 체크
+        if (player != null)
+        {
+            float limitDistance = 2.0f; // PlayerReach가 없을 경우의 기본값 (Fallback)
+            bool horizontalOnly = true; // 기본적으로 수평 거리만 체크 (테이블 위 고려)
+
+            var reach = player.GetComponent<PlayerReach>();
+            if (reach != null)
+            {
+                limitDistance = reach.radius;
+                horizontalOnly = reach.horizontalOnly;
+            }
+
+            float currentDist;
+            if (horizontalOnly)
+            {
+                // 높이(Y) 무시하고 수평 거리만 계산
+                Vector3 p1 = player.transform.position;
+                Vector3 p2 = transform.position;
+                p1.y = 0; p2.y = 0;
+                currentDist = Vector3.Distance(p1, p2);
+            }
+            else
+            {
+                // 3D 거리 계산
+                currentDist = Vector3.Distance(player.transform.position, transform.position);
+            }
+
+            // 아주 약간의 오차(0.1f)를 허용해 줍니다. (이동 정지 지점 미세 오차 고려)
+            if (currentDist > limitDistance + 0.1f)
+            {
+                Debug.Log($"[MicroZoom] 거리가 멉니다. (현재: {currentDist:F2} > 제한: {limitDistance})");
+                return false;
+            }
+        }
+
+        // 연구원 상태 체크
         if (_researcher != null && _researcher.CurrentState != ResearcherController.State.Idle)
         {
             return false;
@@ -86,7 +125,6 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
         if (showCursorWhileMicro) SetCursor(true);
         if (hintCanvas) hintCanvas.enabled = true;
 
-        // [New] 마이크로 줌 진입 시 X 버튼 켜기
         if (closeButton) closeButton.gameObject.SetActive(true);
 
         if (_pi != null)
@@ -104,7 +142,6 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
     public void Exit()
     {
         if (!_inMicro) return;
-
         ExitImpl();
         _blockUntil = Time.unscaledTime + reenterBlockSec;
     }
@@ -115,13 +152,6 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
 
         if (microCloseupCam) CloseupCamManager.DeactivateMicro(microCloseupCam);
 
-        if (lockPlayerWhileMicro) TogglePlayerControls(true);
-        if (showCursorWhileMicro) SetCursor(true);
-        if (hintCanvas) hintCanvas.enabled = false;
-
-        // 여기서 즉시 끄지 않고, 코루틴으로 처리를 미룹니다.
-        // 이렇게 해야 이번 프레임의 이동 판정(Update)에서 UI가 살아있는 것으로 인식되어
-        // 바닥 클릭(이동)을 막을 수 있습니다.
         StartCoroutine(Routine_ExitCleanup());
 
         if (_host != null) _host.OnMicroExit(_pi);
@@ -132,15 +162,11 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
 
     IEnumerator Routine_ExitCleanup()
     {
-        // 이번 프레임의 모든 렌더링/로직이 끝날 때까지 대기
-        // (이동 스크립트의 Update보다 뒤에 실행됨)
         yield return new WaitForEndOfFrame();
 
         if (lockPlayerWhileMicro) TogglePlayerControls(true);
         if (showCursorWhileMicro) SetCursor(true);
         if (hintCanvas) hintCanvas.enabled = false;
-
-        // 버튼도 이제서야 끕니다.
         if (closeButton) closeButton.gameObject.SetActive(false);
 
         if (_pi != null)
@@ -156,7 +182,6 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
             Exit();
     }
 
-    // ... (아래 TogglePlayerControls, SetCursor 등은 기존 유지) ...
     void TogglePlayerControls(bool enable)
     {
         var input = _pi ? _pi.GetComponent<RatInput>() : null;
