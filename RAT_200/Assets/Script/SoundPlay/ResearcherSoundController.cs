@@ -63,8 +63,7 @@ public class ResearcherSoundController : MonoBehaviour
     {
         if(_researcherRunSound != null)
         {
-            Debug.Log("Researcher Run Sound");
-            AudioManager.Instance.Play(_researcherRunSound, AudioManager.Sound.Effect, Random.Range(0.9f, 1.1f), 1.0f);
+            AudioManager.Instance.Play(_researcherRunSound, AudioManager.Sound.Effect, Random.Range(0.9f, 1.1f));
         }
     }
     
