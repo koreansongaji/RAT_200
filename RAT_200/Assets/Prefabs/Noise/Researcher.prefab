@@ -78,6 +78,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: ToggleLight, Assembly-CSharp
+        m_MethodName: TurnOffAllLight
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnIntroFinished:
     m_PersistentCalls:
       m_Calls:
@@ -134,13 +146,49 @@ MonoBehaviour:
         m_CallState: 2
   OnPlayerCaught:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1705726258676023640}
+        m_TargetAssemblyTypeName: ResearcherSoundController, Assembly-CSharp
+        m_MethodName: PlayBreathSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: ToggleLight, Assembly-CSharp
+        m_MethodName: TurnOnBigLight
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnNpcCaught:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1705726258676023640}
         m_TargetAssemblyTypeName: ResearcherSoundController, Assembly-CSharp
         m_MethodName: PlayRatDeathSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: ToggleLight, Assembly-CSharp
+        m_MethodName: TurnOnBigLight
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -201,3 +249,4 @@ MonoBehaviour:
   _ratDeathSound: {fileID: 8300000, guid: 61c53d4d87452fd46aa7920cb326bee1, type: 3}
   _approachSound: {fileID: 8300000, guid: 8d16f6958887b2248a61509a6b8b6b03, type: 3}
   _researcherRunSound: {fileID: 8300000, guid: e88198f540fbcc4488fe6f852fe27da3, type: 3}
+  _breathSound: {fileID: 0}

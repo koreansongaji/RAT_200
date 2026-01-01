@@ -40,6 +40,16 @@ public class AudioManager : Singleton<AudioManager>
     public void PlayBgmWithFade(AudioClip clip, float fadeDuration = 1.0f)
     {
         if (clip == null) return;
+
+        // 이미 같은 브금이 재생 중인지 확인
+        foreach (var source in _bgmSources)
+        {
+            if (source != null && source.isPlaying && source.clip == clip)
+            {
+                return;
+            }
+        }
+
         StartCoroutine(CoFadeBGM(clip, fadeDuration));
     }
 
@@ -218,13 +228,21 @@ public class AudioManager : Singleton<AudioManager>
 
         if (type == Sound.BGM)
         {
+            // 이미 같은 브금이 재생 중인지 확인
+            foreach (var source in _bgmSources)
+            {
+                if (source != null && source.isPlaying && source.clip == audioClip)
+                {
+                    return;
+                }
+            }
+
             AudioSource bgmSource = GetUnusedBgmSource();
             if (bgmSource == null)
             {
                 Debug.LogWarning("[AudioManager] No BGM AudioSource available!");
                 return;
             }
-            if (bgmSource.clip == audioClip && bgmSource.isPlaying) return;
             bgmSource.pitch = pitch;
             bgmSource.clip = audioClip;
             bgmSource.volume = volumeScale;

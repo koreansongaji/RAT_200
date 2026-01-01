@@ -2,9 +2,11 @@
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Unity.VisualScripting;
 
 /// <summary>
 /// E 키로 화면 하단 인벤토리 바를 토글 (DOTween 애니메이션 + 아이템 순차 등장).
+/// 플레이어 위치와 두 개의 사전 지정된 점을 이용해 동적으로 삼각형을 그립니다.
 /// </summary>
 public class InventoryUI : MonoBehaviour
 {
@@ -40,15 +42,29 @@ public class InventoryUI : MonoBehaviour
         new("Recipe",        "레시피 종이"),
     };
 
+    [Header("Data Source")]
+    [SerializeField] ItemDatabase database;
+
     [Header("오디오 클립")]
     [SerializeField] AudioClip _inventoryopenSound;
     [SerializeField] AudioClip _inventorycloseSound;
+
+    // (삼각형은 제외되었습니다)
 
     bool _visible;
     
     // 각각의 원래 위치 저장용
     private Vector2 _bgDefaultPos;
     private Vector2 _panelDefaultPos;
+
+    // RectTransform의 anchorMin/Max 기본값 저장용 (좌/우 전환 시 사용)
+    private Vector2 _bgAnchorMin;
+    private Vector2 _bgAnchorMax;
+    private Vector2 _panelAnchorMin;
+    private Vector2 _panelAnchorMax;
+
+    [Header("Inspector Link")]
+    [SerializeField] ItemInspectorUI inspectorUI;
 
     [System.Serializable]
     public struct ItemLabel
@@ -71,9 +87,19 @@ public class InventoryUI : MonoBehaviour
         if (_inventoryopenSound == null) _inventoryopenSound = Resources.Load<AudioClip>("Sounds/Effect/Rat/inventory_open");
         if (_inventorycloseSound == null) _inventorycloseSound = Resources.Load<AudioClip>("Sounds/Effect/Rat/inventory_close");
     
-        // 초기 위치 저장
-        if (backgroundRect != null) _bgDefaultPos = backgroundRect.anchoredPosition;
-        if (slotPanelRect != null) _panelDefaultPos = slotPanelRect.anchoredPosition;
+        // 초기 위치와 앵커 저장
+        if (backgroundRect != null)
+        {
+            _bgDefaultPos = backgroundRect.anchoredPosition;
+            _bgAnchorMin = backgroundRect.anchorMin;
+            _bgAnchorMax = backgroundRect.anchorMax;
+        }
+        if (slotPanelRect != null)
+        {
+            _panelDefaultPos = slotPanelRect.anchoredPosition;
+            _panelAnchorMin = slotPanelRect.anchorMin;
+            _panelAnchorMax = slotPanelRect.anchorMax;
+        }
 
         // 시작 상태 설정
         _visible = !startHidden;
@@ -91,6 +117,8 @@ public class InventoryUI : MonoBehaviour
         if (slotPanelRect != null) slotPanelRect.localScale = _visible ? Vector3.one : Vector3.zero;
 
         if (_visible) RefreshUI();
+
+        // 삼각형 관련 초기화는 제외되었습니다.
     }
 
     void Update()
@@ -104,9 +132,13 @@ public class InventoryUI : MonoBehaviour
         if (_visible)
         {
             RefreshUI();
+            // 삼각형 업데이트는 제외됨
         }
     }
 
+    /// <summary>
+    /// 인벤토리 토글 시 UI 상태를 적용합니다.
+    /// </summary>
     void ApplyVisibility()
     {
         if (player == null) return;
@@ -116,6 +148,7 @@ public class InventoryUI : MonoBehaviour
         if (slotPanelRect != null) slotPanelRect.DOKill();
         if (canvasGroup != null) canvasGroup.DOKill();
         foreach (var slot in itemSlots) if (slot != null) slot.transform.DOKill();
+        // 삼각형 그래픽 관련 처리는 더 이상 필요하지 않습니다.
 
         Vector3 playerScreenPos = Camera.main.WorldToScreenPoint(player.transform.position);
 
@@ -137,25 +170,62 @@ public class InventoryUI : MonoBehaviour
             // 1. 배경 애니메이션
             if (backgroundRect != null)
             {
-                backgroundRect.position = playerScreenPos; // 플레이어 위치로
+                // 플레이어가 화면 오른쪽 절반에 있을 경우 UI를 왼쪽에 표시하고, 그렇지 않으면 기본 위치(오른쪽)에 표시
+                bool showOnLeft = playerScreenPos.x > Screen.width * 0.5f;
+
+                // 타겟 앵커와 위치 계산
+                Vector2 targetAnchorMin = _bgAnchorMin;
+                Vector2 targetAnchorMax = _bgAnchorMax;
+                Vector2 targetPos = _bgDefaultPos;
+                if (showOnLeft)
+                {
+                    // 가로 앵커를 좌우 반전 (예: 1 -> 0, 0 -> 1) 하고 위치 x값 부호를 반전
+                    targetAnchorMin = new Vector2(1f - _bgAnchorMax.x, _bgAnchorMin.y);
+                    targetAnchorMax = new Vector2(1f - _bgAnchorMin.x, _bgAnchorMax.y);
+                    targetPos = new Vector2(-_bgDefaultPos.x, _bgDefaultPos.y);
+                }
+
+                // 앵커 설정
+                backgroundRect.anchorMin = targetAnchorMin;
+                backgroundRect.anchorMax = targetAnchorMax;
+                // pivot은 기본값 유지
+
+                backgroundRect.position = playerScreenPos; // 플레이어 위치로 시작
                 backgroundRect.localScale = Vector3.zero;  // 작게 시작
-                
-                backgroundRect.DOAnchorPos(_bgDefaultPos, animDuration).SetEase(openEase);
+
+                // 타겟 위치로 이동
+                backgroundRect.DOAnchorPos(targetPos, animDuration).SetEase(openEase);
                 backgroundRect.DOScale(1f, animDuration).SetEase(openEase);
             }
 
             // 2. 슬롯 패널 애니메이션
             if (slotPanelRect != null)
             {
-                slotPanelRect.position = playerScreenPos; // 플레이어 위치로
+                bool showOnLeft = playerScreenPos.x > Screen.width * 0.5f;
+                Vector2 targetAnchorMin = _panelAnchorMin;
+                Vector2 targetAnchorMax = _panelAnchorMax;
+                Vector2 targetPos = _panelDefaultPos;
+                if (showOnLeft)
+                {
+                    targetAnchorMin = new Vector2(1f - _panelAnchorMax.x, _panelAnchorMin.y);
+                    targetAnchorMax = new Vector2(1f - _panelAnchorMin.x, _panelAnchorMax.y);
+                    targetPos = new Vector2(-_panelDefaultPos.x, _panelDefaultPos.y);
+                }
+
+                slotPanelRect.anchorMin = targetAnchorMin;
+                slotPanelRect.anchorMax = targetAnchorMax;
+
+                slotPanelRect.position = playerScreenPos; // 플레이어 위치로 시작
                 slotPanelRect.localScale = Vector3.zero;  // 작게 시작
 
-                slotPanelRect.DOAnchorPos(_panelDefaultPos, animDuration).SetEase(openEase);
+                slotPanelRect.DOAnchorPos(targetPos, animDuration).SetEase(openEase);
                 slotPanelRect.DOScale(1f, animDuration).SetEase(openEase);
             }
 
             // 3. 내부 슬롯들 순차 팝업
             AnimateSlots();
+
+            // 삼각형 관련 로직은 제외되었습니다.
         }
         else
         {
@@ -184,9 +254,16 @@ public class InventoryUI : MonoBehaviour
                 slotPanelRect.DOScale(0f, animDuration).SetEase(closeEase)
                     .OnComplete(() => { slotPanelRect.anchoredPosition = _panelDefaultPos; });
             }
+
+            // 삼각형 페이드 아웃은 제외되었습니다.
         }
     }
 
+    // 삼각형 업데이트 메서드는 더 이상 사용되지 않습니다.
+
+    /// <summary>
+    /// 아이템 슬롯 애니메이션 처리. 활성 슬롯은 순차적으로 팝업합니다.
+    /// </summary>
     void AnimateSlots()
     {
         int activeSlotCount = 0;
@@ -210,37 +287,66 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 플레이어가 보유하고 있는 아이템을 기반으로 슬롯 UI를 업데이트합니다.
+    /// </summary>
     void RefreshUI()
     {
         if (player == null || itemSlots == null || itemSlots.Length == 0) return;
+        if (database == null) return;
 
         int slotIndex = 0;
 
-        for (int i = 0; i < knownItems.Count; i++)
+        for (int i = 0; i < database.items.Count; i++)
         {
             if (slotIndex >= itemSlots.Length) break;
 
-            var itemInfo = knownItems[i];
+            var itemInfo = database.items[i];
             if (string.IsNullOrEmpty(itemInfo.id)) continue;
 
             if (player.HasItem(itemInfo.id))
             {
-                if (itemSlots[slotIndex] != null)
+                Image slotImage = itemSlots[slotIndex];
+
+                if (slotImage != null)
                 {
-                    itemSlots[slotIndex].sprite = itemInfo.icon;
-                    itemSlots[slotIndex].preserveAspect = true;
-                    itemSlots[slotIndex].enabled = true;
+                    slotImage.sprite = itemInfo.icon;
+                    slotImage.preserveAspect = true;
+                    slotImage.enabled = true;
+
+                    // ★★★ [추가된 부분] 클릭 이벤트 연결 ★★★
+                    // 슬롯 게임오브젝트에 Button 컴포넌트가 있어야 합니다.
+                    Button btn = slotImage.GetComponent<Button>();
+                    if (btn == null) btn = slotImage.gameObject.AddComponent<Button>();
+
+                    // 기존 리스너 제거 (중복 방지) 후 새 리스너 등록
+                    btn.onClick.RemoveAllListeners();
+
+                    // 클로저 문제 방지를 위해 로컬 변수 캡처
+                    var currentItemData = itemInfo;
+                    btn.onClick.AddListener(() => OnSlotClick(currentItemData));
                 }
                 slotIndex++;
             }
         }
 
+        // 남은 슬롯 비활성화
         for (int i = slotIndex; i < itemSlots.Length; i++)
         {
             if (itemSlots[i] != null)
             {
                 itemSlots[i].enabled = false;
+                // 비활성 슬롯은 버튼도 꺼야 함
+                Button btn = itemSlots[i].GetComponent<Button>();
+                if (btn) btn.onClick.RemoveAllListeners();
             }
+        }
+    }
+    void OnSlotClick(ItemDatabase.ItemData data)
+    {
+        if (inspectorUI != null)
+        {
+            inspectorUI.OpenInspector(data);
         }
     }
 }

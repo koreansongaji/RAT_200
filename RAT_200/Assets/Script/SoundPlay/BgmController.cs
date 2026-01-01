@@ -30,10 +30,8 @@ public class BgmController : MonoBehaviour
 
         float value = _noiseBandSignal.currentPercent;
         int nextStep;
-
-        if (value < 80)
-            nextStep = 0;
-        else if (value < 100)
+        
+        if (value < 100)
             nextStep = 1;
         else
             nextStep = 2;
@@ -52,8 +50,8 @@ public class BgmController : MonoBehaviour
     public void PlayFirstStep()
     {
         _isStarted = true; // 이제부터 BGM 재생 및 단계 체크 허용
-        _currentStep = 0;
-        PlayStepBGM(0);
+        _currentStep = 1;
+        PlayStepBGM(1);
     }
 
     private void PlayStepBGM(int step)
@@ -62,8 +60,8 @@ public class BgmController : MonoBehaviour
 
         switch (step)
         {
-            case 0: clipToPlay = _defaultBGM; break;
-            case 1: clipToPlay = _intenseBGM; break;
+            //case 0: clipToPlay = _defaultBGM; break;
+            case 1: clipToPlay = _defaultBGM; break;
             case 2: clipToPlay = _researcherBGM; break;
         }
 

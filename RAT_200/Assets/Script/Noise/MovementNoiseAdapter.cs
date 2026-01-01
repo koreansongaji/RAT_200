@@ -1,17 +1,17 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class MovementNoiseAdapter : MonoBehaviour
 {
-    [Header("Rates (±âÈ¹ ¹Ý¿µ)")]
-    [Tooltip("°È±â Áß ÃÊ´ç ¼ÒÀ½ Áõ°¡·® (0~1). ±âÈ¹»ó °È±â´Â 0%.")]
-    public float walkRatePerSecond = 0f;          // ¡Ú °È±â = 0%
+    [Header("Rates (ï¿½ï¿½È¹ ï¿½Ý¿ï¿½)")]
+    [Tooltip("ï¿½È±ï¿½ ï¿½ï¿½ ï¿½Ê´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (0~1). ï¿½ï¿½È¹ï¿½ï¿½ ï¿½È±ï¿½ï¿½ 0%.")]
+    public float walkRatePerSecond = 0f;          // ï¿½ï¿½ ï¿½È±ï¿½ = 0%
 
-    [Tooltip("´Þ¸®±â Áß ÃÊ´ç ¼ÒÀ½ Áõ°¡·® (0~1). ±âÈ¹»ó ´Þ¸®±â = +1%p/ÃÊ.")]
-    public float runRatePerSecond = 0.01f;        // ¡Ú 1%/sec ¡æ 0.01
+    [Tooltip("ï¿½Þ¸ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ê´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (0~1). ï¿½ï¿½È¹ï¿½ï¿½ ï¿½Þ¸ï¿½ï¿½ï¿½ = +1%p/ï¿½ï¿½.")]
+    public float runRatePerSecond = 0.01f;        // ï¿½ï¿½ 1%/sec ï¿½ï¿½ 0.01
 
-    [Header("Run ÆÇÁ¤")]
+    [Header("Run ï¿½ï¿½ï¿½ï¿½")]
     public float velocityEps = 0.05f;
     public bool detectRunBySpeed = true;
     [Min(0f)] public float runSpeedThreshold = 3.5f;

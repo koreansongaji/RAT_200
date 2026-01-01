@@ -106,7 +106,8 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _LightScattering: 1
+    - _Intensity: 0.5
+    - _LightScattering: 0.12
     - _MaxDistance: 10
     - _Metallic: 0
     - _NoiseOffset: 2.21

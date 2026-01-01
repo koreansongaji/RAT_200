@@ -10,12 +10,11 @@ public class RatExecutionDirector : MonoBehaviour
 
     [Header("Audio")]
     public AudioSource audioSource;
-    public AudioClip sfxSwitchOff;       // 탁!
-    public AudioClip sfxCrunch;          // 으직!
+    public AudioClip sfxSwitchOff;       // 탁! (암전)
+    public AudioClip sfxCrunch;          // 으직! (사망)
 
-    // ★ [추가] 중복 실행 방지용 플래그
+    // 중복 실행 방지용
     private bool _isEventExecuted = false;
-    private bool _triggered = false;
 
     void Start()
     {
@@ -23,38 +22,26 @@ public class RatExecutionDirector : MonoBehaviour
 
         if (researcher)
         {
-            // 연구원에게 타겟 등록
+            // 연구원에게 "이 쥐도 타겟이야"라고 알려줌
             researcher.npcTarget = npcRat;
+            // 연구원이 "NPC 잡았어!"라고 외치면 OnRatFound 실행
             researcher.OnNpcCaught.AddListener(OnRatFound);
         }
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        // 이미 이벤트가 끝났으면 다시는 발동 안 함
-        if (_isEventExecuted) return;
+    // ★ [삭제됨] OnTriggerEnter : 이제 위치 트리거로 연구원을 부르지 않습니다.
 
-        if (!_triggered && other.CompareTag("Player"))
-        {
-            _triggered = true;
-            Debug.Log("[Director] Player entered trigger. Summoning Researcher...");
-            researcher.StartSummon();
-        }
-    }
-
-    // 연구원이 쥐를 발견했을 때 호출됨
+    // 연구원이 NPC를 발견하면(OnNpcCaught) 이 함수가 실행됨
     void OnRatFound()
     {
-        // ★ [핵심] 이미 실행 중이거나 끝났으면 무시
         if (_isEventExecuted) return;
-        _isEventExecuted = true; // "이제 끝났다"고 표시
+        _isEventExecuted = true;
 
-        // ★ [핵심] 연구원의 기억 소거
-        // 이제 연구원은 NPC를 더 이상 신경 쓰지 않게 됩니다.
+        // 연구원 기억 소거 (더 이상 타겟 추적 X)
         if (researcher)
         {
-            researcher.npcTarget = null; // 타겟 해제
-            researcher.OnNpcCaught.RemoveListener(OnRatFound); // 이벤트 리스너 끊기
+            researcher.npcTarget = null;
+            researcher.OnNpcCaught.RemoveListener(OnRatFound);
         }
 
         StartCoroutine(Routine_KillSequence());
@@ -62,36 +49,35 @@ public class RatExecutionDirector : MonoBehaviour
 
     IEnumerator Routine_KillSequence()
     {
-        Debug.Log("[Director] Rat Found! Starting Execution.");
+        Debug.Log("[Director] 동료 쥐 발견! 처형 시퀀스 시작.");
 
-        // 1. 조명 붉게 변경
-        if (researcher.spotLight) researcher.spotLight.color = Color.red;
+        // 1. 잠시 대기 (연구원이 쳐다보는 시간)
+        yield return new WaitForSeconds(1.5f);
 
-        // 2. 2초 대기 (붉은 시선)
-        yield return new WaitForSeconds(2.0f);
-
-        // 3. 탁! (완전 암전)
+        // 2. 탁! (완전 암전)
         if (sfxSwitchOff) audioSource.PlayOneShot(sfxSwitchOff);
 
-        // 연구원 라이트 끄기
+        // 연구원 라이트 끄기 (어둠 속으로)
         if (researcher.spotLight) researcher.spotLight.enabled = false;
 
-        // 4. 으직! (사망)
-        yield return new WaitForSeconds(0.2f);
+        // 3. 으직! (사망 소리)
+        yield return new WaitForSeconds(0.4f);
         if (sfxCrunch) audioSource.PlayOneShot(sfxCrunch);
 
-        // 5. 바꿔치기
+        // 4. 바꿔치기 (쥐 사라지고 핏자국 생성)
         yield return new WaitForSeconds(1.0f);
         if (npcRat) npcRat.gameObject.SetActive(false);
         if (bloodDecal) bloodDecal.SetActive(true);
 
-        // 6. 상황 종료 및 퇴근
+        // 5. 상황 종료 및 퇴근
         if (researcher)
         {
-            researcher.spotLight.color = Color.white; // 색상 복구
-            researcher.ForceLeave(); // 연구원 퇴근
+            // 색상 복구 불필요 (붉게 안 바꿨으므로)
+            // researcher.spotLight.color = Color.white; 
+
+            researcher.ForceLeave(); // 연구원 퇴근 (이때 Noise도 0이 됨)
         }
 
-        Debug.Log("[Director] Sequence Finished.");
+        Debug.Log("[Director] 시퀀스 종료.");
     }
 }

@@ -16,7 +16,7 @@ public class PickupInteractable : BaseInteractable
     public override void Interact(PlayerInteractor i)
     {
         if (!CanInteract(i)) return;
-        i.AddItem(itemId); // ���� �÷��׸� ON (�Ҹ� X)
+        i.AddItem(itemId, transform.position); // ���� �÷��׸� ON (�Ҹ� X)
         
         Debug.Log($"[PickupInteractable] �÷��̾ ������ '{itemId}' ȹ��");
 
@@ -24,5 +24,6 @@ public class PickupInteractable : BaseInteractable
         // ���� ǥ��: ������ų� ��¦�̰ų�
         gameObject.SetActive(!oneTime);
         // (����) SFX / �佺Ʈ ��
+        CommonSoundController.Instance?.PlayPickUp();
     }
 }

@@ -11,7 +11,7 @@ public class ResearcherController : MonoBehaviour
         Searching,
         Focusing,
         Capture,
-        BusyWithEvent // �� [�߰�] �̺�Ʈ ���� �� �ٸ� �ൿ �� ��
+        BusyWithEvent // 이벤트 진행 중 (수색 중단)
     }
 
     [Header("Refs")]
@@ -22,15 +22,15 @@ public class ResearcherController : MonoBehaviour
     public Transform player;
 
     [Header("Optional Target")]
-    [Tooltip("�÷��̾� ������ ������ NPC�� �ִٸ� ����.")]
+    [Tooltip("플레이어 외에 수색할 NPC가 있다면 설정.")]
     public Transform npcTarget;
 
     [Header("Events")]
     public UnityEvent OnSummonStarted;
     public UnityEvent OnIntroFinished;
     public UnityEvent OnSearchEnded;
-    public UnityEvent OnPlayerCaught; // �÷��̾� �߰� ��
-    public UnityEvent OnNpcCaught;    // �� [�߰�] NPC �߰� ��
+    public UnityEvent OnPlayerCaught; // 플레이어 발견 시
+    public UnityEvent OnNpcCaught;    // NPC 발견 시 -> Director가 받아서 처리
 
     [Header("Settings")]
     public Vector3 doorOpenEuler = new Vector3(0, 90, 0);
@@ -39,43 +39,30 @@ public class ResearcherController : MonoBehaviour
     public float searchDuration = 30f;
     public float focusDuration = 5f;
     public LayerMask obstacleMask;
-    public float catchDistance = 1.0f;
     public Transform roomCenter;
     public Vector2 scanAreaSize = new Vector2(8f, 8f);
     public float scanMoveSpeed = 3f;
 
     [Header("Game Over")]
-    public Transform handModel;
     public UnityEvent OnGameOver;
+
+    [Header("Sfx Clips")]
+    [SerializeField] private AudioClip _summonAlertClip;
 
     State _state = State.Idle;
     float _stateTimer;
     Vector3 _scanTargetPos;
     Tween _scanTween;
     bool _subscribed;
-    Transform _currentFocusTarget; // ���� �Ĵٺ��� �ִ� ��� (�÷��̾� or NPC)
-
-    [Header("Sfx Clips")]
-    [SerializeField] private AudioClip _summonAlertClip;
-    [SerializeField] private AudioClip _doorCreakClip;
-    [SerializeField] private AudioClip _spotlightToggleClip;
-    [SerializeField] private AudioClip _lightBuzzClip;
-    [SerializeField] private AudioClip _caughtScareClip;
+    Transform _currentFocusTarget;
     Vector3? _pendingFocusPos = null;
 
     void Start()
     {
         SubscribeNoiseSystem();
         if (spotLight) spotLight.enabled = false;
-        if (handModel) handModel.gameObject.SetActive(false);
         if (roomCenter) _scanTargetPos = roomCenter.position;
-
-        // 리소스 로드 (할당 안 된 경우)
         if (_summonAlertClip == null) _summonAlertClip = Resources.Load<AudioClip>("Sounds/Effect/Researcher/alert");
-        if (_doorCreakClip == null) _doorCreakClip = Resources.Load<AudioClip>("Sounds/Effect/Universal/creak_a");
-        if (_spotlightToggleClip == null) _spotlightToggleClip = Resources.Load<AudioClip>("Sounds/Effect/Universal/button_b");
-        if (_lightBuzzClip == null) _lightBuzzClip = Resources.Load<AudioClip>("Sounds/Effect/Universal/spark");
-        if (_caughtScareClip == null) _caughtScareClip = Resources.Load<AudioClip>("Sounds/Effect/Rat/rat_death");
     }
 
     void OnEnable() => SubscribeNoiseSystem();
@@ -92,6 +79,7 @@ public class ResearcherController : MonoBehaviour
         if (ns != null && !_subscribed) { ns.OnValueChanged += HandleNoiseChanged; _subscribed = true; }
     }
 
+    // ★ 소음이 100(1.0)에 도달하면 소환!
     void HandleNoiseChanged(float value01)
     {
         if (_state != State.Idle) return;
@@ -104,19 +92,23 @@ public class ResearcherController : MonoBehaviour
         _state = State.SummonIntro;
         _stateTimer = 0f;
         _pendingFocusPos = null;
-        
-        // 소환 시작 효과음 (경고음)
+
         if (_summonAlertClip != null) AudioManager.Instance.Play(_summonAlertClip, AudioManager.Sound.Effect, 1.0f, 0.8f);
-        
-        OnSummonStarted?.Invoke(); // ���⼭ ���ڱ� �Ҹ� ���
-        Debug.Log("[Researcher] Summon Started (Wait 5s)");
+
+        OnSummonStarted?.Invoke();
+        Debug.Log("[Researcher] 소음 감지! 연구원 소환 시작.");
     }
 
     void Update()
     {
-        // �ü� ó�� (Ÿ���� ������ Ÿ����, ������ �ٴ� ��ĵ ������)
-        Vector3 lookPos = _currentFocusTarget ? _currentFocusTarget.position : _scanTargetPos;
+        // ★ 연구원이 집에 있는 동안은 긴장감 유지를 위해 Noise 100 고정
+        if (_state != State.Idle)
+        {
+            if (NoiseSystem.Instance != null) NoiseSystem.Instance.SetLevel01(1.0f);
+        }
 
+        // 시선 처리
+        Vector3 lookPos = _currentFocusTarget ? _currentFocusTarget.position : _scanTargetPos;
         if (eyePivot)
         {
             Vector3 dir = lookPos - eyePivot.position;
@@ -132,7 +124,7 @@ public class ResearcherController : MonoBehaviour
             case State.SummonIntro: UpdateSummonIntro(); break;
             case State.Searching: UpdateSearching(); break;
             case State.Focusing: UpdateFocusing(); break;
-            case State.BusyWithEvent: /* �̺�Ʈ ������ �˾Ƽ� �� */ break;
+            case State.BusyWithEvent: /* 이벤트 중엔 아무것도 안 함 (Director가 연출) */ break;
         }
     }
 
@@ -141,48 +133,39 @@ public class ResearcherController : MonoBehaviour
         _stateTimer += Time.deltaTime;
         if (_stateTimer >= introDelay)
         {
-            // �� ����
             if (doorHinge) doorHinge.DOLocalRotate(doorOpenEuler, 0.5f).SetEase(Ease.OutBack);
             if (spotLight) spotLight.enabled = true;
-            if (roomMainLight) roomMainLight.enabled = false; // �� �� ����
+            if (roomMainLight) roomMainLight.enabled = false;
 
             OnIntroFinished?.Invoke();
 
-            // ���� [�ٽ� ����] ����ص� ���� ��ġ�� �ִ°�? ����
             if (_pendingFocusPos.HasValue)
             {
-                // �ִ� -> �ٷ� '����(Focusing)' ���·� ����
-                Debug.Log("[Researcher] Door Open -> Immediately Focusing on Target!");
                 _state = State.Focusing;
                 _stateTimer = 0f;
-
-                // �ü� Ÿ���� ����ص� ��ġ�� ����
                 _scanTargetPos = _pendingFocusPos.Value;
-                _pendingFocusPos = null; // ��������� �ʱ�ȭ
+                _pendingFocusPos = null;
             }
             else
             {
-                // ���� -> �׳� '�Ϲ� ����(Searching)' ����
-                Debug.Log("[Researcher] Door Open -> Random Search Start");
                 _state = State.Searching;
                 _stateTimer = 0f;
                 PickNextRandomScanPoint();
             }
-            // �����������������������������������������
         }
     }
 
     void UpdateSearching()
     {
         _stateTimer += Time.deltaTime;
-        DetectTargets(); // �� �÷��̾� & NPC ����
+        DetectTargets(); // 타겟 감지
         if (_stateTimer >= searchDuration) EndSearchAndResetNoise();
     }
 
     void UpdateFocusing()
     {
         _stateTimer += Time.deltaTime;
-        DetectTargets(); // �� ���� �߿��� ����
+        DetectTargets();
         if (_stateTimer >= focusDuration)
         {
             _state = State.Searching;
@@ -191,19 +174,18 @@ public class ResearcherController : MonoBehaviour
         }
     }
 
-    // ���� [�ٽ� ����] Ÿ�� ���� ���� ����
     void DetectTargets()
     {
         if (!spotLight) return;
 
-        // 1����: �÷��̾� üũ (�ɸ��� ���ӿ���)
+        // 1. 플레이어 먼저 감지 (우선순위 높음) -> 게임 오버
         if (CheckVisibility(player))
         {
             StartCapturePlayer();
             return;
         }
 
-        // 2����: NPC üũ (�ɸ��� �̺�Ʈ)
+        // 2. 동료 NPC 감지 -> 이벤트(사망 연출)
         if (npcTarget && CheckVisibility(npcTarget))
         {
             StartCaptureNPC();
@@ -211,23 +193,19 @@ public class ResearcherController : MonoBehaviour
         }
     }
 
-    // �þ� üũ ���� �Լ�
     bool CheckVisibility(Transform target)
     {
         if (!target) return false;
         Vector3 toTarget = target.position - eyePivot.position;
         float dist = toTarget.magnitude;
 
-        // ���� üũ
         float angle = Vector3.Angle(eyePivot.forward, toTarget);
         if (angle > spotLight.spotAngle * 0.5f) return false;
 
-        // ��ֹ� üũ
         if (Physics.Raycast(eyePivot.position, toTarget.normalized, dist, obstacleMask))
-        {
-            return false; // ���� (���� ����)
-        }
-        return true; // ����
+            return false;
+
+        return true;
     }
 
     void StartCapturePlayer()
@@ -235,38 +213,25 @@ public class ResearcherController : MonoBehaviour
         if (_state == State.Capture || _state == State.BusyWithEvent) return;
         _state = State.Capture;
         _scanTween?.Kill();
-
-        _currentFocusTarget = player; // �÷��̾� ����
+        _currentFocusTarget = player;
         OnPlayerCaught?.Invoke();
 
-        //if (handModel)
-        //{
-        //    handModel.gameObject.SetActive(true);
-        //    handModel.DOMove(player.position, 0.4f).SetEase(Ease.InExpo).OnComplete(() => OnGameOver?.Invoke());
-        //}
-        //else OnGameOver?.Invoke();
-
-        if (GameLoopManager.Instance)
-            GameLoopManager.Instance.TriggerGameOver();
-        else
-            OnGameOver?.Invoke();
+        if (GameLoopManager.Instance) GameLoopManager.Instance.TriggerGameOver();
+        else OnGameOver?.Invoke();
     }
 
     void StartCaptureNPC()
     {
         if (_state == State.Capture || _state == State.BusyWithEvent) return;
 
-        // �� NPC �߰�! -> �̺�Ʈ ���� ��ȯ
+        // ★ 상태를 이벤트 중으로 변경하여 수색 루프를 멈춤
         _state = State.BusyWithEvent;
         _scanTween?.Kill();
 
-        _currentFocusTarget = npcTarget; // �ü��� NPC�� ���� (����ٴ�)
-        OnNpcCaught?.Invoke(); // �������� ��ȣ ����
+        _currentFocusTarget = npcTarget; // 시선을 NPC에 고정
+        OnNpcCaught?.Invoke(); // -> Director에게 신호 보냄
     }
 
-    // ���� [�߰�] �̺�Ʈ ������ �� �Լ��� ����
-
-    // ������ ���� ��� (�̺�Ʈ ���� �� ȣ��)
     public void ForceLeave()
     {
         _state = State.Idle;
@@ -274,6 +239,9 @@ public class ResearcherController : MonoBehaviour
         if (spotLight) spotLight.enabled = false;
         if (doorHinge) doorHinge.DOLocalRotate(doorClosedEuler, 0.5f);
         if (roomMainLight) StartCoroutine(Routine_FlickerLightOn());
+
+        // ★ 퇴근 시 소음 초기화
+        if (NoiseSystem.Instance) NoiseSystem.Instance.SetLevel01(0f);
     }
 
     void PickNextRandomScanPoint()
@@ -289,30 +257,15 @@ public class ResearcherController : MonoBehaviour
                             .SetEase(Ease.InOutSine).OnComplete(PickNextRandomScanPoint);
     }
 
-    public void NotifyNoiseEvent(Vector3 worldPos)
-    {
-        if (_state == State.Searching || _state == State.Focusing)
-        {
-            _state = State.Focusing;
-            _stateTimer = 0f;
-            _scanTween?.Kill();
-            DOTween.To(() => _scanTargetPos, x => _scanTargetPos = x, worldPos, 0.5f).SetEase(Ease.OutCubic);
-        }
-        else if (_state == State.Idle || _state == State.SummonIntro)
-        {
-            _pendingFocusPos = worldPos;
-            Debug.Log($"[Researcher] Noise detected at {worldPos}. Will investigate after door opens.");
-        }
-    }
-
     void EndSearchAndResetNoise()
     {
+        OnSearchEnded?.Invoke();
         _state = State.Idle;
         _scanTween?.Kill();
         if (spotLight) spotLight.enabled = false;
         if (doorHinge) doorHinge.DOLocalRotate(doorClosedEuler, 0.5f);
         if (roomMainLight) StartCoroutine(Routine_FlickerLightOn());
-        if (NoiseSystem.Instance) NoiseSystem.Instance.SetLevel01(0.2f);
+        if (NoiseSystem.Instance) NoiseSystem.Instance.SetLevel01(0.0f);
     }
 
     System.Collections.IEnumerator Routine_FlickerLightOn()
@@ -323,15 +276,5 @@ public class ResearcherController : MonoBehaviour
         roomMainLight.enabled = false;
         yield return new WaitForSeconds(0.1f);
         roomMainLight.enabled = true;
-    }
-
-    void OnDrawGizmos()
-    {
-        if (Application.isPlaying && spotLight && _currentFocusTarget == null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(eyePivot.position, _scanTargetPos);
-            Gizmos.DrawSphere(_scanTargetPos, 0.2f);
-        }
     }
 }

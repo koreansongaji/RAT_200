@@ -16,6 +16,7 @@ public class CommonSoundController : Singleton<CommonSoundController>
     [SerializeField] private AudioClip _puzzleFailClip;
     [SerializeField] private AudioClip _fridgeOpenClip;
     [SerializeField] private AudioClip _fridgeUnlockClip;
+    [SerializeField] private AudioClip _pickUpClip;
 
     new private void Awake()
     {
@@ -30,6 +31,7 @@ public class CommonSoundController : Singleton<CommonSoundController>
         if (_puzzleFailClip == null) _puzzleFailClip = Resources.Load<AudioClip>("Sounds/Effect/Universal/puzzle_fail");
         if (_fridgeOpenClip == null) _fridgeOpenClip = Resources.Load<AudioClip>("Sounds/Effect/Fridge - Light Puzzle/fridge_open");
         if (_fridgeUnlockClip == null) _fridgeUnlockClip = Resources.Load<AudioClip>("Sounds/Effect/Fridge - Light Puzzle/fridge_unlock");
+        if (_pickUpClip == null) _pickUpClip = Resources.Load<AudioClip>("Sounds/Effect/Rat/collect_item");
     }
 
     /// <summary>
@@ -91,7 +93,8 @@ public class CommonSoundController : Singleton<CommonSoundController>
             AudioManager.Instance.Play(_puzzleFailClip, AudioManager.Sound.Effect);
         }
     }
-
+    
+    public void PlayPickUp() => PlayCommonSound(_pickUpClip);
     /// <summary>
     /// 공용 효과음을 기본 설정으로 재생합니다.
     /// </summary>
@@ -102,4 +105,6 @@ public class CommonSoundController : Singleton<CommonSoundController>
             AudioManager.Instance.Play(clip, AudioManager.Sound.Effect);
         }
     }
+    
+    
 }

@@ -8,7 +8,7 @@ public class NoiseTrapReportToResearcher : MonoBehaviour
     {
         if (other.CompareTag("Player") && researcher)
         {
-            researcher.NotifyNoiseEvent(transform.position);
+            //researcher.NotifyNoiseEvent(transform.position);
         }
     }
 }
