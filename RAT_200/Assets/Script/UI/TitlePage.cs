@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI; // 혹시 기본 Text를 쓴다면 필요
-using TMPro;          // ★ [New] TextMeshPro 사용 시 필요
+using UnityEngine.UI;
+using TMPro;
 using DG.Tweening;
 
 [DefaultExecutionOrder(-100)]
@@ -14,10 +14,8 @@ public class TitlePage : MonoBehaviour
     [SerializeField] private HowToPlayPage _howToPlayPage;
     [SerializeField] private GameObject _uiBlocker;
 
-    // ★ [New] 버튼 텍스트를 바꾸기 위한 참조 변수
     [Header("UI Text")]
     [SerializeField] private TextMeshProUGUI _startButtonText;
-    // 만약 Legacy Text를 쓴다면: [SerializeField] private Text _startButtonText;
 
     [Header("Events")]
     public UnityEvent onGameStart;
@@ -26,7 +24,9 @@ public class TitlePage : MonoBehaviour
     private bool _isTransitioning;
     private bool _isPageHidden;
 
-    // ★ [New] 게임이 한 번이라도 시작되었는지 체크하는 플래그
+    // ★ [수정] 서브 메뉴(옵션, 설명)가 열려있는지 체크하는 플래그
+    private bool _isSubMenuOpen = false;
+
     private bool _hasGameStarted = false;
 
     [SerializeField] private AudioClip _titleBGM;
@@ -34,6 +34,7 @@ public class TitlePage : MonoBehaviour
 
     private void Awake()
     {
+        // (기존 코드 동일)
         if (_slideOutPosition == null || _slideInPosition == null)
         {
             Debug.LogError("[TitlePage] Positions are not assigned.");
@@ -54,9 +55,11 @@ public class TitlePage : MonoBehaviour
         _isPageHidden = false;
         SetBlocker(true);
 
-        // ★ [New] 씬이 처음 로드되었을 때는 무조건 START
         _hasGameStarted = false;
         UpdateStartButtonText();
+
+        // 시작할 때는 서브 메뉴 닫힘 상태
+        _isSubMenuOpen = false;
 
         SlideInTitlePage();
         if (_optionPage) _optionPage.SlideOutOptionPage();
@@ -68,29 +71,27 @@ public class TitlePage : MonoBehaviour
 
     private void Update()
     {
-        // 1. 게임 플레이 중일 때 -> ESC 누르면 메뉴 열기 (기존 로직)
+        // 1. 게임 플레이 중일 때 -> ESC 누르면 메뉴 열기
         if (_isPageHidden)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                // 마이크로 줌(퍼즐) 중이면 메뉴 안 열림 (퍼즐 나가기가 우선)
                 if (IsAnyMicroZoomActive()) return;
-
                 OpenMenu();
             }
         }
-        // 2. 메뉴(타이틀)가 열려 있을 때 -> ESC 누르면 메뉴 닫기 (새로운 로직)
+        // 2. 메뉴(타이틀)가 열려 있을 때
         else
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                // ★ 핵심 조건:
-                // (1) 게임이 이미 시작된 상태여야 함 (START 모드에선 ESC로 못 끔)
-                // (2) 화면 전환 중(슬라이드 중)이 아니어야 함
+                // ★ [수정] 서브 메뉴(옵션, 설명창)가 열려있다면 타이틀의 ESC(게임 재개) 무시
+                // 각 서브 메뉴(OptionPage, HowToPlayPage)가 자신의 Update에서 ESC를 처리함
+                if (_isSubMenuOpen) return;
+
+                // 서브 메뉴가 없을 때만 Resume 동작
                 if (_hasGameStarted && !_isTransitioning)
                 {
-                    // StartGame() 내부에서 _hasGameStarted가 true면
-                    // 자동으로 'Resume(단순 닫기)' 로직이 실행됩니다.
                     StartGame();
                 }
             }
@@ -110,20 +111,15 @@ public class TitlePage : MonoBehaviour
     private void OpenMenu()
     {
         _isPageHidden = false;
+        _isSubMenuOpen = false; // 메뉴 열릴 땐 서브 메뉴 닫힌 상태
         SetBlocker(true);
-
-        // ★ [New] 메뉴가 열릴 때 텍스트 갱신 (이미 시작했다면 RESUME이 됨)
         UpdateStartButtonText();
-
         SlideInTitlePage();
     }
 
-    // ★ [New] 상태에 따라 텍스트를 바꿔주는 헬퍼 함수
     private void UpdateStartButtonText()
     {
         if (_startButtonText == null) return;
-
-        // 게임이 이미 시작된 상태(_hasGameStarted)라면 RESUME, 아니면 START
         _startButtonText.text = _hasGameStarted ? "RESUME" : "START";
     }
 
@@ -131,22 +127,14 @@ public class TitlePage : MonoBehaviour
     {
         if (_isTransitioning) return;
 
-        // ★ [New] 이미 게임이 시작된 상태에서 'RESUME'을 누른 거라면
-        // 이벤트를 다시 발동시키지 않고 단순히 페이지만 닫아야 할 수도 있습니다.
-        // 하지만 만약 단순히 닫는 게 아니라, 매번 연출을 원한다면 아래 로직을 조정해야 합니다.
-        // 여기서는 "Resume 시에는 오프닝 연출(뚜껑 열기 등)을 스킵하고 페이지만 닫기"로 구현해 봅니다.
-
         if (_hasGameStarted)
         {
-            // [Resume 로직]
-            // 이미 게임 중이므로 onGameStart(오프닝 연출)은 실행하지 않음
             CloseTitleOnly();
         }
         else
         {
-            // [First Start 로직]
             _isTransitioning = true;
-            _hasGameStarted = true; // 이제부터는 게임 중인 상태
+            _hasGameStarted = true;
 
             if (_bgmController != null)
             {
@@ -154,7 +142,7 @@ public class TitlePage : MonoBehaviour
                 catch (Exception e) { Debug.LogWarning($"BGM Error: {e.Message}"); }
             }
 
-            onGameStart?.Invoke(); // 인트로/오프닝 실행
+            onGameStart?.Invoke();
 
             SlideOutTitlePage(onComplete: () =>
             {
@@ -165,7 +153,6 @@ public class TitlePage : MonoBehaviour
         }
     }
 
-    // ★ [New] Resume 전용 닫기 (이벤트 발생 X)
     private void CloseTitleOnly()
     {
         _isTransitioning = true;
@@ -181,6 +168,9 @@ public class TitlePage : MonoBehaviour
     {
         if (_isTransitioning || _optionPage == null) return;
         _isTransitioning = true;
+
+        // ★ [수정] 옵션 창이 열림을 표시
+        _isSubMenuOpen = true;
 
         SlideOutTitlePage(onComplete: () =>
         {
@@ -212,7 +202,12 @@ public class TitlePage : MonoBehaviour
         _currentTween = transform.DOMove(_slideInPosition.position, duration)
             .SetEase(ease)
             .SetUpdate(true)
-            .OnComplete(() => onComplete?.Invoke())
+            .OnComplete(() =>
+            {
+                // ★ [수정] 타이틀이 다시 들어왔다면 서브 메뉴는 닫힌 것임
+                _isSubMenuOpen = false;
+                onComplete?.Invoke();
+            })
             .OnKill(() => onComplete?.Invoke());
     }
 
@@ -228,7 +223,9 @@ public class TitlePage : MonoBehaviour
         if (_isTransitioning || _howToPlayPage == null) return;
         _isTransitioning = true;
 
-        // 타이틀이 나가고(SlideOut) -> 완료되면 -> 설명창이 들어옴(SlideIn)
+        // ★ [수정] 설명 창이 열림을 표시
+        _isSubMenuOpen = true;
+
         SlideOutTitlePage(onComplete: () =>
         {
             _howToPlayPage.SlideIn(onComplete: () =>

@@ -969,16 +969,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eca2c73d728547240834ac202b24c8c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  requireMicro: 0
-  requireModifier: 0
-  planeMode: 1
-  customPlane: {fileID: 0}
-  lockX: 0
-  lockY: 1
-  lockZ: 0
-  snapStep: {x: 0, y: 0, z: 0}
-  bounds: {fileID: 0}
-  _slideSound: {fileID: 0}
+  freezeRotationOnDrag: 1
 --- !u!114 &41922697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11051,16 +11042,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eca2c73d728547240834ac202b24c8c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  requireMicro: 1
-  requireModifier: 0
-  planeMode: 1
-  customPlane: {fileID: 194827397}
-  lockX: 1
-  lockY: 1
-  lockZ: 0
-  snapStep: {x: 0, y: 0, z: 0}
-  bounds: {fileID: 0}
-  _slideSound: {fileID: 0}
+  freezeRotationOnDrag: 1
 --- !u!1 &643954659
 GameObject:
   m_ObjectHideFlags: 0
@@ -13001,16 +12983,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eca2c73d728547240834ac202b24c8c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  requireMicro: 1
-  requireModifier: 0
-  planeMode: 1
-  customPlane: {fileID: 194827397}
-  lockX: 1
-  lockY: 1
-  lockZ: 0
-  snapStep: {x: 0, y: 0, z: 0}
-  bounds: {fileID: 0}
-  _slideSound: {fileID: 0}
+  freezeRotationOnDrag: 1
 --- !u!114 &755717826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13023,16 +12996,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eca2c73d728547240834ac202b24c8c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  requireMicro: 1
-  requireModifier: 0
-  planeMode: 1
-  customPlane: {fileID: 194827397}
-  lockX: 1
-  lockY: 1
-  lockZ: 0
-  snapStep: {x: 0, y: 0, z: 0}
-  bounds: {fileID: 0}
-  _slideSound: {fileID: 0}
+  freezeRotationOnDrag: 1
 --- !u!114 &755717827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13045,16 +13009,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eca2c73d728547240834ac202b24c8c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  requireMicro: 1
-  requireModifier: 0
-  planeMode: 1
-  customPlane: {fileID: 194827397}
-  lockX: 1
-  lockY: 1
-  lockZ: 0
-  snapStep: {x: 0, y: 0, z: 0}
-  bounds: {fileID: 0}
-  _slideSound: {fileID: 0}
+  freezeRotationOnDrag: 1
 --- !u!114 &755717828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13067,16 +13022,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eca2c73d728547240834ac202b24c8c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  requireMicro: 1
-  requireModifier: 0
-  planeMode: 1
-  customPlane: {fileID: 194827397}
-  lockX: 1
-  lockY: 1
-  lockZ: 0
-  snapStep: {x: 0, y: 0, z: 0}
-  bounds: {fileID: 0}
-  _slideSound: {fileID: 0}
+  freezeRotationOnDrag: 1
 --- !u!1 &764089910
 GameObject:
   m_ObjectHideFlags: 0
@@ -16147,16 +16093,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eca2c73d728547240834ac202b24c8c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  requireMicro: 1
-  requireModifier: 0
-  planeMode: 1
-  customPlane: {fileID: 194827397}
-  lockX: 1
-  lockY: 1
-  lockZ: 0
-  snapStep: {x: 0, y: 0, z: 0}
-  bounds: {fileID: 0}
-  _slideSound: {fileID: 0}
+  freezeRotationOnDrag: 1
 --- !u!1 &877893739
 GameObject:
   m_ObjectHideFlags: 0
@@ -23225,16 +23162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eca2c73d728547240834ac202b24c8c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  requireMicro: 1
-  requireModifier: 0
-  planeMode: 1
-  customPlane: {fileID: 194827397}
-  lockX: 1
-  lockY: 1
-  lockZ: 0
-  snapStep: {x: 0, y: 0, z: 0}
-  bounds: {fileID: 0}
-  _slideSound: {fileID: 0}
+  freezeRotationOnDrag: 1
 --- !u!1001 &1283222966
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26129,7 +26057,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1417587271}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 11
   m_Type: 0
   m_Color: {r: 0.9764151, g: 0.9764151, b: 0.9764151, a: 1}

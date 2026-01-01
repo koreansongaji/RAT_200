@@ -14,9 +14,6 @@ public class OptionPage : MonoBehaviour
     [SerializeField] private Slider _bgmVolumeSlider;
     [SerializeField] private Slider _effectVolumeSlider;
 
-    /// <summary>
-    /// 옵션 페이지가 화면에 표시될 때의 기준 위치를 반환합니다.
-    /// </summary>
     public Vector3 GetInPosition() => _slideInPosition.position;
 
     private Tween _currentTween;
@@ -24,6 +21,7 @@ public class OptionPage : MonoBehaviour
 
     private void Awake()
     {
+        // (기존 코드 동일)
         if (_slideOutPosition == null || _slideInPosition == null)
         {
             Debug.LogError("[OptionPage] Positions are not assigned.");
@@ -32,7 +30,6 @@ public class OptionPage : MonoBehaviour
         }
         transform.position = _slideOutPosition.position;
 
-        // 슬라이더 리스너 등록
         if (_masterVolumeSlider != null) _masterVolumeSlider.onValueChanged.AddListener(OnMasterVolumeChange);
         if (_bgmVolumeSlider != null) _bgmVolumeSlider.onValueChanged.AddListener(OnBgmVolumeChange);
         if (_effectVolumeSlider != null) _effectVolumeSlider.onValueChanged.AddListener(OnEffectVolumeChange);
@@ -40,13 +37,26 @@ public class OptionPage : MonoBehaviour
 
     private void Start()
     {
-        // 슬라이더 초기값 설정
+        // (기존 코드 동일)
         if (_masterVolumeSlider != null) _masterVolumeSlider.value = OptionManager.Instance.OptionData.MastersoundVolume;
         if (_bgmVolumeSlider != null) _bgmVolumeSlider.value = OptionManager.Instance.OptionData.BGMsoundVolume;
         if (_effectVolumeSlider != null) _effectVolumeSlider.value = OptionManager.Instance.OptionData.EffectsoundVolume;
-
-        // 초기 볼륨 적용은 OptionManager.Start() 또는 여기서 직접 Slider 이벤트를 통해 발생함
     }
+
+    // ★ [추가] 옵션 창이 켜져있을 때 ESC 처리
+    private void Update()
+    {
+        // 화면 안쪽(_slideInPosition)에 거의 도착했을 때만 ESC 작동
+        if (_slideInPosition && Vector3.Distance(transform.position, _slideInPosition.position) < 0.1f)
+        {
+            // 전환 중이 아닐 때만
+            if (!_isTransitioning && Input.GetKeyDown(KeyCode.Escape))
+            {
+                BackToTitle();
+            }
+        }
+    }
+
     public void OnMasterVolumeChange(float volume)
     {
         OptionManager.Instance.OnMasterVolumeChange(volume);
@@ -59,9 +69,7 @@ public class OptionPage : MonoBehaviour
     {
         OptionManager.Instance.OnBgmVolumeChange(volume);
     }
-    /// <summary>
-    /// 옵션 페이지를 닫고 타이틀 페이지로 돌아갑니다.
-    /// </summary>
+
     public void BackToTitle()
     {
         if (_isTransitioning || _titlePage == null) return;
@@ -69,6 +77,7 @@ public class OptionPage : MonoBehaviour
         _isTransitioning = true;
         KillTween();
 
+        // (기존 애니메이션 로직 유지)
         var timeout = DOVirtual.DelayedCall(1.2f, () => { _isTransitioning = false; }, ignoreTimeScale: true).SetUpdate(true);
 
         if ((transform.position - _slideOutPosition.position).sqrMagnitude < 0.0001f)
@@ -108,12 +117,9 @@ public class OptionPage : MonoBehaviour
             .SetEase(ease)
             .SetUpdate(true)
             .OnComplete(() => onComplete?.Invoke())
-            .OnKill(() => onComplete?.Invoke()); // 중간에 Kill돼도 다음 단계 진행
+            .OnKill(() => onComplete?.Invoke());
     }
 
-    /// <summary>
-    /// 옵션 페이지를 설정된 화면 안 위치로 이동시킵니다.
-    /// </summary>
     public void SlideInOptionPage(float duration = 0.5f, Ease ease = Ease.OutCubic, Action onComplete = null)
     {
         KillTween();
