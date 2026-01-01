@@ -50,6 +50,9 @@ public class ResearcherController : MonoBehaviour
     [SerializeField] private AudioClip _summonAlertClip;
 
     State _state = State.Idle;
+
+    public State CurrentState => _state;
+        
     float _stateTimer;
     Vector3 _scanTargetPos;
     Tween _scanTween;

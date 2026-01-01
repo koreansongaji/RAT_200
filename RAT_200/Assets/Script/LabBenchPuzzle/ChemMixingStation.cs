@@ -216,9 +216,9 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
     void RefreshTexts()
     {
         string Mark(int c, int n) => c > n ? $"{c}" : c.ToString();
-        if (txtNa) txtNa.text = $"Na: {Mark(_cNa, needNa)}";
-        if (txtWater) txtWater.text = $"Water: {Mark(_cWater, needWater)}";
-        if (txtGel) txtGel.text = $"Gel: {Mark(_cGel, needGel)}";
+        if (txtNa) txtNa.text = $"{Mark(_cNa, needNa)}";
+        if (txtWater) txtWater.text = $"{Mark(_cWater, needWater)}";
+        if (txtGel) txtGel.text = $"{Mark(_cGel, needGel)}";
     }
 
     void Submit()
