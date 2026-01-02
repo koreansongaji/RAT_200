@@ -198,7 +198,8 @@ Shader "Hidden/Vol/Outline"
 
                 float diff_color = diff_color_up_down + diff_color_left_right;
                 
-                float diff = saturate(pow(diff_normal, _CustomOutlineData.x) + pow(diff_color, _CustomOutlineData.y));
+                float diff = saturate(max(pow(diff_normal, _CustomOutlineData.x), pow(diff_color, _CustomOutlineData.y)));
+                // float diff = saturate(pow(diff_normal, _CustomOutlineData.x));
 
                 return diff;
             }
