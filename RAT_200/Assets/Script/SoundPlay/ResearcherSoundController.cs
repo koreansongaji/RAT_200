@@ -9,6 +9,7 @@ public class ResearcherSoundController : MonoBehaviour
     [SerializeField] private AudioClip _approachSound;
     [SerializeField] private AudioClip _researcherRunSound;
     [SerializeField] private AudioClip _breathSound;
+    [SerializeField] private AudioClip _scientistCatchSound;
     
     private void Awake()
     {
@@ -19,6 +20,7 @@ public class ResearcherSoundController : MonoBehaviour
         if(_approachSound == null) _approachSound = Resources.Load<AudioClip>("Sounds/Effect/Scientist/scientist_approach");
         if(_researcherRunSound == null) _researcherRunSound = Resources.Load<AudioClip>("Sounds/Effect/Scientist/scientist_run_a");
         if(_breathSound == null) _breathSound = Resources.Load<AudioClip>("Sounds/Effect/Scientist/scientist_breath");
+        if(_scientistCatchSound == null) _scientistCatchSound = Resources.Load<AudioClip>("Sounds/Effect/Scientist/scientist_catch");
     }
     
     public void PlayDoorOpenSound()
@@ -47,7 +49,7 @@ public class ResearcherSoundController : MonoBehaviour
     {
         if(_ratDeathSound != null)
         {
-            AudioManager.Instance.Play(_ratDeathSound, AudioManager.Sound.Effect);
+            AudioManager.Instance.Play(_ratDeathSound, AudioManager.Sound.Effect, 1f, 5f);
         }
     }
     
@@ -72,6 +74,14 @@ public class ResearcherSoundController : MonoBehaviour
         if(_breathSound != null)
         {
             AudioManager.Instance.Play(_breathSound, AudioManager.Sound.Effect);
+        }
+    }
+    
+    public void PlayScientistCatchSound()
+    {
+        if(_scientistCatchSound != null)
+        {
+            AudioManager.Instance.Play(_scientistCatchSound, AudioManager.Sound.Effect);
         }
     }
 }

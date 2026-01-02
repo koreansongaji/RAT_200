@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using DG.Tweening;
 using UnityEngine.AI;
 using System.Collections;
@@ -36,6 +37,14 @@ public class LabToFridgeManager : MonoBehaviour
 
     [Header("Fuse Single")]
     public GameObject fuse;
+
+    [Header("Sounds Clips")]
+    [SerializeField] private AudioClip _fallSound;
+
+    private void Awake()
+    {
+        if(_fallSound == null) _fallSound = Resources.Load<AudioClip>("Sounds/Effect/Trap/book_fall");
+    }
 
     void Start()
     {
@@ -196,6 +205,8 @@ public class LabToFridgeManager : MonoBehaviour
                 col.isTrigger = false;
             }
 
+            AudioManager.Instance.Play(_fallSound);
+            
             fuse.gameObject.GetComponent<DrawerItemDispenser>().Dispense();
             fuse.gameObject.GetComponent<InteractionBlocker>().Unlock();
         }

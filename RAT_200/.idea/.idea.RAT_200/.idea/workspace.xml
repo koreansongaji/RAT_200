@@ -7,8 +7,9 @@
     <list default="true" id="9a50adee-ec7a-4782-bb48-036fabc44743" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.RAT_200/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RAT_200/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/MainScene 2.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/MainScene 2.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/Noise/GlitchController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Noise/GlitchController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Shader/Settings/DefaultVolumeProfile.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shader/Settings/DefaultVolumeProfile.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/LabBenchPuzzle/LabToFridgeManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/LabBenchPuzzle/LabToFridgeManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/SoundPlay/ResearcherSoundController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/SoundPlay/ResearcherSoundController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Shader/Settings/PC_Renderer.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shader/Settings/PC_Renderer.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,7 +17,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="19" />
+    <option name="cachedIndexableFilesCount" value="20" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
@@ -36,9 +37,7 @@
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d33af19c329a4ed299b042988e8741b918800/3f/4df1b170/AudioSource.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Script/BaseInteractable.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Script/ClickMoveOrInteract_Events.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Script/DoorAnimInteractable.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/Downloads/outline_modified.shader" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/DoorInteractable.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/Draggable3D.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/Fracture/FractureEventLinker.cs" root0="FORCE_HIGHLIGHTING" />
@@ -58,10 +57,8 @@
     <setting file="file://$PROJECT_DIR$/Assets/Script/RefrigeratorPuzzle/Crosshair.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/RefrigeratorPuzzle/KeypadController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/RefrigeratorPuzzle/OpenRefrigerator.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Script/RopeInteractable.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/SafePuzzle/SafeDialInteractable.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/SafePuzzle/SafePuzzleController.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Script/SlidingDoorInteract.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/SoundPlay/BgmController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/SoundPlay/CommonSoundController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/SoundPlay/FridgeSoundController.cs" root0="FORCE_HIGHLIGHTING" />
@@ -102,7 +99,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "hotfix",
+    "git-widget-placeholder": "feature/sound",
     "junie.onboarding.icon.badge.shown": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -115,7 +112,7 @@
 }]]></component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Standalone Player" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="$USER_HOME$/Documents/SongHeeJun/Work/Pandora_Cube/Main Project/Team Shorts/R.A.T#200/V0.1.0\RAT_200.exe" />
+      <option name="EXE_PATH" value="$USER_HOME$/Documents/SongHeeJun/Work/Pandora_Cube/Main Project/Team Shorts/R.A.T#200/202601031205\RAT_200.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="C:\Users\korea\Documents\SongHeeJun\Work\Pandora_Cube\Main Project\Team Shorts\R.A.T#200\V0.1.0" />
       <option name="PASS_PARENT_ENVS" value="1" />
@@ -217,6 +214,7 @@
       <workItem from="1767265915626" duration="1081000" />
       <workItem from="1767268034414" duration="211000" />
       <workItem from="1767294443783" duration="322000" />
+      <workItem from="1767367193702" duration="2057000" />
     </task>
     <servers />
   </component>
