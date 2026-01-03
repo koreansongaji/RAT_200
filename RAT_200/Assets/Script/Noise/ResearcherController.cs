@@ -192,12 +192,19 @@ public class ResearcherController : MonoBehaviour
 
     bool CheckVisibility(Transform target)
     {
-        if (!target) return false;
+        // ★ [핵심 수정] 타겟이 없거나, 비활성화(죽음) 상태라면 안 보이는 것으로 처리
+        if (!target || !target.gameObject.activeInHierarchy) return false;
+
         Vector3 toTarget = target.position - eyePivot.position;
         float dist = toTarget.magnitude;
+
         float angle = Vector3.Angle(eyePivot.forward, toTarget);
         if (angle > spotLight.spotAngle * 0.5f) return false;
-        if (Physics.Raycast(eyePivot.position, toTarget.normalized, dist, obstacleMask)) return false;
+
+        // 장애물 체크
+        if (Physics.Raycast(eyePivot.position, toTarget.normalized, dist, obstacleMask))
+            return false;
+
         return true;
     }
 
@@ -226,19 +233,20 @@ public class ResearcherController : MonoBehaviour
     {
         if (_state == State.Capture || _state == State.BusyWithEvent) return;
 
-        //OnNpcCaught?.Invoke();
-
-        _state = State.BusyWithEvent; // 혹은 Capture
+        _state = State.BusyWithEvent;
         _scanTween?.Kill();
         _currentFocusTarget = npcTarget;
 
         Debug.Log("[Researcher] 동료 잡음 -> 매니저에게 처형 요청");
 
-        // 플레이어 때와 똑같은 연출 실행 (코드 재사용)
         if (GameLoopManager.Instance && npcTarget)
         {
             GameLoopManager.Instance.TriggerDeath(npcTarget.gameObject);
         }
+
+        // ★ [핵심 수정] 잡았으니 이제 타겟 변수를 비워줍니다.
+        // 그래야 나중에 연구원이 다시 활동할 때, 죽은 동료를 또 쳐다보지 않습니다.
+        npcTarget = null;
 
         //OnNpcCaught?.Invoke();
     }
