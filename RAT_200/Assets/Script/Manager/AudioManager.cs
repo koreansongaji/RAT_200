@@ -319,6 +319,14 @@ public class AudioManager : Singleton<AudioManager>
             source.clip = null;
         }
     }
+    public void StopSFX()
+    {
+        AudioSource sfxSource = _audioSources[(int)Sound.Effect];
+        if (sfxSource != null && sfxSource.isPlaying)
+        {
+            sfxSource.Stop();
+        }
+    }
 
     private Dictionary<string, AudioSource> _loopSources = new Dictionary<string, AudioSource>();
 

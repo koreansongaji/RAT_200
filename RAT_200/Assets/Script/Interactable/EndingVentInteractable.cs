@@ -3,43 +3,68 @@ using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine.UI;
 using DG.Tweening;
-using UnityEngine.SceneManagement; // 씬 리로드를 위해 필요
+using UnityEngine.SceneManagement;
 
 public class EndingVentInteractable : BaseInteractable
 {
     [Header("Ending Settings")]
     [Tooltip("엔딩 시 활성화될 방 전체를 비추는 와이드 카메라")]
     public CinemachineCamera roomWideCamera;
+    [Tooltip("카메라가 완전히 전환되는 데 걸리는 시간")]
+    public float cameraTransitionDelay = 2.0f;
+
+    [Header("Audio Assets")]
+    [Tooltip("벤트 클릭 시 시작될 엔딩 BGM")]
+    public AudioClip endingBgm;
+    [Tooltip("컬러 이미지가 나올 때 재생될 효과음")]
+    public AudioClip endingSfx;
 
     [Header("UI References (Canvas Groups)")]
-    [Tooltip("방 전체 컬러 이미지 (기존)")]
-    public CanvasGroup overlayCanvasGroup;
+    [Tooltip("순서대로 보여줄 컬러 이미지들 (총 4개 연결: 1, 2, 3, 4번 순서)")]
+    public CanvasGroup[] endingImages; // ★ 배열로 변경됨
 
-    [Tooltip("'Credits' 텍스트가 포함된 UI 그룹")]
-    public CanvasGroup creditsGroup;
-
-    [Tooltip("'Thank you for playing' 텍스트가 포함된 UI 그룹")]
-    public CanvasGroup thankYouGroup;
-
-    [Tooltip("마지막에 화면을 덮을 검은색 패널")]
-    public CanvasGroup blackCurtainGroup;
+    public CanvasGroup whiteCurtainGroup;   // 흰색 배경
+    public CanvasGroup creditsGroup;        // Credits 텍스트
+    public CanvasGroup thankYouGroup;       // Thank You 텍스트
+    public CanvasGroup blackCurtainGroup;   // 마지막 암전
 
     [Header("Timing Settings")]
-    public float overlayFadeDuration = 3.0f; // 컬러 이미지 페이드 시간
-    public float textFadeDuration = 1.0f;    // 텍스트 나타남/사라짐 시간
-    public float textStayDuration = 2.5f;    // 텍스트 머무르는 시간
-    public float finalBlackFadeDuration = 2.0f; // 마지막 암전 시간
+    [Tooltip("각 이미지가 페이드 인 되는 시간")]
+    public float overlayFadeDuration = 2.0f;
+
+    [Tooltip("다음 이미지가 나오기 전까지 대기하는 시간")]
+    public float imageInterval = 2.0f;
+
+    [Tooltip("4번째 이미지가 깜빡! 하고 보이는 짧은 시간")]
+    public float flashDuration = 0.15f;
+
+    [Tooltip("3번째 이미지가 다시 보인 후 흰색 커튼 전까지 유지 시간")]
+    public float finalImageHoldDuration = 3.0f;
+
+    public float whiteFadeDuration = 2.0f;
+    public float textFadeDuration = 1.0f;
+    public float textStayDuration = 2.5f;
+    public float finalBlackFadeDuration = 2.0f;
 
     private bool _isEndingStarted = false;
+    private ResearcherController _researcher;
+
+    void Awake()
+    {
+        _researcher = FindFirstObjectByType<ResearcherController>();
+    }
 
     void Start()
     {
-        // 1. 모든 UI 요소 초기화 (안 보이게)
-        InitCanvasGroup(overlayCanvasGroup);
+        // 이미지 배열 초기화
+        if (endingImages != null)
+        {
+            foreach (var img in endingImages) InitCanvasGroup(img);
+        }
+
+        InitCanvasGroup(whiteCurtainGroup);
         InitCanvasGroup(creditsGroup);
         InitCanvasGroup(thankYouGroup);
-
-        // 블랙 커튼은 시작할 때 꺼져 있어야 함 (만약 씬 시작 페이드인이 필요하면 별도 처리)
         InitCanvasGroup(blackCurtainGroup);
 
         if (roomWideCamera) roomWideCamera.Priority = 10;
@@ -60,29 +85,97 @@ public class EndingVentInteractable : BaseInteractable
     public override void Interact(PlayerInteractor i)
     {
         if (_isEndingStarted) return;
+
+        CleanUpGameEnvironment();
         StartCoroutine(Routine_EndingSequence(i.gameObject));
+    }
+
+    void CleanUpGameEnvironment()
+    {
+        if (_researcher != null && _researcher.CurrentState != ResearcherController.State.Idle)
+        {
+            _researcher.ForceLeave();
+        }
+
+        if (AudioManager.Instance)
+        {
+            AudioManager.Instance.KillAllSounds();
+        }
     }
 
     IEnumerator Routine_EndingSequence(GameObject playerObj)
     {
         _isEndingStarted = true;
 
-        // 1. 플레이어 퇴장
+        // 1. 카메라 전환 & BGM
         if (playerObj) playerObj.SetActive(false);
-        yield return new WaitForSeconds(1.0f);
-
-        // 2. 카메라 전환 (방 전체)
         if (roomWideCamera) roomWideCamera.Priority = 999;
 
-        // 3. 컬러 이미지 페이드 인
-        if (overlayCanvasGroup)
+        if (AudioManager.Instance && endingBgm)
         {
-            overlayCanvasGroup.gameObject.SetActive(true);
-            // 이미지가 다 나올 때까지 대기
-            yield return overlayCanvasGroup.DOFade(1f, overlayFadeDuration).WaitForCompletion();
+            AudioManager.Instance.PlayBgmWithFade(endingBgm, 1.0f);
         }
 
-        // 4. Credits 등장 -> 대기 -> 퇴장
+        yield return new WaitForSeconds(cameraTransitionDelay);
+
+        // 2. SFX 재생
+        if (AudioManager.Instance && endingSfx)
+        {
+            AudioManager.Instance.Play(endingSfx, AudioManager.Sound.Effect);
+        }
+
+        // 3. 이미지 연출 (1 -> 2 -> 3 -> 4(Flash) -> 3)
+        // 안전 장치: 배열이 비어있으면 패스
+        if (endingImages != null && endingImages.Length >= 4)
+        {
+            // [Image 1] Fade In
+            endingImages[0].gameObject.SetActive(true);
+            yield return endingImages[0].DOFade(1f, overlayFadeDuration).WaitForCompletion();
+            yield return new WaitForSeconds(imageInterval);
+
+            // [Image 2] Fade In (1번 위에 덮어씀)
+            endingImages[1].gameObject.SetActive(true);
+            yield return endingImages[1].DOFade(1f, overlayFadeDuration).WaitForCompletion();
+            yield return new WaitForSeconds(imageInterval);
+
+            // [Image 3] Fade In (2번 위에 덮어씀)
+            endingImages[2].gameObject.SetActive(true);
+            yield return endingImages[2].DOFade(1f, overlayFadeDuration).WaitForCompletion();
+            yield return new WaitForSeconds(imageInterval);
+
+            // [Image 4] Flash! (3번 위에 깜빡)
+            endingImages[3].gameObject.SetActive(true);
+            endingImages[3].alpha = 1f; // 페이드 없이 즉시 등장
+
+            // 깜빡이는 찰나의 시간 대기
+            yield return new WaitForSeconds(flashDuration);
+
+            // 4번 끄기 -> 3번이 다시 보임
+            endingImages[3].gameObject.SetActive(false);
+
+            // 3번 이미지 감상 시간
+            yield return new WaitForSeconds(finalImageHoldDuration);
+        }
+        else
+        {
+            Debug.LogWarning("[Ending] 이미지 배열이 4개 미만입니다! 인스펙터를 확인하세요.");
+            yield return new WaitForSeconds(2.0f);
+        }
+
+        // 4. 화이트 커튼 (덮기)
+        if (whiteCurtainGroup)
+        {
+            whiteCurtainGroup.gameObject.SetActive(true);
+            yield return whiteCurtainGroup.DOFade(1f, whiteFadeDuration).WaitForCompletion();
+        }
+
+        // 뒤쪽 이미지들 모두 정리 (최적화)
+        if (endingImages != null)
+        {
+            foreach (var img in endingImages) if (img) img.gameObject.SetActive(false);
+        }
+
+        // 5. Credits
         if (creditsGroup)
         {
             creditsGroup.gameObject.SetActive(true);
@@ -92,7 +185,7 @@ public class EndingVentInteractable : BaseInteractable
             creditsGroup.gameObject.SetActive(false);
         }
 
-        // 5. Thank You 등장 -> 대기 -> 퇴장
+        // 6. Thank You
         if (thankYouGroup)
         {
             thankYouGroup.gameObject.SetActive(true);
@@ -102,20 +195,15 @@ public class EndingVentInteractable : BaseInteractable
             thankYouGroup.gameObject.SetActive(false);
         }
 
-        // 6. Black Curtain 페이드 인 (암전)
+        // 7. Black Curtain (암전)
         if (blackCurtainGroup)
         {
             blackCurtainGroup.gameObject.SetActive(true);
             yield return blackCurtainGroup.DOFade(1f, finalBlackFadeDuration).WaitForCompletion();
         }
 
-        // 7. 암전 상태에서 컬러 이미지 끄기 (다음에 보이지 않게)
-        if (overlayCanvasGroup) overlayCanvasGroup.gameObject.SetActive(false);
-
-        // 8. 씬 리로드 (타이틀 화면으로 복귀)
-        // 주의: 리로드 후 Black Curtain이 서서히 걷히는 연출은 
-        // 씬 시작 스크립트(SceneFader 등)가 담당해야 자연스럽습니다.
-        // 현재는 씬을 다시 로드하여 초기 상태로 돌립니다.
+        // 8. 종료 및 리로드
+        if (AudioManager.Instance) AudioManager.Instance.KillAllSounds();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

@@ -176,9 +176,16 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         if (worldCanvas) worldCanvas.enabled = false;
         SetButtonsInteractable(false);
 
-        // 초기화 로직: 초기값 복원
-        _pressCount = 0;
-        _h[0] = w1Init; _h[1] = w2Init; _h[2] = w3Init; _h[3] = w4Init;
+        if (!_isSolved)
+        {
+            // 실패했거나 도중에 나간 경우에만 초기값으로 복원
+            _pressCount = 0;
+            _h[0] = w1Init; _h[1] = w2Init; _h[2] = w3Init; _h[3] = w4Init;
+
+            // 시각적 갱신 (초기 위치로 복귀)
+            SnapAll();
+            RefreshTexts();
+        }
 
         // 시각적 갱신 (SnapAll로 즉시 이동)
         SnapAll();

@@ -80,9 +80,9 @@ public class ZoneLightTrigger : MonoBehaviour
     IEnumerator Routine_FlickerOn()
     {
         // 1. µþ±ï ¼Ò¸® Àç»ý
-        if (sfxSource && clickSound)
+        if (clickSound)
         {
-            sfxSource.PlayOneShot(clickSound);
+            AudioManager.Instance.Play(clickSound);
         }
 
         // 2. ±ôºýÀÓ ¿¬Ãâ

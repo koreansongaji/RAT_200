@@ -21,8 +21,10 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
     [SerializeField] bool lockPlayerWhileMicro = true;
     [SerializeField] bool showCursorWhileMicro = true;
 
-    // ★ [삭제됨] 기존의 수동 거리 설정 변수는 제거합니다.
-    // [SerializeField] float maxEntryDistance = 3.0f; 
+    // ★ [New] 줌 상태에서 숨길 오브젝트 리스트 (사다리 등)
+    [Header("Visibility Control")]
+    [Tooltip("Micro Zoom 진입 시 잠시 숨길 오브젝트들 (예: 사다리)")]
+    [SerializeField] GameObject[] objectsToHide;
 
     public UnityEvent OnEnterMicro, OnExitMicro;
 
@@ -65,11 +67,11 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
         if (_inMicro) return false;
         if (Time.unscaledTime < _blockUntil) return false;
 
-        // ★ [Modified] PlayerReach 컴포넌트 값을 자동으로 가져와 거리 체크
+        // PlayerReach 기반 거리 체크
         if (player != null)
         {
-            float limitDistance = 2.0f; // PlayerReach가 없을 경우의 기본값 (Fallback)
-            bool horizontalOnly = true; // 기본적으로 수평 거리만 체크 (테이블 위 고려)
+            float limitDistance = 2.0f;
+            bool horizontalOnly = true;
 
             var reach = player.GetComponent<PlayerReach>();
             if (reach != null)
@@ -81,7 +83,6 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
             float currentDist;
             if (horizontalOnly)
             {
-                // 높이(Y) 무시하고 수평 거리만 계산
                 Vector3 p1 = player.transform.position;
                 Vector3 p2 = transform.position;
                 p1.y = 0; p2.y = 0;
@@ -89,11 +90,9 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
             }
             else
             {
-                // 3D 거리 계산
                 currentDist = Vector3.Distance(player.transform.position, transform.position);
             }
 
-            // 아주 약간의 오차(0.1f)를 허용해 줍니다. (이동 정지 지점 미세 오차 고려)
             if (currentDist > limitDistance + 0.1f)
             {
                 Debug.Log($"[MicroZoom] 거리가 멉니다. (현재: {currentDist:F2} > 제한: {limitDistance})");
@@ -101,7 +100,6 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
             }
         }
 
-        // 연구원 상태 체크
         if (_researcher != null && _researcher.CurrentState != ResearcherController.State.Idle)
         {
             return false;
@@ -131,6 +129,15 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
         {
             var col = _pi.GetComponent<Collider>();
             if (col) col.enabled = false;
+        }
+
+        // ★ [New] 방해되는 오브젝트 숨기기
+        if (objectsToHide != null)
+        {
+            foreach (var obj in objectsToHide)
+            {
+                if (obj) obj.SetActive(false);
+            }
         }
 
         if (_host != null) _host.OnMicroEnter(_pi);
@@ -173,6 +180,15 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
         {
             var col = _pi.GetComponent<Collider>();
             if (col) col.enabled = true;
+        }
+
+        // ★ [New] 숨겼던 오브젝트 다시 보이기
+        if (objectsToHide != null)
+        {
+            foreach (var obj in objectsToHide)
+            {
+                if (obj) obj.SetActive(true);
+            }
         }
     }
 
