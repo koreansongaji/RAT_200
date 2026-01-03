@@ -25,7 +25,11 @@ public class GameLoopManager : MonoBehaviour
     public AudioClip suspenseBreathClip;
     [Tooltip("3. 으직! 사망 사운드")]
     public AudioClip crunchDeathClip;
-    public AudioClip scientistCatchClip;
+    // ▼ [추가됨] 문 닫히는 소리와 불 켜지는 스위치 소리
+    [Tooltip("연구원이 나갈 때 문 닫히는 소리")]
+    public AudioClip doorCloseClip;
+    [Tooltip("불이 다시 켜질 때 스위치/전기 소리")]
+    public AudioClip lightOnClip;
 
     [Header("Visuals for Death")]
     [Tooltip("암전 시 껏다가, 연구원 퇴근 시 다시 켜질 방 조명들")]
@@ -39,6 +43,7 @@ public class GameLoopManager : MonoBehaviour
 
     [Header("Timing Settings")]
     public float lightsOutDelay = 0.5f;
+    public float breathDuration = 4.0f;
     public float aftermathDuration = 3.0f;
     public float fadeDuration = 1.5f;
 
@@ -55,7 +60,6 @@ public class GameLoopManager : MonoBehaviour
             blackCurtain.blocksRaycasts = true;
         }
 
-        // 연구원 자동 찾기 (혹시 인스펙터 누락 대비)
         if (!researcher) researcher = FindFirstObjectByType<ResearcherController>();
     }
 
@@ -75,7 +79,6 @@ public class GameLoopManager : MonoBehaviour
         if (gameUI) gameUI.SetActive(false);
     }
 
-    // ★ [핵심] 누군가(플레이어 혹은 동료) 잡혔을 때 호출되는 공용 함수
     public void TriggerDeath(GameObject victim)
     {
         StartCoroutine(Routine_DeathSequence(victim));
@@ -85,39 +88,42 @@ public class GameLoopManager : MonoBehaviour
     {
         Debug.Log($"Death Sequence Start: {victim.name}");
 
-        // 0. 플레이어 조작 차단 (만약 피해자가 플레이어라면)
+        // 0. 플레이어 조작 차단
         if (victim == playerObject)
         {
             var pi = victim.GetComponent<PlayerInteractor>();
             if (pi) pi.enabled = false;
         }
 
-        // 1. 숨소리/바람소리 재생
+        // 1. 숨소리/바람소리
         if (suspenseBreathClip)
         {
             AudioManager.Instance.Play(suspenseBreathClip, AudioManager.Sound.Effect);
-            yield return new WaitForSeconds(3.0f);
+            yield return new WaitForSeconds(breathDuration);
         }
         else
         {
-            yield return new WaitForSeconds(3.0f);
+            yield return new WaitForSeconds(breathDuration);
         }
 
-        // 2. 완전 암전 (방 조명 OFF + 연구원 손전등 OFF)
-        // 연구원 손전등은 연구원 스크립트에서 제어하거나 여기서 강제로 끕니다.
+        AudioManager.Instance.StopSFX();
+
+        // 2. 완전 암전
         ToggleRoomLights(false);
         if (researcher && researcher.spotLight) researcher.spotLight.enabled = false;
+        AudioManager.Instance.Play(lightOnClip);
+
+
+        // 4. 으직! (사망)
+        AudioManager.Instance.Play(crunchDeathClip, AudioManager.Sound.Effect, 1f, 2f);
 
         // 3. 암전 공포 대기
         yield return new WaitForSeconds(lightsOutDelay);
 
-        AudioManager.Instance.StopSFX();
-        // 4. 으직! (사망)
-        AudioManager.Instance.Play(crunchDeathClip, AudioManager.Sound.Effect, 1f, 2f);
 
-        // 5. 피해자 처리 (숨기기 & 핏자국)
+        // 5. 피해자 처리
         Vector3 deathPos = victim.transform.position;
-        victim.SetActive(false); // 쥐 사라짐
+        victim.SetActive(false);
 
         if (bloodStainPrefab)
         {
@@ -126,25 +132,34 @@ public class GameLoopManager : MonoBehaviour
             Instantiate(bloodStainPrefab, bloodPos, Quaternion.Euler(90, 0, 0));
         }
 
-        // 6. ★ [핵심] 연구원 강제 퇴근 (ForceLeave)
-        // 이 함수가 문을 닫고, "방 불을 깜빡이며 켜주는 역할"을 수행합니다.
+        // 6. ★ [수정됨] 연구원 강제 퇴근 + 사운드 연출
         if (researcher)
         {
+            // (1) 문 닫히는 소리 먼저 재생
+            if (doorCloseClip) AudioManager.Instance.Play(doorCloseClip, AudioManager.Sound.Effect);
+
+            // (2) 연구원 퇴근 시작 (문 닫는 애니메이션 0.5초 + 불 켜기 대기 0.5초가 내부에서 돔)
             researcher.ForceLeave();
+
+            // (3) 문이 닫히는 시간(0.5초)만큼 대기
+            yield return new WaitForSeconds(0.5f);
+
+            // (4) 불 켜지는 소리 재생 (연구원 스크립트가 불을 켜는 타이밍과 일치)
+            if (lightOnClip) AudioManager.Instance.Play(lightOnClip, AudioManager.Sound.Effect);
         }
         else
         {
-            // 만약 연구원 스크립트가 없다면 비상용으로 불만 켬
+            // 연구원 없을 때 예외 처리
             ToggleRoomLights(true);
+            if (lightOnClip) AudioManager.Instance.Play(lightOnClip, AudioManager.Sound.Effect);
         }
 
-        // 7. 현장 유지 (참혹한 광경 확인)
+        // 7. 현장 유지
         yield return new WaitForSeconds(aftermathDuration);
 
-        // 8. 분기 처리: 플레이어면 재시작, 아니면(동료면) 게임 계속
+        // 8. 분기 처리
         if (victim == playerObject)
         {
-            // 플레이어 사망 -> 재시작 시퀀스
             if (blackCurtain)
             {
                 blackCurtain.gameObject.SetActive(true);
@@ -157,7 +172,6 @@ public class GameLoopManager : MonoBehaviour
         }
         else
         {
-            // 동료 사망 -> 그냥 진행 (연구원은 이미 떠났음)
             Debug.Log("동료 사망. 게임은 계속됩니다.");
         }
     }

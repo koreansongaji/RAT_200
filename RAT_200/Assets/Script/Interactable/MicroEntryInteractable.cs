@@ -37,4 +37,14 @@ public class MicroEntryInteractable : BaseInteractable
         // CloseupCam을 거치지 않고 바로 Micro로
         micro.TryEnter(i);
     }
+
+    // ▼ [추가됨] 외부(ClickMoveOrInteract)에서 "지금 거리 무시하고 바로 진입해도 돼?"라고 물어볼 때 사용
+    public bool ShouldBypassDistanceCheck(Vector3 playerPos)
+    {
+        if (!micro) return false;
+
+        // 연결된 세션(MicroZoomSession)에게 판정을 위임합니다.
+        // 세션이 'Zone 모드'이고 플레이어가 구역 안에 있다면 true를 반환합니다.
+        return micro.IsPlayerInsideZone(playerPos);
+    }
 }
