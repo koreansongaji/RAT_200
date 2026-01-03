@@ -16,9 +16,8 @@ public class GameIntroManager : MonoBehaviour
     [Tooltip("들썩거리고 열릴 케이지 뚜껑")]
     public Transform cageLid;
 
-    // ★ [New] 케이지 비추는 조명 연결용
     [Header("Lights")]
-    public GameObject cageLight;
+    public GameObject cageLight; // 조명 오브젝트 (Light 컴포넌트 포함 필수)
 
     [Header("Start Positions")]
     public Transform cageInsidePos;
@@ -45,6 +44,10 @@ public class GameIntroManager : MonoBehaviour
     private Vector3 _lidInitialLocalPos;
     private Quaternion _lidInitialLocalRot;
 
+    // ★ [New] 조명 원래 밝기 저장용 변수
+    private float _initialLightIntensity = 1.0f;
+    private Light _targetLight;
+
     void Start()
     {
         if (cageLid)
@@ -52,6 +55,14 @@ public class GameIntroManager : MonoBehaviour
             _lidInitialLocalPos = cageLid.localPosition;
             _lidInitialLocalRot = cageLid.localRotation;
         }
+
+        // ★ [New] 조명 컴포넌트 및 밝기 저장
+        if (cageLight)
+        {
+            _targetLight = cageLight.GetComponent<Light>();
+            if (_targetLight) _initialLightIntensity = _targetLight.intensity;
+        }
+
         PrepareIntro();
     }
 
@@ -68,8 +79,12 @@ public class GameIntroManager : MonoBehaviour
             if (partnerRat) partnerRat.position = cageInsidePos.position + new Vector3(0.2f, 0, 0.2f);
         }
 
-        // ★ [New] 게임 시작/재시작 시 조명 켜기
-        if (cageLight) cageLight.SetActive(true);
+        // ★ [New] 게임 시작 시 조명 켜고 밝기 원상복구
+        if (cageLight)
+        {
+            cageLight.SetActive(true);
+            if (_targetLight) _targetLight.intensity = _initialLightIntensity;
+        }
 
         StartLidShaking();
     }
@@ -137,9 +152,22 @@ public class GameIntroManager : MonoBehaviour
         // 카메라 전환
         if (cageIntroCam) cageIntroCam.Priority = 0;
 
-        // ★ [New] 연출 종료 후 조명 끄기
-        // (카메라가 빠지면서 조명도 같이 꺼주어 최적화 및 분위기 전환)
-        if (cageLight) cageLight.SetActive(false);
+        // ★ [New] 조명을 1초 동안 서서히 끄기 (Intensity -> 0)
+        if (_targetLight)
+        {
+            _targetLight.DOIntensity(0f, 1.0f)
+                .SetEase(Ease.Linear)
+                .OnComplete(() =>
+                {
+                    // 완전히 어두워지면 비활성화 (성능 최적화)
+                    if (cageLight) cageLight.SetActive(false);
+                });
+        }
+        else if (cageLight)
+        {
+            // Light 컴포넌트 없으면 그냥 끔
+            cageLight.SetActive(false);
+        }
 
         Debug.Log("[Intro] 게임 시작 시퀀스 완료!");
     }

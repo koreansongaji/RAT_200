@@ -27,14 +27,14 @@ public class ResearcherSoundController : MonoBehaviour
     {
         if(_doorOpenSound != null)
         {
-            AudioManager.Instance.Play(_doorOpenSound, AudioManager.Sound.Effect);
+            AudioManager.Instance.Play(_doorOpenSound, AudioManager.Sound.Effect, 1f, 2f);
         }
     }
     public void PlayDoorCloseSound()
     {
         if(_doorCloseSound != null)
         {
-            AudioManager.Instance.Play(_doorCloseSound, AudioManager.Sound.Effect);
+            AudioManager.Instance.Play(_doorCloseSound, AudioManager.Sound.Effect, 1f, 2f);
         }
     }
     public void PlayLightToggleSound()
