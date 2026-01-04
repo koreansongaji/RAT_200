@@ -12,6 +12,9 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
     public PlayerInteractor player;
     public PlayerReach reach;
 
+    // ★ [추가] 플레이어의 상태(Busy)를 확인하기 위한 스크립트 참조
+    public PlayerScriptedMover scriptedMover;
+
     [Header("Masks")]
     public LayerMask groundMask;
     public LayerMask interactableMask;
@@ -69,8 +72,6 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
         if (Physics.Raycast(ray, out var hit, maxRayDistance, draggableMask))
         {
             var dragComp = hit.collider.GetComponentInParent<Draggable3D>();
-
-            // ★ [핵심 수정] 컴포넌트가 존재하고, '활성화(Enabled)' 상태일 때만 리턴!
             if (dragComp != null && dragComp.isActiveAndEnabled)
             {
                 return dragComp;
@@ -82,7 +83,15 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
     bool InMicro() => CloseupCamManager.InMicro;
     bool ModKey() => Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 
-    void Awake() { _path = new NavMeshPath(); }
+    void Awake()
+    {
+        _path = new NavMeshPath();
+
+        // ★ [추가] 자동으로 찾아주기 (혹시 인스펙터 누락 대비)
+        if (!scriptedMover) scriptedMover = GetComponent<PlayerScriptedMover>();
+        if (!scriptedMover && player) scriptedMover = player.GetComponent<PlayerScriptedMover>();
+    }
+
     void Start()
     {
         _baseSpeed = agent.speed;
@@ -95,6 +104,10 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
     public void OnPointerDown(InputAction.CallbackContext ctx)
     {
         if (!ctx.performed) return;
+
+        // ★ [추가] 플레이어가 연출 중(밧줄 등)이면 입력 무시
+        if (scriptedMover && scriptedMover.IsBusy()) return;
+
         var pos = Mouse.current != null ? Mouse.current.position.ReadValue() : (Vector2)Input.mousePosition;
 
         _pointerDown = true;
@@ -112,6 +125,10 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
     public void OnPointerDrag(InputAction.CallbackContext ctx)
     {
         if (!ctx.performed && !ctx.canceled) return;
+
+        // ★ [추가] 플레이어가 연출 중이면 드래그도 무시
+        if (scriptedMover && scriptedMover.IsBusy()) return;
+
         if (!_pointerDown) return;
 
         var pos = Mouse.current != null ? Mouse.current.position.ReadValue() : (Vector2)Input.mousePosition;
@@ -146,6 +163,16 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
     {
         if (!ctx.performed) return;
 
+        // ★ [추가] 플레이어가 연출 중이면 클릭 해제도 로직 처리 안 함 (단, _pointerDown 초기화는 필요할 수 있음)
+        if (scriptedMover && scriptedMover.IsBusy())
+        {
+            _pointerDown = false;
+            _activeDrag = null;
+            _dragCandidate = null;
+            _queuedClick = false; // 혹시 모를 큐 제거
+            return;
+        }
+
         var pos = Mouse.current != null ? Mouse.current.position.ReadValue() : (Vector2)Input.mousePosition;
         _pointerDown = false;
 
@@ -163,6 +190,7 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
 
     void Update()
     {
+        // 1. 기존 이동 로직 처리
         if (!agent.pathPending && agent.hasPath && Arrived())
             HardStop();
 
@@ -172,6 +200,7 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
                 HardStop();
         }
 
+        // 2. 드래그 처리
         if (_activeDrag != null)
         {
             var pos = Mouse.current != null ? Mouse.current.position.ReadValue() : (Vector2)Input.mousePosition;
@@ -179,6 +208,14 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
             return;
         }
 
+        // ★ [핵심 추가] 플레이어가 Scripted Movement(밧줄, 사다리 등) 중이면 클릭 처리 중단
+        if (scriptedMover && scriptedMover.IsBusy())
+        {
+            _queuedClick = false; // 쌓여있던 클릭 요청 폐기
+            return;
+        }
+
+        // 3. 클릭 처리 (이동 or 인터랙션)
         if (!_queuedClick) return;
         _queuedClick = false;
 
@@ -189,21 +226,17 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
 
         if (Physics.Raycast(ray, out var hit, maxRayDistance, combinedMask))
         {
-            // 1. Interactable 처리
+            // Interactable 처리
             if (((1 << hit.collider.gameObject.layer) & interactableMask) != 0)
             {
                 var target = hit.collider.GetComponentInParent<IInteractable>();
                 if (target != null)
                 {
                     bool inMicro = InMicro();
-
-                    // Zone 모드인지 확인하여 거리 무시 여부 결정
                     bool bypassDistance = false;
 
-                    // target이 인터페이스(IInteractable)라서 MicroEntryInteractable인지 형변환 확인
                     if (target is MicroEntryInteractable microEntry)
                     {
-                        // "지금 Zone 안에 있어서 거리 무시해도 되나요?" 물어보기
                         bypassDistance = microEntry.ShouldBypassDistanceCheck(agent.transform.position);
                     }
 
@@ -234,9 +267,7 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
             }
             else
             {
-                // 2. Ground(이동) 처리
-
-                // ★ [수정] 마이크로 줌 상태라면 바닥 클릭(이동) 무시!
+                // Ground(이동) 처리
                 if (InMicro()) return;
 
                 ActivateBoostIfNeeded(true, _queuedScreenPos);
@@ -250,8 +281,9 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
         }
     }
 
-    // ... (이하 기존 함수들: GetClosestPointOnTarget, IsWithinReach, TryApproachTarget, Arrived, IsDoubleClick, ActivateBoostIfNeeded, TryMoveToGroundUnderRay, TrySetPath, HardStop, IsPointerOverUI, OnDrawGizmos 등은 그대로 유지) ...
-    // 편의를 위해 나머지 함수들도 포함합니다.
+    // ... (이하 기존 함수들: GetClosestPointOnTarget 등 그대로 유지) ...
+
+    // (이전 코드의 나머지 부분은 생략 없이 그대로 두시면 됩니다.)
 
     Vector3 GetClosestPointOnTarget(IInteractable target, Vector3 playerPos, out Collider hitCol)
     {
@@ -359,7 +391,6 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
     {
         if (!agent || !agent.isActiveAndEnabled || !agent.isOnNavMesh)
             return false;
-
 
         if (_path == null) _path = new NavMeshPath();
         if (agent.CalculatePath(dst, _path) && _path.status == NavMeshPathStatus.PathComplete)
