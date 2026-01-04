@@ -32,6 +32,10 @@ public class TitlePage : MonoBehaviour
     [SerializeField] private AudioClip _titleBGM;
     [SerializeField] private BgmController _bgmController;
 
+
+    private InventoryUI _inventoryUI;
+    private ItemInspectorUI _itemInspectorUI;
+
     private void Awake()
     {
         // (기존 코드 동일)
@@ -48,6 +52,9 @@ public class TitlePage : MonoBehaviour
         {
             _bgmController = FindFirstObjectByType<BgmController>();
         }
+
+        _inventoryUI = FindFirstObjectByType<InventoryUI>();
+        _itemInspectorUI = FindFirstObjectByType<ItemInspectorUI>();
     }
 
     private void Start()
@@ -71,6 +78,19 @@ public class TitlePage : MonoBehaviour
 
     private void Update()
     {
+        // ★ [핵심 로직 변경]
+        // 1. 다른 팝업 UI가 열려있는지 검사
+        bool isPopupOpen = false;
+
+        if (_itemInspectorUI != null && _itemInspectorUI.IsOpen) isPopupOpen = true;
+        else if (_inventoryUI != null && _inventoryUI.IsOpen) isPopupOpen = true;
+
+        // 팝업이 하나라도 열려있으면 타이틀의 ESC 동작은 무시합니다.
+        // (각 팝업 스크립트에서 스스로 닫는 처리를 함)
+        if (isPopupOpen) return;
+
+        // --- 이하 기존 타이틀 ESC 로직 ---
+
         // 1. 게임 플레이 중일 때 -> ESC 누르면 메뉴 열기
         if (_isPageHidden)
         {
@@ -85,11 +105,9 @@ public class TitlePage : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                // ★ [수정] 서브 메뉴(옵션, 설명창)가 열려있다면 타이틀의 ESC(게임 재개) 무시
-                // 각 서브 메뉴(OptionPage, HowToPlayPage)가 자신의 Update에서 ESC를 처리함
+                // 서브 메뉴가 열려있다면 타이틀의 ESC 무시
                 if (_isSubMenuOpen) return;
 
-                // 서브 메뉴가 없을 때만 Resume 동작
                 if (_hasGameStarted && !_isTransitioning)
                 {
                     StartGame();

@@ -66,6 +66,8 @@ public class InventoryUI : MonoBehaviour
     [Header("Inspector Link")]
     [SerializeField] ItemInspectorUI inspectorUI;
 
+    public bool IsOpen => _visible;
+
     [System.Serializable]
     public struct ItemLabel
     {
@@ -123,16 +125,34 @@ public class InventoryUI : MonoBehaviour
 
     void Update()
     {
+        // 토글 키(E) 처리 (기존 유지)
         if (Input.GetKeyDown(toggleKey))
         {
+            // 상세창이 열려있으면 인벤토리 토글 막기 (선택사항, UX 취향)
+            if (inspectorUI != null && inspectorUI.IsOpen) return;
+
             _visible = !_visible;
+            ApplyVisibility();
+        }
+
+        // ★ [추가] ESC 키 처리
+        // 인벤토리가 열려있을 때만 검사
+        if (_visible && Input.GetKeyDown(KeyCode.Escape))
+        {
+            // 1순위: 상세창이 열려있다면? -> 상세창이 닫히도록 둠 (여기선 아무것도 안 함)
+            if (inspectorUI != null && inspectorUI.IsOpen)
+            {
+                return;
+            }
+
+            // 2순위: 상세창이 없다면 -> 인벤토리 닫기
+            _visible = false;
             ApplyVisibility();
         }
 
         if (_visible)
         {
             RefreshUI();
-            // 삼각형 업데이트는 제외됨
         }
     }
 

@@ -129,13 +129,7 @@ public class Draggable3D : MonoBehaviour
             target = pointerRay.GetPoint(enter) + _grabOffsetWorld;
         }
 
-        // --- 축 잠금 로직 (여기서 Y를 잠그므로 물체는 바닥에 붙어있게 됨) ---
-        var cur = transform.position;
-        if (lockX) target.x = cur.x;
-        if (lockY) target.y = cur.y; // ★ 중요: 계산은 공중에서 했지만, 실제 이동은 Y축 고정
-        if (lockZ) target.z = cur.z;
-
-        // 스냅
+        // --- 스냅 (Snap) ---
         if (snapStep != Vector3.zero)
         {
             if (snapStep.x != 0) target.x = Mathf.Round(target.x / snapStep.x) * snapStep.x;
@@ -143,8 +137,20 @@ public class Draggable3D : MonoBehaviour
             if (snapStep.z != 0) target.z = Mathf.Round(target.z / snapStep.z) * snapStep.z;
         }
 
-        // 경계 제한
-        if (bounds != null) target = bounds.ClosestPoint(target);
+        // --- 경계 제한 (Bounds) 먼저 적용 ---
+        // ★ 수정됨: 축을 잠그기 전에 경계 계산을 먼저 해야, 
+        // 경계가 물체를 바닥으로 끌어내려도 뒤에서 다시 높이를 복구할 수 있습니다.
+        if (bounds != null)
+        {
+            target = bounds.ClosestPoint(target);
+        }
+
+        // --- 축 잠금 로직 (Lock) 나중에 적용 ---
+        // ★ 수정됨: Bounds 계산 후에 Lock을 적용해야 높이가 튀지 않습니다.
+        var cur = transform.position;
+        if (lockX) target.x = cur.x;
+        if (lockY) target.y = cur.y; // 여기서 높이를 강제로 원래대로 돌려놓습니다.
+        if (lockZ) target.z = cur.z;
 
         transform.position = target;
     }

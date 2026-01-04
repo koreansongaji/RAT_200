@@ -6,6 +6,17 @@ using UnityEngine.UI;
 
 public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
 {
+    // ▼ [모드 선택 기능]
+    public enum EntryMode
+    {
+        Distance,   // 기존 방식: PlayerReach 거리 내에서만 진입
+        Zone        // 구역 방식: 특정 Trigger 안에 있으면 거리 무관 진입
+    }
+
+    [Header("Entry Settings")]
+    public EntryMode entryMode = EntryMode.Distance; // 기본값은 거리
+    public Collider zoneCollider;                    // Zone 모드일 때 사용할 콜라이더 (CameraZoneTrigger 등)
+
     [Header("Cameras")]
     [SerializeField] CinemachineCamera benchCloseupCam;
     [SerializeField] CinemachineCamera microCloseupCam;
@@ -21,7 +32,6 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
     [SerializeField] bool lockPlayerWhileMicro = true;
     [SerializeField] bool showCursorWhileMicro = true;
 
-    // ★ [New] 줌 상태에서 숨길 오브젝트 리스트 (사다리 등)
     [Header("Visibility Control")]
     [Tooltip("Micro Zoom 진입 시 잠시 숨길 오브젝트들 (예: 사다리)")]
     [SerializeField] GameObject[] objectsToHide;
@@ -62,52 +72,90 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
         _researcher = FindFirstObjectByType<ResearcherController>();
     }
 
+    // ▼ [핵심] 플레이어가 Zone 안에 있는지 검사
+    public bool IsPlayerInsideZone(Vector3 playerPos)
+    {
+        // Distance 모드거나 콜라이더가 없으면 Zone 판정은 False
+        if (entryMode == EntryMode.Distance || zoneCollider == null) return false;
+
+        // ClosestPoint를 사용하여 플레이어 위치가 콜라이더 내부인지 확인
+        Vector3 closest = zoneCollider.ClosestPoint(playerPos);
+        return Vector3.Distance(playerPos, closest) < 0.05f; // 약간의 오차 허용
+    }
+
     public bool TryEnter(PlayerInteractor player)
     {
         if (_inMicro) return false;
         if (Time.unscaledTime < _blockUntil) return false;
 
-        // PlayerReach 기반 거리 체크
-        if (player != null)
-        {
-            float limitDistance = 2.0f;
-            bool horizontalOnly = true;
-
-            var reach = player.GetComponent<PlayerReach>();
-            if (reach != null)
-            {
-                limitDistance = reach.radius;
-                horizontalOnly = reach.horizontalOnly;
-            }
-
-            float currentDist;
-            if (horizontalOnly)
-            {
-                Vector3 p1 = player.transform.position;
-                Vector3 p2 = transform.position;
-                p1.y = 0; p2.y = 0;
-                currentDist = Vector3.Distance(p1, p2);
-            }
-            else
-            {
-                currentDist = Vector3.Distance(player.transform.position, transform.position);
-            }
-
-            if (currentDist > limitDistance + 0.1f)
-            {
-                Debug.Log($"[MicroZoom] 거리가 멉니다. (현재: {currentDist:F2} > 제한: {limitDistance})");
-                return false;
-            }
-        }
-
+        // 1. 연구원 상태 체크 (Busy하면 진입 불가)
         if (_researcher != null && _researcher.CurrentState != ResearcherController.State.Idle)
         {
             return false;
         }
 
+        // 2. Host 조건 체크 (퍼즐 로직상 진입 가능한지)
         if (_host != null && !_host.CanBeginMicro(player))
             return false;
 
+        // 3. 거리 vs Zone 모드에 따른 진입 판정 분기
+        bool canEnter = false;
+
+        if (entryMode == EntryMode.Zone)
+        {
+            // [Zone 모드] 플레이어가 Zone 안에 있으면 거리 무시하고 통과
+            if (player != null && IsPlayerInsideZone(player.transform.position))
+            {
+                canEnter = true;
+            }
+            else
+            {
+                Debug.Log("[MicroZoom] Zone 모드인데 플레이어가 구역 밖에 있습니다.");
+            }
+        }
+        else
+        {
+            // [Distance 모드] 기존 거리 계산 로직 유지
+            if (player != null)
+            {
+                float limitDistance = 2.0f;
+                bool horizontalOnly = true;
+
+                var reach = player.GetComponent<PlayerReach>();
+                if (reach != null)
+                {
+                    limitDistance = reach.radius;
+                    horizontalOnly = reach.horizontalOnly;
+                }
+
+                float currentDist;
+                if (horizontalOnly)
+                {
+                    Vector3 p1 = player.transform.position;
+                    Vector3 p2 = transform.position;
+                    p1.y = 0; p2.y = 0;
+                    currentDist = Vector3.Distance(p1, p2);
+                }
+                else
+                {
+                    currentDist = Vector3.Distance(player.transform.position, transform.position);
+                }
+
+                if (currentDist <= limitDistance + 0.1f)
+                {
+                    canEnter = true;
+                }
+                else
+                {
+                    Debug.Log($"[MicroZoom] 거리가 멉니다. (현재: {currentDist:F2} > 제한: {limitDistance})");
+                }
+            }
+        }
+
+        // 판정 결과 실패면 리턴
+        if (!canEnter) return false;
+
+        // 성공하면 진입 로직 실행
         EnterImpl(player);
         return true;
     }
@@ -131,7 +179,6 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
             if (col) col.enabled = false;
         }
 
-        // ★ [New] 방해되는 오브젝트 숨기기
         if (objectsToHide != null)
         {
             foreach (var obj in objectsToHide)
@@ -182,7 +229,6 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
             if (col) col.enabled = true;
         }
 
-        // ★ [New] 숨겼던 오브젝트 다시 보이기
         if (objectsToHide != null)
         {
             foreach (var obj in objectsToHide)

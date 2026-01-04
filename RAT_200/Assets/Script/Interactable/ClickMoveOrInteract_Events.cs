@@ -196,7 +196,18 @@ public class ClickMoveOrInteract_Events : MonoBehaviour
                 if (target != null)
                 {
                     bool inMicro = InMicro();
-                    float effectiveReach = inMicro ? float.PositiveInfinity : ReachRadius;
+
+                    // Zone 모드인지 확인하여 거리 무시 여부 결정
+                    bool bypassDistance = false;
+
+                    // target이 인터페이스(IInteractable)라서 MicroEntryInteractable인지 형변환 확인
+                    if (target is MicroEntryInteractable microEntry)
+                    {
+                        // "지금 Zone 안에 있어서 거리 무시해도 되나요?" 물어보기
+                        bypassDistance = microEntry.ShouldBypassDistanceCheck(agent.transform.position);
+                    }
+
+                    float effectiveReach = (inMicro || bypassDistance) ? float.PositiveInfinity : ReachRadius;
 
                     Vector3 closest = GetClosestPointOnTarget(target, agent.transform.position, out _);
                     _hasDebugClosest = true;
