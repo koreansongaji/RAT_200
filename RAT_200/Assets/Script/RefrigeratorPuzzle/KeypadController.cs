@@ -78,6 +78,8 @@ public class KeypadController : MonoBehaviour
             if (inputDisplay) inputDisplay.text = "PASS";
             PlaySound(_successClip);
 
+            InventoryUI.Instance?.ForceClose();
+
             OnCorrectPassword?.Invoke(); // �� ���⿡ �� ���� ����
         }
         else
@@ -85,6 +87,7 @@ public class KeypadController : MonoBehaviour
             // ����
             if (inputDisplay) inputDisplay.text = "ERR";
             PlaySound(_errorClip);
+            NoiseSystem.Instance.FireImpulse(0.7f);
 
             OnWrongPassword?.Invoke();
             StartCoroutine(ResetRoutine());

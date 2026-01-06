@@ -71,16 +71,27 @@ public class LabToFridgeManager : MonoBehaviour
         }
         if (bookPivot)
         {
+            // 0.5초 대기 후 책이 떨어지기 시작
             DOVirtual.DelayedCall(0.5f, () => {
+
+                // [애니메이션] 책 회전 시작 (0.8초 동안)
                 bookPivot.DOLocalRotate(bookFallRotation, 0.8f)
                     .SetRelative(true).SetEase(Ease.OutBounce)
                     .OnComplete(OnBridgeLanded);
+
+                // ★ [추가] 소리 타이밍 조절 (애니메이션 시작 0.25초 뒤에 쾅!)
+                // 0.25f 숫자를 조절해서 싱크를 맞추시면 됩니다.
+                DOVirtual.DelayedCall(0.25f, () => {
+                    AudioManager.Instance.Play(_fallSound);
+                    if (NoiseSystem.Instance) NoiseSystem.Instance.FireImpulse(noiseAmount);
+                });
             });
         }
     }
 
     void OnBridgeLanded()
     {
+        // AudioManager.Instance.Play(_fallSound);
         if (NoiseSystem.Instance) NoiseSystem.Instance.FireImpulse(noiseAmount);
         if (bridgeBlocker) bridgeBlocker.enabled = false;
         if (bookWalkableCol) bookWalkableCol.enabled = true;
@@ -139,7 +150,7 @@ public class LabToFridgeManager : MonoBehaviour
 
         // 7. �� ���� ����״� �㸦 ���� �������� ��ȯ�ؼ� ����߸�
         // (å�� ���� ��¦ ������ ������ ���� 0.05�ʸ� �� ��)
-        yield return new WaitForSeconds(0.05f);
+        yield return new WaitForSeconds(0.01f);
         DropPlayer();
 
         // 8. ���� �� ����

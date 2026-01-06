@@ -258,6 +258,8 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
 
     IEnumerator Routine_SuccessSequence()
     {
+        InventoryUI.Instance?.ForceClose();
+
         _isSuccessSequence = true;
         SetButtonsState(false);
         if (panel) panel.enabled = false;

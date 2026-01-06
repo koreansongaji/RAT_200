@@ -68,8 +68,6 @@ public class TitlePage : MonoBehaviour
         // 시작할 때는 서브 메뉴 닫힘 상태
         _isSubMenuOpen = false;
 
-        yield return null;
-
         SlideInTitlePage();
         if (_optionPage) _optionPage.SlideOutOptionPage();
         if (_howToPlayPage) _howToPlayPage.SlideOut();

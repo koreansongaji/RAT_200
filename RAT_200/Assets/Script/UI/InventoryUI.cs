@@ -10,6 +10,8 @@ using Unity.VisualScripting;
 /// </summary>
 public class InventoryUI : MonoBehaviour
 {
+    public static InventoryUI Instance { get; private set; }
+
     [Header("Refs")]
     [SerializeField] PlayerInteractor player;
     
@@ -85,6 +87,8 @@ public class InventoryUI : MonoBehaviour
 
     void Awake()
     {
+        if (Instance == null) Instance = this;
+
         // 소리 로드
         if (_inventoryopenSound == null) _inventoryopenSound = Resources.Load<AudioClip>("Sounds/Effect/Rat/inventory_open");
         if (_inventorycloseSound == null) _inventorycloseSound = Resources.Load<AudioClip>("Sounds/Effect/Rat/inventory_close");
@@ -250,6 +254,11 @@ public class InventoryUI : MonoBehaviour
         else
         {
             // [CLOSE]
+            if (inspectorUI != null && inspectorUI.IsOpen)
+            {
+                inspectorUI.CloseInspector();
+            }
+
             AudioManager.Instance.Play(_inventorycloseSound);
             
             if (canvasGroup != null)
@@ -367,6 +376,15 @@ public class InventoryUI : MonoBehaviour
         if (inspectorUI != null)
         {
             inspectorUI.OpenInspector(data);
+        }
+    }
+
+    public void ForceClose()
+    {
+        if (_visible)
+        {
+            _visible = false;
+            ApplyVisibility();
         }
     }
 }
