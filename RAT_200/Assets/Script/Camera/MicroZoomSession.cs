@@ -54,6 +54,8 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
     IMicroSessionHost _host;
     private ResearcherController _researcher;
 
+    private bool _isExitLocked = false;
+
     void Awake()
     {
         if (microCloseupCam) microCloseupCam.Priority = CloseupCamManager.MicroOff;
@@ -70,6 +72,13 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
         }
 
         _researcher = FindFirstObjectByType<ResearcherController>();
+    }
+
+    public void SetExitLocked(bool locked)
+    {
+        _isExitLocked = locked;
+        // UI 버튼(closeButton)도 잠금 상태에 따라 비활성화하면 좋습니다.
+        if (closeButton) closeButton.interactable = !locked;
     }
 
     // ▼ [핵심] 플레이어가 Zone 안에 있는지 검사
@@ -195,6 +204,7 @@ public class MicroZoomSession : MonoBehaviour, IZoomStateProvider
 
     public void Exit()
     {
+        if (_isExitLocked) return;
         if (!_inMicro) return;
         ExitImpl();
         _blockUntil = Time.unscaledTime + reenterBlockSec;
