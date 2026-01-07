@@ -29,18 +29,26 @@ public class OptionPage : MonoBehaviour
             return;
         }
         transform.position = _slideOutPosition.position;
-
-        if (_masterVolumeSlider != null) _masterVolumeSlider.onValueChanged.AddListener(OnMasterVolumeChange);
-        if (_bgmVolumeSlider != null) _bgmVolumeSlider.onValueChanged.AddListener(OnBgmVolumeChange);
-        if (_effectVolumeSlider != null) _effectVolumeSlider.onValueChanged.AddListener(OnEffectVolumeChange);
     }
 
     private void Start()
     {
-        // (기존 코드 동일)
-        if (_masterVolumeSlider != null) _masterVolumeSlider.value = OptionManager.Instance.OptionData.MastersoundVolume;
-        if (_bgmVolumeSlider != null) _bgmVolumeSlider.value = OptionManager.Instance.OptionData.BGMsoundVolume;
-        if (_effectVolumeSlider != null) _effectVolumeSlider.value = OptionManager.Instance.OptionData.EffectsoundVolume;
+        // 슬라이더 초기값 설정 (콜백이 호출되지 않도록)
+        if (_masterVolumeSlider != null)
+        {
+            _masterVolumeSlider.value = OptionManager.Instance.OptionData.MastersoundVolume;
+            _masterVolumeSlider.onValueChanged.AddListener(OnMasterVolumeChange);
+        }
+        if (_bgmVolumeSlider != null)
+        {
+            _bgmVolumeSlider.value = OptionManager.Instance.OptionData.BGMsoundVolume;
+            _bgmVolumeSlider.onValueChanged.AddListener(OnBgmVolumeChange);
+        }
+        if (_effectVolumeSlider != null)
+        {
+            _effectVolumeSlider.value = OptionManager.Instance.OptionData.EffectsoundVolume;
+            _effectVolumeSlider.onValueChanged.AddListener(OnEffectVolumeChange);
+        }
     }
 
     // ★ [추가] 옵션 창이 켜져있을 때 ESC 처리
