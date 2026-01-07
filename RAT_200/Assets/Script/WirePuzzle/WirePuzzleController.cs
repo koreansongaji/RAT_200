@@ -232,6 +232,8 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
 
     IEnumerator Routine_SuccessSequence()
     {
+        InventoryUI.Instance?.ForceClose();
+
         _isAnimating = true;
         SetButtonsInteractable(false);
         if (worldCanvas) worldCanvas.enabled = false;

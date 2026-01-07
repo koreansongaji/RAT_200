@@ -40,6 +40,10 @@ public class ResearcherController : MonoBehaviour
     public Vector2 scanAreaSize = new Vector2(8f, 8f);
     public float scanMoveSpeed = 3f;
 
+    [Header("Sprite")]
+    public SimpleColorChanger sprite1;
+    public SimpleColorChanger sprite2;
+
     [Header("Game Over Event")]
     public UnityEvent OnGameOver;
 
@@ -294,5 +298,7 @@ public class ResearcherController : MonoBehaviour
         roomMainLight.enabled = false;
         yield return new WaitForSeconds(0.1f);
         roomMainLight.enabled = true;
+        if (sprite1) sprite1.ChangeToNormal();
+        if (sprite2) sprite2.ChangeToNormal();
     }
 }

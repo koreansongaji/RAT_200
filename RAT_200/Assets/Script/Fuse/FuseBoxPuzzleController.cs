@@ -11,6 +11,7 @@ public class FuseBoxPuzzleController : BaseInteractable, IMicroSessionHost, IMic
 
     [Tooltip("연출용: 위에서 아래로 툭 떨어질 가짜 환풍구 덮개 (Rigidbody 필수)")]
     public GameObject fallingVentProp;
+    public GameObject disappearVentProp;
 
     [Header("Visuals")]
     [Tooltip("스파크 파티클들 (여러 개 연결 가능, 처음엔 켜져 있음)")]
@@ -85,6 +86,9 @@ public class FuseBoxPuzzleController : BaseInteractable, IMicroSessionHost, IMic
     public void SolvePuzzle()
     {
         if (_isSolved) return;
+
+        InventoryUI.Instance?.ForceClose();
+
         _isSolved = true;
 
         StartCoroutine(Routine_Success());
@@ -107,14 +111,16 @@ public class FuseBoxPuzzleController : BaseInteractable, IMicroSessionHost, IMic
         // 3. 퓨즈 끼우는 소리 (찰칵/전기음)
         CommonSoundController.Instance?.PlaySpark();
 
+        yield return new WaitForSeconds(0.2f);
 
         // 6. 줌 아웃 (자동 Exit)
         if (_micro) _micro.Exit();
 
         // --- ★ [핵심] 환풍구 덮개 낙하 연출 ---
-        if (fallingVentProp)
+        if (fallingVentProp && disappearVentProp)
         {
             fallingVentProp.SetActive(true); // 활성화되면서 중력에 의해 떨어짐
+            disappearVentProp.SetActive(false);
             
             // 만약 약간 튕겨나가게 하고 싶다면 힘을 추가
             Rigidbody rb = fallingVentProp.GetComponent<Rigidbody>();

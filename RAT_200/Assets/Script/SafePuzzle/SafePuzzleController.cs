@@ -147,6 +147,8 @@ public class SafePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
 
     void OpenDoor()
     {
+        InventoryUI.Instance?.ForceClose();
+
         _isSolved = true;
         SetStatus("OPEN");
 
@@ -176,6 +178,7 @@ public class SafePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         statusText.alpha = 1f;
         statusText.text = "FAIL";
         statusText.DOFade(0.2f, failBlinkSec * 0.5f).SetLoops(2, LoopType.Yoyo);
+        NoiseSystem.Instance.FireImpulse(0.7f);
     }
 
     void SetStatus(string msg)

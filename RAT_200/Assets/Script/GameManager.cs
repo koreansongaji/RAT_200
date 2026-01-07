@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// 이 스크립트는 프로젝트 설정의 Script Execution Order에서 가장 먼저 실행되도록 설정하면 좋습니다.
+[DefaultExecutionOrder(-200)]
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
