@@ -24,6 +24,8 @@ public class TitlePage : MonoBehaviour
     private bool _isTransitioning;
     private bool _isPageHidden;
 
+    public bool IsMenuOpen => !_isPageHidden;
+
     // ★ [수정] 서브 메뉴(옵션, 설명)가 열려있는지 체크하는 플래그
     private bool _isSubMenuOpen = false;
 

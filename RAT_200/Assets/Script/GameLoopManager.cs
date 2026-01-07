@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.AI;
 
 public class GameLoopManager : MonoBehaviour
 {
@@ -83,17 +84,56 @@ public class GameLoopManager : MonoBehaviour
     {
         StartCoroutine(Routine_DeathSequence(victim));
     }
+    void FreezeVictim(GameObject victim)
+    {
+        if (!victim) return;
+
+        // 1. 플레이어 조작 스크립트 끄기 (PlayerInteractor, RatInput 등)
+        var scripts = victim.GetComponents<MonoBehaviour>();
+        foreach (var script in scripts)
+        {
+            // 필수 컴포넌트는 끄지 않도록 이름으로 필터링 (필요 시 수정)
+            if (script.GetType().Name.Contains("Input") ||
+                script.GetType().Name.Contains("Controller") ||
+                script.GetType().Name.Contains("Interactor"))
+            {
+                script.enabled = false;
+            }
+        }
+
+        // 2. 물리(Rigidbody) 정지 - 플레이어용
+        var rb = victim.GetComponent<Rigidbody>();
+        if (rb)
+        {
+            // Unity 6: rb.linearVelocity = Vector3.zero;
+            // Unity 2022 이하: rb.velocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true; // 물리 영향 받지 않게 고정
+        }
+
+        // 3. 네비게이션(NavMeshAgent) 정지 - 동료 NPC용
+        var agent = victim.GetComponent<NavMeshAgent>();
+        if (agent && agent.isActiveAndEnabled)
+        {
+            agent.isStopped = true;
+            agent.velocity = Vector3.zero;
+            agent.enabled = false; // 아예 꺼버려서 밀리지 않게 함
+        }
+
+        // 4. 애니메이션 정지 (공포에 질려 굳은 연출)
+        var anim = victim.GetComponent<Animator>();
+        if (anim)
+        {
+            anim.speed = 0f; // 애니메이션 일시정지
+        }
+    }
 
     IEnumerator Routine_DeathSequence(GameObject victim)
     {
         Debug.Log($"Death Sequence Start: {victim.name}");
 
-        // 0. 플레이어 조작 차단
-        if (victim == playerObject)
-        {
-            var pi = victim.GetComponent<PlayerInteractor>();
-            if (pi) pi.enabled = false;
-        }
+        FreezeVictim(victim);
 
         // 1. 숨소리/바람소리
         if (suspenseBreathClip)
