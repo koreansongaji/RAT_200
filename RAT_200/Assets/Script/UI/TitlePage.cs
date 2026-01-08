@@ -75,7 +75,7 @@ public class TitlePage : MonoBehaviour
         if (_howToPlayPage) _howToPlayPage.SlideOut();
 
         if (_titleBGM == null) _titleBGM = Resources.Load<AudioClip>("Sounds/BGM/bgm_title");
-        AudioManager.Instance.Play(_titleBGM, AudioManager.Sound.BGM);
+        AudioManager.Instance.PlayBgmWithFade(_titleBGM, 1.0f, 1.0f);
     }
 
     private void Update()

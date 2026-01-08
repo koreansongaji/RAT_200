@@ -6,10 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="9a50adee-ec7a-4782-bb48-036fabc44743" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.RAT_200/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RAT_200/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/MainScene 2.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/MainScene 2.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/LabBenchPuzzle/LabToFridgeManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/LabBenchPuzzle/LabToFridgeManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/SoundPlay/ResearcherSoundController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/SoundPlay/ResearcherSoundController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Shader/Settings/PC_Renderer.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shader/Settings/PC_Renderer.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Sounds/Main.mixer" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Sounds/Main.mixer" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/MainScene 1.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/MainScene 1.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/Manager/AudioManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Manager/AudioManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/SoundPlay/BgmController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/SoundPlay/BgmController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/SoundPlay/RatSoundController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/SoundPlay/RatSoundController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/UI/OptionPage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/UI/OptionPage.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/UI/TitlePage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/UI/TitlePage.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,6 +83,10 @@
     <setting file="file://$PROJECT_DIR$/Packages/com.unity.render-pipelines.universal@63585d5be1b1/Runtime/UniversalRenderPipeline.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Packages/com.unity.render-pipelines.universal@63585d5be1b1/ShaderLibrary/RealtimeLights.hlsl" root0="FORCE_HIGHLIGHTING" />
   </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -91,25 +98,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "feature/sound",
-    "junie.onboarding.icon.badge.shown": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/sound&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecapUselessUpdatesCounter">
+    <option name="suspendCountdown" value="0" />
+  </component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Standalone Player" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="$USER_HOME$/Documents/SongHeeJun/Work/Pandora_Cube/Main Project/Team Shorts/R.A.T#200/202601031205\RAT_200.exe" />
@@ -122,7 +133,7 @@
       <method v="2" />
     </configuration>
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.0.53f1\Editor\Unity.exe" />
+      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.0.58f2\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-projectPath C:\Users\korea\notebook_Work\GitHub\RAT_200\RAT_200 -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="C:\Users\korea\notebook_Work\GitHub\RAT_200\RAT_200" />
       <option name="PASS_PARENT_ENVS" value="1" />
@@ -132,7 +143,7 @@
       <method v="2" />
     </configuration>
     <configuration name="Unit Tests (batch mode)" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.0.53f1\Editor\Unity.exe" />
+      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.0.58f2\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-runTests -batchmode -projectPath C:\Users\korea\notebook_Work\GitHub\RAT_200\RAT_200 -testResults Logs/results.xml -logFile Logs/Editor.log -testPlatform EditMode -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="C:\Users\korea\notebook_Work\GitHub\RAT_200\RAT_200" />
       <option name="PASS_PARENT_ENVS" value="1" />
@@ -141,7 +152,7 @@
       <option name="MIXED_MODE_DEBUG" value="0" />
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor &amp; Play" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="UNITY_ATTACH_AND_PLAY" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+    <configuration name="Attach to Unity Editor &amp; Play" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="UNITY_ATTACH_AND_PLAY" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" useMixedMode="false">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
       <option name="pid" />
@@ -152,10 +163,9 @@
       <option name="selectedOptions">
         <list />
       </option>
-      <option name="useMixedMode" value="false" />
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" useMixedMode="false">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
       <option name="pid" />
@@ -166,7 +176,6 @@
       <option name="selectedOptions">
         <list />
       </option>
-      <option name="useMixedMode" value="false" />
       <method v="2" />
     </configuration>
     <configuration name="Attach to" type="UnityDevicePlayer" factoryName="UnityAttachToDevicePlayer">
@@ -215,6 +224,8 @@
       <workItem from="1767268034414" duration="211000" />
       <workItem from="1767294443783" duration="322000" />
       <workItem from="1767367193702" duration="2057000" />
+      <workItem from="1767801613791" duration="9235000" />
+      <workItem from="1767814575794" duration="2342000" />
     </task>
     <servers />
   </component>

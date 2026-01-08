@@ -25,7 +25,7 @@ public class RatSoundController : MonoBehaviour
     private Vector3 _lastPos;
     private float _distAccum;
     [SerializeField] private float _stepDist = 0.6f; // 기존 거리 로직은 사용하지 않음
-    [SerializeField] private float _runSpeedThreshold = 4f; 
+    [SerializeField] private float _runSpeedThreshold = 2f; 
 
 
     private void Awake()
