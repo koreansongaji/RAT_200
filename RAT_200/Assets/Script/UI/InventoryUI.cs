@@ -14,7 +14,8 @@ public class InventoryUI : MonoBehaviour
 
     [Header("Refs")]
     [SerializeField] PlayerInteractor player;
-    
+    private TitlePage _titlePage;
+
     // (변경) 두 개의 RectTransform으로 분리
     [SerializeField] RectTransform backgroundRect; // 배경 이미지
     [SerializeField] RectTransform slotPanelRect;  // 슬롯들이 담긴 패널
@@ -124,6 +125,8 @@ public class InventoryUI : MonoBehaviour
 
         if (_visible) RefreshUI();
 
+        _titlePage = FindFirstObjectByType<TitlePage>();
+
         // 삼각형 관련 초기화는 제외되었습니다.
     }
 
@@ -134,6 +137,8 @@ public class InventoryUI : MonoBehaviour
         {
             // 상세창이 열려있으면 인벤토리 토글 막기 (선택사항, UX 취향)
             if (inspectorUI != null && inspectorUI.IsOpen) return;
+
+            if (_titlePage != null && _titlePage.IsMenuOpen) return;
 
             _visible = !_visible;
             ApplyVisibility();

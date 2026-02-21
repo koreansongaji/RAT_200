@@ -13110,6 +13110,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: AudioManager
       objectReference: {fileID: 0}
+    - target: {fileID: 9004814914868589935, guid: 40337044cac305343a1385a8a547397a, type: 3}
+      propertyPath: audioMixer
+      value: 
+      objectReference: {fileID: 24100000, guid: 40f8134001277194b8b09fce25547218, type: 2}
+    - target: {fileID: 9004814914868589935, guid: 40337044cac305343a1385a8a547397a, type: 3}
+      propertyPath: UseAudioMixer
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -38709,7 +38717,7 @@ MonoBehaviour:
   _refreshAudioClips: 0
   _agent: {fileID: 2058422726}
   _stepDist: 0.6
-  _runSpeedThreshold: 4
+  _runSpeedThreshold: 2
 --- !u!1 &2059398700 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4711863480243290343, guid: 96a82d8ab2d6a474ca3f56629e2da434, type: 3}
