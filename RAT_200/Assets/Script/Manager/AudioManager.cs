@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Audio;
 using System.Collections.Generic;
 
@@ -39,7 +39,7 @@ public class AudioManager : Singleton<AudioManager>
     {
         // Singleton 기반 초기화
         base.Awake();  // Singleton<T> 기반일 경우 호출
-
+        if (Instance && Instance != this) { Destroy(this); return; }
         // AudioMixer 그룹 캐싱
         if (audioMixer != null && UseAudioMixer)
         {

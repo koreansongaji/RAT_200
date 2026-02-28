@@ -1,21 +1,22 @@
-using UnityEngine;
-using DG.Tweening; // ½ºÀ§Ä¡ ¾Ö´Ï¸ÞÀÌ¼Ç¿ë
+ï»¿using UnityEngine;
+using DG.Tweening; // ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼Ç¿ï¿½
 
 public class SwitchInteractable : BaseInteractable
 {
     [Header("Target Lights (GameObjects)")]
-    [Tooltip("°ÔÀÓ ½ÃÀÛ ½Ã ÄÑÁ®ÀÖÀ» ÀÛÀº Á¶¸í")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")]
     [SerializeField] private GameObject smallLight;
+    [SerializeField] private GameObject smallLight_switch;
 
-    [Tooltip("½ºÀ§Ä¡¸¦ ´©¸£¸é ÄÑÁú Å« Á¶¸í")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å« ï¿½ï¿½ï¿½ï¿½")]
     [SerializeField] private GameObject bigLight;
 
     [Header("Switch Visuals (Optional)")]
-    [Tooltip("¿òÁ÷ÀÏ ½ºÀ§Ä¡ ·¹¹ö/¹öÆ° ¸ðµ¨")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½Æ° ï¿½ï¿½")]
     [SerializeField] private Transform switchModel;
-    [Tooltip("ÄÑÁ³À» ¶§ÀÇ È¸Àü °ª (Big Light ON)")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ (Big Light ON)")]
     [SerializeField] private Vector3 onRotation = new Vector3(45, 0, 0);
-    [Tooltip("²¨Á³À» ¶§ÀÇ È¸Àü °ª (Small Light ON)")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ (Small Light ON)")]
     [SerializeField] private Vector3 offRotation = new Vector3(-45, 0, 0);
     [SerializeField] private float animDuration = 0.3f;
 
@@ -23,20 +24,20 @@ public class SwitchInteractable : BaseInteractable
     [SerializeField] private AudioClip switchSound;
 
     [Header("Settings")]
-    [Tooltip("Ã¼Å©ÇÏ¸é ÇÑ ¹ø ÄÑÁø µÚ¿¡´Â ´Ù½Ã ²ø ¼ö ¾øÀ½")]
+    [Tooltip("Ã¼Å©ï¿½Ï¸ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ú¿ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")]
     [SerializeField] private bool oneTime = false;
 
-    // ÇöÀç »óÅÂ (false: Small On / true: Big On)
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (false: Small On / true: Big On)
     private bool _isBigLightOn = false;
     private bool _isAnimating = false;
 
     private void Start()
     {
-        // 1. ½ÃÀÛ ½Ã Á¶¸í »óÅÂ ÃÊ±âÈ­
-        // _isBigLightOnÀÌ falseÀÌ¹Ç·Î -> Small: ON, Big: OFF
+        // 1. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
+        // _isBigLightOnï¿½ï¿½ falseï¿½Ì¹Ç·ï¿½ -> Small: ON, Big: OFF
         UpdateLightsState();
 
-        // 2. ½ºÀ§Ä¡ ¸ðµ¨ °¢µµ ÃÊ±âÈ­
+        // 2. ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         if (switchModel)
         {
             switchModel.localEulerAngles = _isBigLightOn ? onRotation : offRotation;
@@ -47,7 +48,7 @@ public class SwitchInteractable : BaseInteractable
     {
         if (_isAnimating) return false;
 
-        // ÀÏÈ¸¿ëÀÎµ¥ ÀÌ¹Ì Ä×´Ù¸é »óÈ£ÀÛ¿ë ºÒ°¡
+        // ï¿½ï¿½È¸ï¿½ï¿½ï¿½Îµï¿½ ï¿½Ì¹ï¿½ ï¿½×´Ù¸ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½Ò°ï¿½
         if (oneTime && _isBigLightOn) return false;
 
         return base.CanInteract(i);
@@ -58,17 +59,17 @@ public class SwitchInteractable : BaseInteractable
         Debug.Log("Switch Interaction");
         if (!CanInteract(i)) return;
 
-        // »óÅÂ Åä±Û (ON <-> OFF)
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ (ON <-> OFF)
         _isBigLightOn = !_isBigLightOn;
         _isAnimating = true;
 
-        // 1. ¼Ò¸® Àç»ý
+        // 1. ï¿½Ò¸ï¿½ ï¿½ï¿½ï¿½
         if (switchSound)
         {
             AudioManager.Instance.Play(switchSound, AudioManager.Sound.Effect);
         }
 
-        // 2. ½ºÀ§Ä¡ ¾Ö´Ï¸ÞÀÌ¼Ç
+        // 2. ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½
         if (switchModel)
         {
             Vector3 targetRot = _isBigLightOn ? onRotation : offRotation;
@@ -81,14 +82,18 @@ public class SwitchInteractable : BaseInteractable
             _isAnimating = false;
         }
 
-        // 3. Á¶¸í »óÅÂ Àû¿ë
+        // 3. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         UpdateLightsState();
     }
 
     private void UpdateLightsState()
     {
-        // Big Light°¡ ÄÑÁ®¾ß ÇÏ¸é SmallÀº ²ô°í, ¹Ý´ë¸é SmallÀ» ÄÔ
-        if (smallLight) smallLight.SetActive(!_isBigLightOn);
+        // Big Lightï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï¸ï¿½ Smallï¿½ï¿½ ï¿½ï¿½ï¿½, ï¿½Ý´ï¿½ï¿½ Smallï¿½ï¿½ ï¿½ï¿½
+        if (smallLight)
+        {
+            smallLight.SetActive(!_isBigLightOn);
+            smallLight_switch.SetActive(!_isBigLightOn);
+        }
         if (bigLight) bigLight.SetActive(_isBigLightOn);
     }
 }
