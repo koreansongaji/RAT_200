@@ -81,6 +81,9 @@ public class KeypadController : MonoBehaviour
             InventoryUI.Instance?.ForceClose();
 
             OnCorrectPassword?.Invoke(); // �� ���⿡ �� ���� ����
+            
+            // Steam achievement: Cold Open
+            SteamAchievementManager.UnlockAchievement(SteamAchievementIds.ColdOpen);
         }
         else
         {

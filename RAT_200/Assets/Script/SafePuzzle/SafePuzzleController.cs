@@ -163,6 +163,9 @@ public class SafePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         if (dispenser) dispenser.Dispense();
 
         Invoke(nameof(ExitMicro), 0.5f);
+        
+        // Steam achievement: Safe Cracker
+        SteamAchievementManager.UnlockAchievement(SteamAchievementIds.SafeCracker);
     }
 
     void ExitMicro()

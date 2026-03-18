@@ -8,37 +8,37 @@ using UnityEngine.SceneManagement;
 public class EndingVentInteractable : BaseInteractable
 {
     [Header("Ending Settings")]
-    [Tooltip("¿£µù ½Ã È°¼ºÈ­µÉ ¹æ ÀüÃ¼¸¦ ºñÃß´Â ¿ÍÀÌµå Ä«¸Þ¶ó")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ß´ï¿½ ï¿½ï¿½ï¿½Ìµï¿½ Ä«ï¿½Þ¶ï¿½")]
     public CinemachineCamera roomWideCamera;
-    [Tooltip("Ä«¸Þ¶ó°¡ ¿ÏÀüÈ÷ ÀüÈ¯µÇ´Â µ¥ °É¸®´Â ½Ã°£")]
+    [Tooltip("Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ç´ï¿½ ï¿½ï¿½ ï¿½É¸ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½")]
     public float cameraTransitionDelay = 2.0f;
 
     [Header("Audio Assets")]
-    [Tooltip("º¥Æ® Å¬¸¯ ½Ã ½ÃÀÛµÉ ¿£µù BGM")]
+    [Tooltip("ï¿½ï¿½Æ® Å¬ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ûµï¿½ ï¿½ï¿½ï¿½ï¿½ BGM")]
     public AudioClip endingBgm;
-    [Tooltip("ÄÃ·¯ ÀÌ¹ÌÁö°¡ ³ª¿Ã ¶§ Àç»ýµÉ È¿°úÀ½")]
+    [Tooltip("ï¿½Ã·ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ï¿½ï¿½")]
     public AudioClip endingSfx;
 
     [Header("UI References (Canvas Groups)")]
-    [Tooltip("¼ø¼­´ë·Î º¸¿©ÁÙ ÄÃ·¯ ÀÌ¹ÌÁöµé (ÃÑ 4°³ ¿¬°á: 1, 2, 3, 4¹ø ¼ø¼­)")]
-    public CanvasGroup[] endingImages; // ¡Ú ¹è¿­·Î º¯°æµÊ
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ 4ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: 1, 2, 3, 4ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)")]
+    public CanvasGroup[] endingImages; // ï¿½ï¿½ ï¿½è¿­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 
-    public CanvasGroup whiteCurtainGroup;   // Èò»ö ¹è°æ
-    public CanvasGroup creditsGroup;        // Credits ÅØ½ºÆ®
-    public CanvasGroup thankYouGroup;       // Thank You ÅØ½ºÆ®
-    public CanvasGroup blackCurtainGroup;   // ¸¶Áö¸· ¾ÏÀü
+    public CanvasGroup whiteCurtainGroup;   // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+    public CanvasGroup creditsGroup;        // Credits ï¿½Ø½ï¿½Æ®
+    public CanvasGroup thankYouGroup;       // Thank You ï¿½Ø½ï¿½Æ®
+    public CanvasGroup blackCurtainGroup;   // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     [Header("Timing Settings")]
-    [Tooltip("°¢ ÀÌ¹ÌÁö°¡ ÆäÀÌµå ÀÎ µÇ´Â ½Ã°£")]
+    [Tooltip("ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ï¿½ ï¿½Ç´ï¿½ ï¿½Ã°ï¿½")]
     public float overlayFadeDuration = 2.0f;
 
-    [Tooltip("´ÙÀ½ ÀÌ¹ÌÁö°¡ ³ª¿À±â Àü±îÁö ´ë±âÇÏ´Â ½Ã°£")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ã°ï¿½")]
     public float imageInterval = 2.0f;
 
-    [Tooltip("4¹øÂ° ÀÌ¹ÌÁö°¡ ±ôºý! ÇÏ°í º¸ÀÌ´Â ÂªÀº ½Ã°£")]
+    [Tooltip("4ï¿½ï¿½Â° ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½! ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½Ì´ï¿½ Âªï¿½ï¿½ ï¿½Ã°ï¿½")]
     public float flashDuration = 0.15f;
 
-    [Tooltip("3¹øÂ° ÀÌ¹ÌÁö°¡ ´Ù½Ã º¸ÀÎ ÈÄ Èò»ö Ä¿Æ° Àü±îÁö À¯Áö ½Ã°£")]
+    [Tooltip("3ï¿½ï¿½Â° ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ Ä¿Æ° ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½")]
     public float finalImageHoldDuration = 3.0f;
 
     public float whiteFadeDuration = 2.0f;
@@ -56,7 +56,7 @@ public class EndingVentInteractable : BaseInteractable
 
     void Start()
     {
-        // ÀÌ¹ÌÁö ¹è¿­ ÃÊ±âÈ­
+        // ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½è¿­ ï¿½Ê±ï¿½È­
         if (endingImages != null)
         {
             foreach (var img in endingImages) InitCanvasGroup(img);
@@ -107,7 +107,10 @@ public class EndingVentInteractable : BaseInteractable
     {
         _isEndingStarted = true;
 
-        // 1. Ä«¸Þ¶ó ÀüÈ¯ & BGM
+        // Steam achievement: Escape The Lab
+        SteamAchievementManager.UnlockAchievement(SteamAchievementIds.EscapeTheLab);
+        
+        // 1. Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½È¯ & BGM
         if (playerObj) playerObj.SetActive(false);
         if (roomWideCamera) roomWideCamera.Priority = 999;
 
@@ -118,14 +121,14 @@ public class EndingVentInteractable : BaseInteractable
 
         yield return new WaitForSeconds(cameraTransitionDelay);
 
-        // 2. SFX Àç»ý
+        // 2. SFX ï¿½ï¿½ï¿½
         if (AudioManager.Instance && endingSfx)
         {
             AudioManager.Instance.Play(endingSfx, AudioManager.Sound.Effect);
         }
 
-        // 3. ÀÌ¹ÌÁö ¿¬Ãâ (1 -> 2 -> 3 -> 4(Flash) -> 3)
-        // ¾ÈÀü ÀåÄ¡: ¹è¿­ÀÌ ºñ¾îÀÖÀ¸¸é ÆÐ½º
+        // 3. ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (1 -> 2 -> 3 -> 4(Flash) -> 3)
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡: ï¿½è¿­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ð½ï¿½
         if (endingImages != null && endingImages.Length >= 4)
         {
             // [Image 1] Fade In
@@ -133,43 +136,43 @@ public class EndingVentInteractable : BaseInteractable
             yield return endingImages[0].DOFade(1f, overlayFadeDuration).WaitForCompletion();
             yield return new WaitForSeconds(imageInterval);
 
-            // [Image 2] Fade In (1¹ø À§¿¡ µ¤¾î¾¸)
+            // [Image 2] Fade In (1ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½î¾¸)
             endingImages[1].gameObject.SetActive(true);
             yield return endingImages[1].DOFade(1f, overlayFadeDuration).WaitForCompletion();
             yield return new WaitForSeconds(imageInterval);
 
-            // [Image 3] Fade In (2¹ø À§¿¡ µ¤¾î¾¸)
+            // [Image 3] Fade In (2ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½î¾¸)
             endingImages[2].gameObject.SetActive(true);
             yield return endingImages[2].DOFade(1f, overlayFadeDuration).WaitForCompletion();
             yield return new WaitForSeconds(imageInterval);
 
-            // [Image 4] Flash! (3¹ø À§¿¡ ±ôºý)
+            // [Image 4] Flash! (3ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
             endingImages[3].gameObject.SetActive(true);
-            endingImages[3].alpha = 1f; // ÆäÀÌµå ¾øÀÌ Áï½Ã µîÀå
+            endingImages[3].alpha = 1f; // ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-            // ±ôºýÀÌ´Â Âû³ªÀÇ ½Ã°£ ´ë±â
+            // ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½
             yield return new WaitForSeconds(flashDuration);
 
-            // 4¹ø ²ô±â -> 3¹øÀÌ ´Ù½Ã º¸ÀÓ
+            // 4ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ -> 3ï¿½ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½
             endingImages[3].gameObject.SetActive(false);
 
-            // 3¹ø ÀÌ¹ÌÁö °¨»ó ½Ã°£
+            // 3ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½
             yield return new WaitForSeconds(finalImageHoldDuration);
         }
         else
         {
-            Debug.LogWarning("[Ending] ÀÌ¹ÌÁö ¹è¿­ÀÌ 4°³ ¹Ì¸¸ÀÔ´Ï´Ù! ÀÎ½ºÆåÅÍ¸¦ È®ÀÎÇÏ¼¼¿ä.");
+            Debug.LogWarning("[Ending] ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½è¿­ï¿½ï¿½ 4ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½Ô´Ï´ï¿½! ï¿½Î½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ È®ï¿½ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½.");
             yield return new WaitForSeconds(2.0f);
         }
 
-        // 4. È­ÀÌÆ® Ä¿Æ° (µ¤±â)
+        // 4. È­ï¿½ï¿½Æ® Ä¿Æ° (ï¿½ï¿½ï¿½ï¿½)
         if (whiteCurtainGroup)
         {
             whiteCurtainGroup.gameObject.SetActive(true);
             yield return whiteCurtainGroup.DOFade(1f, whiteFadeDuration).WaitForCompletion();
         }
 
-        // µÚÂÊ ÀÌ¹ÌÁöµé ¸ðµÎ Á¤¸® (ÃÖÀûÈ­)
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½È­)
         if (endingImages != null)
         {
             foreach (var img in endingImages) if (img) img.gameObject.SetActive(false);
@@ -195,14 +198,14 @@ public class EndingVentInteractable : BaseInteractable
             thankYouGroup.gameObject.SetActive(false);
         }
 
-        // 7. Black Curtain (¾ÏÀü)
+        // 7. Black Curtain (ï¿½ï¿½ï¿½ï¿½)
         if (blackCurtainGroup)
         {
             blackCurtainGroup.gameObject.SetActive(true);
             yield return blackCurtainGroup.DOFade(1f, finalBlackFadeDuration).WaitForCompletion();
         }
 
-        // 8. Á¾·á ¹× ¸®·Îµå
+        // 8. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Îµï¿½
         if (AudioManager.Instance) AudioManager.Instance.KillAllSounds();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }

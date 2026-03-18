@@ -261,6 +261,9 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
             CancelSession();
         }
         _isAnimating = false;
+        
+        // Steam achievement: Crispy Rat
+        SteamAchievementManager.UnlockAchievement(SteamAchievementIds.CrispyRat);
     }
 
     void SnapAll()

@@ -294,6 +294,9 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         if (rewardCardObj) rewardCardObj.SetActive(true);
 
         _isSuccessSequence = false;
+        
+        // Steam achievement: Successful Experiment
+        SteamAchievementManager.UnlockAchievement(SteamAchievementIds.SuccessfulExperiment);
     }
 
     public void BeginSessionFromExternal() => StartSession(null);

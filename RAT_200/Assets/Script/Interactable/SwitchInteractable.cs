@@ -84,6 +84,9 @@ public class SwitchInteractable : BaseInteractable
 
         // 3. ���� ���� ����
         UpdateLightsState();
+        
+        // Steam achievement: A Great Beginning
+        SteamAchievementManager.UnlockAchievement(SteamAchievementIds.AGreatBeginning);
     }
 
     private void UpdateLightsState()
