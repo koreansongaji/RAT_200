@@ -294,6 +294,9 @@ public class ChemMixingStation : BaseInteractable, IMicroSessionHost, IMicroHide
         if (rewardCardObj) rewardCardObj.SetActive(true);
 
         _isSuccessSequence = false;
+        
+        // Achievement Clear: SuccessfulExperiment
+        StoveAchievementManager.UnlockByStat(StoveAchievementStatIds.SuccessfulExperiment);
     }
 
     public void BeginSessionFromExternal() => StartSession(null);

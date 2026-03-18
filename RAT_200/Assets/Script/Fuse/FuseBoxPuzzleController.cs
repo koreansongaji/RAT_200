@@ -6,28 +6,28 @@ using Unity.Cinemachine;
 public class FuseBoxPuzzleController : BaseInteractable, IMicroSessionHost, IMicroHidePlayerPreference
 {
     [Header("Puzzle Target (Vent)")]
-    [Tooltip("ÆÛÁñ ÇØ°á ÈÄ »óÈ£ÀÛ¿ëÀÌ °¡´ÉÇØÁú ÁøÂ¥ È¯Ç³±¸ ¿ÀºêÁ§Æ® (ÃÊ±â¿£ Default ·¹ÀÌ¾î)")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ ï¿½Ø°ï¿½ ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Â¥ È¯Ç³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® (ï¿½Ê±â¿£ Default ï¿½ï¿½ï¿½Ì¾ï¿½)")]
     public GameObject realVentObject;
 
-    [Tooltip("¿¬Ãâ¿ë: À§¿¡¼­ ¾Æ·¡·Î Åö ¶³¾îÁú °¡Â¥ È¯Ç³±¸ µ¤°³ (Rigidbody ÇÊ¼ö)")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Â¥ È¯Ç³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (Rigidbody ï¿½Ê¼ï¿½)")]
     public GameObject fallingVentProp;
     public GameObject disappearVentProp;
 
     [Header("Visuals")]
-    [Tooltip("½ºÆÄÅ© ÆÄÆ¼Å¬µé (¿©·¯ °³ ¿¬°á °¡´É, Ã³À½¿£ ÄÑÁ® ÀÖÀ½)")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½Å© ï¿½ï¿½Æ¼Å¬ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, Ã³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)")]
     public ParticleSystem[] sparkEffects;
 
-    [Tooltip("³¢¿öÁú Ç»Áî ¸ðµ¨ (Ã³À½¿£ ²¨Á® ÀÖÀ½)")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ç»ï¿½ï¿½ ï¿½ï¿½ (Ã³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)")]
     public GameObject fuseVisual;
 
     [Header("Settings")]
-    [Tooltip("¿¬ÃâÀÌ ÁøÇàµÇ´Â ½Ã°£ (µ¤°³°¡ ¶³¾îÁö´Â °É ÁöÄÑº¸´Â ½Ã°£)")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½Ã°ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ñºï¿½ï¿½ï¿½ ï¿½Ã°ï¿½)")]
     public float successDelay = 2.0f; 
 
     [Header("Sound")]
-    public AudioClip ventFallSound; // Äô! ÇÏ°í ¶³¾îÁö´Â ¼Ò¸®
+    public AudioClip ventFallSound; // ï¿½ï¿½! ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò¸ï¿½
 
-    // ÀÎÅÍÆäÀÌ½º ±¸Çö
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public bool HidePlayerDuringMicro => true;
 
     private bool _isSolved = false;
@@ -40,9 +40,9 @@ public class FuseBoxPuzzleController : BaseInteractable, IMicroSessionHost, IMic
         _myCollider = GetComponent<Collider>();
 
         if (fuseVisual) fuseVisual.SetActive(false);
-        if (fallingVentProp) fallingVentProp.SetActive(false); // ¿¬Ãâ¿ëÀº ¼û°ÜµÒ
+        if (fallingVentProp) fallingVentProp.SetActive(false); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Üµï¿½
 
-        // ½ºÆÄÅ© Àç»ý
+        // ï¿½ï¿½ï¿½ï¿½Å© ï¿½ï¿½ï¿½
         if (sparkEffects != null)
         {
             foreach (var fx in sparkEffects)
@@ -51,16 +51,16 @@ public class FuseBoxPuzzleController : BaseInteractable, IMicroSessionHost, IMic
             }
         }
         
-        // ¡Ú ½ÃÀÛ ½Ã ÁøÂ¥ È¯Ç³±¸´Â »óÈ£ÀÛ¿ë ºÒ°¡´ÉÇÏ°Ô(Default) ¼³Á¤
-        // (¿¡µðÅÍ¿¡¼­ ¹Ì¸® ¼³Á¤Çß´Ù¸é ÀÌ ÄÚµå´Â ¾ø¾îµµ µÇÁö¸¸ ¾ÈÀüÀåÄ¡·Î µÒ)
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Â¥ È¯Ç³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½Ò°ï¿½ï¿½ï¿½ï¿½Ï°ï¿½(Default) ï¿½ï¿½ï¿½ï¿½
+        // (ï¿½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß´Ù¸ï¿½ ï¿½ï¿½ ï¿½Úµï¿½ï¿½ ï¿½ï¿½ï¿½îµµ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½)
         if (realVentObject)
         {
-            // È¤½Ã ¸ð¸£´Ï ½ÃÀÛÇÒ ¶© Default ·¹ÀÌ¾î·Î °­Á¦ (»óÈ£ÀÛ¿ë ºÒ°¡)
+            // È¤ï¿½ï¿½ ï¿½ð¸£´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Default ï¿½ï¿½ï¿½Ì¾ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½Ò°ï¿½)
             realVentObject.layer = LayerMask.NameToLayer("Default");
         }
     }
 
-    // --- 1. ÁøÀÔ Á¦¾î ---
+    // --- 1. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ---
     public override bool CanInteract(PlayerInteractor i) => !_isSolved;
 
     public override void Interact(PlayerInteractor i)
@@ -69,7 +69,7 @@ public class FuseBoxPuzzleController : BaseInteractable, IMicroSessionHost, IMic
         if (_micro) _micro.TryEnter(i);
     }
 
-    // --- 2. ÁÜ ¼¼¼Ç Á¦¾î ---
+    // --- 2. ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ---
     public bool CanBeginMicro(PlayerInteractor player) => !_isSolved;
 
     public void OnMicroEnter(PlayerInteractor player)
@@ -82,7 +82,7 @@ public class FuseBoxPuzzleController : BaseInteractable, IMicroSessionHost, IMic
         if (_myCollider) _myCollider.enabled = true;
     }
 
-    // --- 3. ÆÛÁñ ·ÎÁ÷ (Slot¿¡¼­ È£Ãâ) ---
+    // --- 3. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (Slotï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½) ---
     public void SolvePuzzle()
     {
         if (_isSolved) return;
@@ -96,10 +96,10 @@ public class FuseBoxPuzzleController : BaseInteractable, IMicroSessionHost, IMic
 
     IEnumerator Routine_Success()
     {
-        // 1. Ç»Áî ³¢¿ì±â ½Ã°¢È­
+        // 1. Ç»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½È­
         if (fuseVisual) fuseVisual.SetActive(true);
 
-        // 2. ½ºÆÄÅ© ²ô±â
+        // 2. ï¿½ï¿½ï¿½ï¿½Å© ï¿½ï¿½ï¿½ï¿½
         if (sparkEffects != null)
         {
             foreach (var fx in sparkEffects)
@@ -108,21 +108,21 @@ public class FuseBoxPuzzleController : BaseInteractable, IMicroSessionHost, IMic
             }
         }
 
-        // 3. Ç»Áî ³¢¿ì´Â ¼Ò¸® (ÂûÄ¬/Àü±âÀ½)
+        // 3. Ç»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò¸ï¿½ (ï¿½ï¿½Ä¬/ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
         CommonSoundController.Instance?.PlaySpark();
 
         yield return new WaitForSeconds(0.2f);
 
-        // 6. ÁÜ ¾Æ¿ô (ÀÚµ¿ Exit)
+        // 6. ï¿½ï¿½ ï¿½Æ¿ï¿½ (ï¿½Úµï¿½ Exit)
         if (_micro) _micro.Exit();
 
-        // --- ¡Ú [ÇÙ½É] È¯Ç³±¸ µ¤°³ ³«ÇÏ ¿¬Ãâ ---
+        // --- ï¿½ï¿½ [ï¿½Ù½ï¿½] È¯Ç³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ---
         if (fallingVentProp && disappearVentProp)
         {
-            fallingVentProp.SetActive(true); // È°¼ºÈ­µÇ¸é¼­ Áß·Â¿¡ ÀÇÇØ ¶³¾îÁü
+            fallingVentProp.SetActive(true); // È°ï¿½ï¿½È­ï¿½Ç¸é¼­ ï¿½ß·Â¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             disappearVentProp.SetActive(false);
             
-            // ¸¸¾à ¾à°£ Æ¨°Ü³ª°¡°Ô ÇÏ°í ½Í´Ù¸é ÈûÀ» Ãß°¡
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½à°£ Æ¨ï¿½Ü³ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï°ï¿½ ï¿½Í´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
             Rigidbody rb = fallingVentProp.GetComponent<Rigidbody>();
             if (rb)
             {
@@ -133,28 +133,30 @@ public class FuseBoxPuzzleController : BaseInteractable, IMicroSessionHost, IMic
 
         
 
-        // 5. ÇÃ·¹ÀÌ¾î°¡ ¶³¾îÁö´Â °É º¼ ¼ö ÀÖ°Ô ´ë±â
+        // 5. ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö°ï¿½ ï¿½ï¿½ï¿½
         yield return new WaitForSeconds(successDelay);
 
-        // 4. µ¤°³ ¶³¾îÁö´Â ¼Ò¸® (Äô!)
+        // 4. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò¸ï¿½ (ï¿½ï¿½!)
         if (ventFallSound)
         {
-            // ÇÃ·¹ÀÌ¾î À§Ä¡³ª Ä«¸Þ¶ó À§Ä¡¿¡¼­ µé¸®°Ô Àç»ý
+            // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½é¸®ï¿½ï¿½ ï¿½ï¿½ï¿½
             AudioManager.Instance.Play(ventFallSound, AudioManager.Sound.Effect, 1.0f);
         }
 
         NoiseSystem.Instance.FireImpulse(1.0f);
 
-        // --- ¡Ú [ÇÙ½É] ÁøÂ¥ È¯Ç³±¸ »óÈ£ÀÛ¿ë ÇØ±Ý ---
+        // --- ï¿½ï¿½ [ï¿½Ù½ï¿½] ï¿½ï¿½Â¥ È¯Ç³ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½Ø±ï¿½ ---
         if (realVentObject)
         {
-            // ·¹ÀÌ¾î¸¦ Interactable·Î º¯°æÇÏ¿© ÇÃ·¹ÀÌ¾î°¡ Å¬¸¯ÇÒ ¼ö ÀÖ°Ô ¸¸µê
+            // ï¿½ï¿½ï¿½Ì¾î¸¦ Interactableï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î°¡ Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö°ï¿½ ï¿½ï¿½ï¿½ï¿½
             realVentObject.layer = LayerMask.NameToLayer("Interactable");
             Debug.Log("[FuseBox] Vent Unlocked! Layer changed to Interactable.");
         }
 
-        // ¼º°ø BGM/UI »ç¿îµå
+        // ï¿½ï¿½ï¿½ï¿½ BGM/UI ï¿½ï¿½ï¿½ï¿½
         CommonSoundController.Instance?.PlayPuzzleSuccess();
 
+        // Achievement Clear: FuseFixed
+        StoveAchievementManager.UnlockByStat(StoveAchievementStatIds.FuseFixed); 
     }
 }

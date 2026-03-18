@@ -261,6 +261,9 @@ public class WirePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
             CancelSession();
         }
         _isAnimating = false;
+        
+        // Achievement Clear: CrispyRat
+        StoveAchievementManager.UnlockByStat(StoveAchievementStatIds.CrispyRat);
     }
 
     void SnapAll()

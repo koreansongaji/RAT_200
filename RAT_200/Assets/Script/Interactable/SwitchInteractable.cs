@@ -84,6 +84,9 @@ public class SwitchInteractable : BaseInteractable
 
         // 3. ���� ���� ����
         UpdateLightsState();
+        
+        // Achievement Clear: AGreatBeginning
+        StoveAchievementManager.UnlockByStat(StoveAchievementStatIds.AGreatBeginning);
     }
 
     private void UpdateLightsState()

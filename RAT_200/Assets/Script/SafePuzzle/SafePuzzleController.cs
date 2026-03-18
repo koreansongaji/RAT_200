@@ -163,6 +163,9 @@ public class SafePuzzleController : BaseInteractable, IMicroSessionHost, IMicroH
         if (dispenser) dispenser.Dispense();
 
         Invoke(nameof(ExitMicro), 0.5f);
+        
+        // Achievement Clear: SafeCracker
+        StoveAchievementManager.UnlockByStat(StoveAchievementStatIds.SafeCracker);
     }
 
     void ExitMicro()

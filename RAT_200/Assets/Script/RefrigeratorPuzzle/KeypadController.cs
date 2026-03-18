@@ -81,6 +81,9 @@ public class KeypadController : MonoBehaviour
             InventoryUI.Instance?.ForceClose();
 
             OnCorrectPassword?.Invoke(); // �� ���⿡ �� ���� ����
+
+            // Achievement Clear: ColdOpen
+            StoveAchievementManager.UnlockByStat(StoveAchievementStatIds.ColdOpen);
         }
         else
         {
