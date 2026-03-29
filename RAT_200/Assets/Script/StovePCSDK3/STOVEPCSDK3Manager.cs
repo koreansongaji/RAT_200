@@ -1,37 +1,39 @@
 using System;
-using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
-
-// PC SDK 3.0 모듈 별 Using 구문이 필요합니다.
 using static Stove.PCSDK.Base;
-
-using static Stove.PCSDK.IAP;		// IAPSDK_NET 연동시
-
+using static Stove.PCSDK.GameSupport;
+using static Stove.PCSDK.IAP;
 
 public class STOVEPCSDK3Manager : MonoBehaviour
 {
-    // 클래스 상단에 필요한 변수를 선언합니다.
-    
-    // 초기화 여부를 저장하기 위한 변수
-    private bool _isInitialized;
-    
-    // 코루틴 실행 주기를 저장하기 위한 변수
-    private float _runCallbackInternval = 1.0f;
-    
-    // RunCallbackLoop 코루틴을 저장하기 위한 변수
-    private Coroutine _runCallbackCoroutine;
+    [Header("STOVE SDK")]
+    [SerializeField] private bool autoInitializeOnAwake = true;
+    [SerializeField] private bool logUserProfileOnInitialize = true;
+    [SerializeField] private string environment = "LIVE";
+    [SerializeField] private string gameId = "GM-275C-6959EF1A_IND";
+    [SerializeField] private string applicationKey = "fa1b9c6bfb0c5ed3141ec75996b4217b9a5537d673fc9af80d34f0eb0ca1afd9";
+    [SerializeField] private string shopKey = string.Empty;
+    [SerializeField] private bool initializeIap;
+    [SerializeField] private float runCallbackInterval = 1.0f;
 
-    // 오브젝트를 Singleton 형태로 사용히가 위한 정적 변수
+    private bool _isInitialized;
+    private bool _isInitializing;
+    private bool _gameSupportInitialized;
+    private bool _iapInitialized;
+    private Coroutine _runCallbackCoroutine;
+    private readonly Queue<Action> _pendingActions = new Queue<Action>();
+
     private static STOVEPCSDK3Manager _instance;
-    private static object _lockObject = new object();
+    private static readonly object LockObject = new object();
 
     public static STOVEPCSDK3Manager Instance
     {
         get
         {
-            lock (_lockObject)
+            lock (LockObject)
             {
                 if (_instance == null)
                 {
@@ -39,8 +41,8 @@ public class STOVEPCSDK3Manager : MonoBehaviour
 
                     if (_instance == null)
                     {
-                        _instance = new GameObject().AddComponent<STOVEPCSDK3Manager>();
-                        _instance.name = "STOVEPCSDK3Manager";
+                        var managerObject = new GameObject("STOVEPCSDK3Manager");
+                        _instance = managerObject.AddComponent<STOVEPCSDK3Manager>();
                     }
                 }
             }
@@ -49,143 +51,255 @@ public class STOVEPCSDK3Manager : MonoBehaviour
         }
     }
 
-    #region
+    public bool IsInitialized => _isInitialized;
 
-    // DontDestroyOnLoad 처리를 진행
     private void Awake()
     {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        _instance = this;
         DontDestroyOnLoad(gameObject);
+
+        if (autoInitializeOnAwake)
+        {
+            Initialize();
+        }
     }
-    
-    // OnDestroy 에서 UnInitialize 호출
+
     private void OnDestroy()
     {
-        if (_isInitialized)
+        if (_instance == this)
+        {
+            _instance = null;
+        }
+
+        if (_isInitialized || _isInitializing)
         {
             UnInitialize();
         }
     }
 
-    #endregion        
-    
-    #region Coroutine
-    
-    // RunCallback을 처리하기 위한 코루틴을 작성
     private IEnumerator RunCallbackCoroutine()
     {
-        var wfs = new WaitForSeconds(_runCallbackInternval);
+        var wait = new WaitForSeconds(runCallbackInterval);
 
         while (true)
-        {        		
+        {
             Base_RunCallback();
-
-            yield return wfs;
+            yield return wait;
         }
     }
 
-    #endregion
-    
-    #region STOVEPCSDK3Manager public methods
-
-    // Result 구조체 출력 메서드
-    public void PrintResult(Result r)
+    public void PrintResult(Result result)
     {
-        StringBuilder sb = new StringBuilder();
-
+        var sb = new StringBuilder();
         sb.AppendLine("# Result");
-        sb.AppendLine($" - Result.sdkName : {r.sdkName}");
-        sb.AppendLine($" - Result.methodCode : {r.methodCode}");
-        sb.AppendLine($" - Result.resultCode : {r.resultCode}");
-        sb.AppendLine($" - Result.exceptionMessage : {r.exceptionMessage}");
-
+        sb.AppendLine($" - Result.sdkName : {result.sdkName}");
+        sb.AppendLine($" - Result.methodCode : {result.methodCode}");
+        sb.AppendLine($" - Result.resultCode : {result.resultCode}");
+        sb.AppendLine($" - Result.resultCodeName : {ToBaseResultCodeName(result.resultCode)}");
+        sb.AppendLine($" - Result.exceptionMessage : {result.exceptionMessage}");
         Debug.Log(sb.ToString());
     }
 
-    // CallbackResult 구조체 출력 메서드
-    public void PrintCallbackResult(CallbackResult cr)
+    public void PrintCallbackResult(CallbackResult callbackResult)
     {
-        StringBuilder sb = new StringBuilder();
-
+        var sb = new StringBuilder();
         sb.AppendLine("# CallbackResult");
-        sb.AppendLine($" - CallbackResult.Result.sdkName : {cr.result.sdkName}");
-        sb.AppendLine($" - CallbackResult.Result.methodCode : {cr.result.methodCode}");
-        sb.AppendLine($" - CallbackResult.Result.resultCode : {cr.result.resultCode}");
-        sb.AppendLine($" - CallbackResult.Result.exceptionMessage : {cr.result.exceptionMessage}");
-        sb.AppendLine($" - CallbackResult.message : {cr.errorMessage}");
-        sb.AppendLine($" - CallbackResult.externalError : {cr.externalError}");
-
+        sb.AppendLine($" - CallbackResult.Result.sdkName : {callbackResult.result.sdkName}");
+        sb.AppendLine($" - CallbackResult.Result.methodCode : {callbackResult.result.methodCode}");
+        sb.AppendLine($" - CallbackResult.Result.resultCode : {callbackResult.result.resultCode}");
+        sb.AppendLine($" - CallbackResult.Result.resultCodeName : {ToBaseResultCodeName(callbackResult.result.resultCode)}");
+        sb.AppendLine($" - CallbackResult.Result.exceptionMessage : {callbackResult.result.exceptionMessage}");
+        sb.AppendLine($" - CallbackResult.message : {callbackResult.errorMessage}");
+        sb.AppendLine($" - CallbackResult.externalError : {callbackResult.externalError}");
         Debug.Log(sb.ToString());
     }
 
-    // 모듈 통합 초기화를 위한 Initialize 메소드 작성
-    public void Initialize(string shopKey)
+    public void Initialize()
     {
+        Initialize(shopKey);
+    }
+
+    public void Initialize(string overrideShopKey)
+    {
+        if (_isInitialized || _isInitializing)
+        {
+            return;
+        }
+
+        if (Application.platform != RuntimePlatform.WindowsPlayer && Application.platform != RuntimePlatform.WindowsEditor)
+        {
+            Debug.LogWarning($"[STOVE] Initialize skipped on unsupported platform: {Application.platform}");
+            return;
+        }
+
+        _isInitializing = true;
         StartRunCallbackLoop();
 
         StovePCInitializeParam initParam;
-        initParam.environment = "LIVE";
-        initParam.gameId = "GM-275C-6959EF1A_IND";
-        initParam.applicationKey = "fa1b9c6bfb0c5ed3141ec75996b4217b9a5537d673fc9af80d34f0eb0ca1afd9";
+        initParam.environment = environment;
+        initParam.gameId = gameId;
+        initParam.applicationKey = applicationKey;
 
-        Base_Initialize(initParam, (CallbackResult callbackResult) =>
+        Base_Initialize(initParam, callbackResult =>
         {
-            // Print CallbackResult
             PrintCallbackResult(callbackResult);
 
-            if (callbackResult.result.IsSuccessful())
+            if (!callbackResult.result.IsSuccessful())
             {
-                Result result = default;
+                Debug.LogError($"[STOVE] Base SDK initialize failed. code={callbackResult.result.resultCode} ({ToBaseResultCodeName(callbackResult.result.resultCode)}), message={callbackResult.errorMessage}, exception={callbackResult.result.exceptionMessage}");
+                _isInitializing = false;
+                return;
+            }
 
-                result = IAP_Initialize(shopKey);
+            var result = GameSupport_Initialize();
+            PrintResult(result);
+            _gameSupportInitialized = result.IsSuccessful();
+
+            if (!_gameSupportInitialized)
+            {
+                Debug.LogError($"[STOVE] GameSupport initialize failed. code={result.resultCode} ({ToBaseResultCodeName(result.resultCode)}), exception={result.exceptionMessage}");
+                _isInitializing = false;
+                return;
+            }
+
+            var targetShopKey = string.IsNullOrWhiteSpace(overrideShopKey) ? shopKey : overrideShopKey;
+            if (initializeIap && !string.IsNullOrWhiteSpace(targetShopKey))
+            {
+                result = IAP_Initialize(targetShopKey);
                 PrintResult(result);
-
-                _isInitialized = true;
+                _iapInitialized = result.IsSuccessful();
             }
             else
             {
-                Debug.Log("Fail to initialize Base SDK");
+                Debug.Log("[STOVE] IAP initialize skipped.");
+                _iapInitialized = false;
             }
+
+            _isInitialized = true;
+            _isInitializing = false;
+
+            if (logUserProfileOnInitialize)
+            {
+                LogCurrentUserProfile();
+            }
+
+            FlushPendingActions();
         });
     }
 
-    // 모듈 통합 정리를 위한 UnInitialize 메소드 작성
+    public void RunWhenInitialized(Action action)
+    {
+        if (action == null)
+        {
+            return;
+        }
+
+        if (_isInitialized)
+        {
+            action.Invoke();
+            return;
+        }
+
+        _pendingActions.Enqueue(action);
+        Initialize();
+    }
+
     public void UnInitialize()
     {
-        Result result;
+        StopRunCallbackLoop();
 
-        this.StopRunCallbackLoop();
-        
-        result = IAP_UnInitialize();
-        PrintResult(result);
-        
-        result = Base_UnInitialize();
-        PrintResult(result);
-        
-        _isInitialized = false;
-    }
-    
-    // RunCallback을 주기적으로 호출하기 위한 메소드 작성
-    public void StartRunCallbackLoop()
-    {
-        if (_runCallbackCoroutine == null)
+        if (_iapInitialized)
         {
-            Debug.Log("Start RunCallbackLoop");
-
-            _runCallbackCoroutine = StartCoroutine(RunCallbackCoroutine());
+            var result = IAP_UnInitialize();
+            PrintResult(result);
         }
+
+        if (_gameSupportInitialized)
+        {
+            var result = GameSupport_UnInitialize();
+            PrintResult(result);
+        }
+
+        var baseResult = Base_UnInitialize();
+        PrintResult(baseResult);
+
+        _isInitialized = false;
+        _isInitializing = false;
+        _gameSupportInitialized = false;
+        _iapInitialized = false;
+        _pendingActions.Clear();
     }
 
-    // Coroutine을 중지하기 위한 메소드 작성
-    public void StopRunCallbackLoop()
+    public void StartRunCallbackLoop()
     {
         if (_runCallbackCoroutine != null)
         {
-            Debug.Log("Stop RunCallbackLoop");
+            return;
+        }
 
-            StopCoroutine(_runCallbackCoroutine);
-            _runCallbackCoroutine = null;
+        Debug.Log("[STOVE] Start RunCallbackLoop");
+        _runCallbackCoroutine = StartCoroutine(RunCallbackCoroutine());
+    }
+
+    public void StopRunCallbackLoop()
+    {
+        if (_runCallbackCoroutine == null)
+        {
+            return;
+        }
+
+        Debug.Log("[STOVE] Stop RunCallbackLoop");
+        StopCoroutine(_runCallbackCoroutine);
+        _runCallbackCoroutine = null;
+    }
+
+    [ContextMenu("Log STOVE User Profile")]
+    public void LogCurrentUserProfile()
+    {
+        if (!_isInitialized)
+        {
+            Debug.LogWarning("[STOVE] Cannot read user profile before SDK initialization.");
+            return;
+        }
+
+        StovePCUser user = default;
+        var result = Base_GetUser(ref user);
+        PrintResult(result);
+
+        if (!result.IsSuccessful())
+        {
+            Debug.LogError($"[STOVE] Base_GetUser failed. code={result.resultCode} ({ToBaseResultCodeName(result.resultCode)}), exception={result.exceptionMessage}");
+            return;
+        }
+
+        Debug.Log($"[STOVE] User Profile: nickname={user.nickname}, gameUserId={user.gameUserId}");
+    }
+
+    private void FlushPendingActions()
+    {
+        while (_pendingActions.Count > 0)
+        {
+            var action = _pendingActions.Dequeue();
+            action?.Invoke();
         }
     }
 
-    #endregion
+    private static string ToBaseResultCodeName(uint resultCode)
+    {
+        try
+        {
+            var enumValue = (BaseSDKResultCode)resultCode;
+            return Enum.IsDefined(typeof(BaseSDKResultCode), enumValue) ? enumValue.ToString() : "UNKNOWN_CODE";
+        }
+        catch
+        {
+            return "UNKNOWN_CODE";
+        }
+    }
 }
